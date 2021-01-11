@@ -1,5 +1,5 @@
 name := """parrotenginev2"""
-organization := "com.example"
+organization := "com.kodeinc"
 
 version := "1.0-SNAPSHOT"
 
