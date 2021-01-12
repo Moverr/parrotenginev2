@@ -18,6 +18,7 @@ libraryDependencies ++= Seq(
   "org.postgresql" % "postgresql" % "9.4-1201-jdbc41",
   "org.scalactic" %% "scalactic" % "3.2.2",
   "com.typesafe.slick" %% "slick" % "3.3.2",
+  "com.typesafe.slick" %% "slick-testkit" % "3.3.3" % "test",
   "com.typesafe.play" %% "play-json" % "2.8.0-M5",
   "com.typesafe.slick" %% "slick" % "3.2.1",
   "com.typesafe.play" %% "play-slick" % "4.0.2",
