@@ -10,6 +10,8 @@ class AuthController @Inject()(cc:ControllerComponents)   extends AbstractContro
   def login() = Action {request=>
     val loginVals = request.body.asJson
     loginVals.map{ arg=>
+
+      
       val username = arg("username").toString()
       val password = arg("password").toString()
       val authentication = new LoginRequest(username,password)
