@@ -1,9 +1,10 @@
 package controllers
 
+import controllers.traits.BasicController
 import javax.inject.Inject
-import play.api.mvc.{AbstractController, ControllerComponents}
+import play.api.mvc.ControllerComponents
 
-class AuthController @Inject()(cc: ControllerComponents)  extends AbstractController(cc){
+class AuthController @Inject()(cc:ControllerComponents)   extends BasicController(cc){
 
   def  login(): Unit ={
     TODO
