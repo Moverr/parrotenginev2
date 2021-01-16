@@ -9,4 +9,9 @@ class AuthService {
 
     null
   }
+
+  //todo: Register Function
+  def register(): Unit ={
+    ???
+  }
 }
