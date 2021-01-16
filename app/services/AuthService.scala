@@ -9,7 +9,7 @@ class AuthService {
 
   //todo: Login Function
   def validate(loginRequest: LoginRequest): LoginResponse ={
-   val user =  users.get(loginRequest.username).exists(_ == loginRequest.password)
+    users.get(loginRequest.username).exists(_== loginRequest.password)
     null
   }
 
