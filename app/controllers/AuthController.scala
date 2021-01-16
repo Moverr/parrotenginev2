@@ -9,7 +9,9 @@ class AuthController @Inject()(cc:ControllerComponents)   extends AbstractContro
   def login() = Action {request=>
     val loginVals = request.body.asJson
     loginVals.map{ arg=>
-      Ok("Passing"+loginVals)
+      Ok("Passing"+arg("name"))
+
+
     }.getOrElse(Ok("Invalid Entries "))
 
 
