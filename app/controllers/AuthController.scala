@@ -11,12 +11,18 @@ class AuthController @Inject()(cc:ControllerComponents)   extends AbstractContro
     val loginVals = request.body.asJson
     loginVals.map{ arg=>
 
-      
-      val username = arg("username").toString()
-      val password = arg("password").toString()
-      val authentication = new LoginRequest(username,password)
 
-      Ok("Passing"+arg("name"))
+      try{
+        val username = arg("username").toString()
+        val password = arg("password").toString()
+        val authentication = new LoginRequest(username,password)
+        Ok("Passing"+arg("name"))
+      }
+      catch {
+        case e:NoSuchElementException=>{
+          BadRequest("Invalid Request")
+        }
+      }
 
 
     }.getOrElse(Ok("Invalid Entries "))
