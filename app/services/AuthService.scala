@@ -5,7 +5,7 @@ import controllers.responses.LoginResponse
 
 class AuthService {
   //todo: Login Function
-  def login(loginRequest: LoginRequest): LoginResponse ={
+  def validate(loginRequest: LoginRequest): LoginResponse ={
 
     null
   }

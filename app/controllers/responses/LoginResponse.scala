@@ -1,3 +1,3 @@
 package controllers.responses
 
-case class LoginResponse()
+case class LoginResponse(token:String,username: String)
