@@ -1,5 +1,12 @@
 package services
 
-class AuthService {
+import controllers.requests.LoginRequest
+import controllers.responses.LoginResponse
 
+class AuthService {
+  //todo: Login Function
+  def login(loginRequest: LoginRequest): LoginResponse ={
+
+    null
+  }
 }

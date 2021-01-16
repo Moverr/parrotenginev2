@@ -11,7 +11,6 @@ class AuthController @Inject()(cc:ControllerComponents)   extends AbstractContro
     val loginVals = request.body.asJson
     loginVals.map{ arg=>
 
-
       try{
         val username = arg("username").toString()
         val password = arg("password").toString()
