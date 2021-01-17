@@ -2,9 +2,12 @@ package services
 
 import controllers.requests.LoginRequest
 import controllers.responses.LoginResponse
-import  collection.mutable
+import javax.inject.Inject
+import play.api.db.slick.DatabaseConfigProvider
 
-class AuthService {
+import collection.mutable
+
+class AuthService @Inject()(db: DatabaseConfigProvider) {
   private val users = mutable.Map[String,String]("rogers"->"moaoe")
 
   //todo: Login Function
