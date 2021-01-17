@@ -21,7 +21,6 @@ case class Account(
 //todo: Define Table
 class AccountTable(tag: Tag) extends Table[Account](tag, "account") {
 
-
   def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
 
   def owner = column[Long]("id")

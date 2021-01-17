@@ -2,13 +2,14 @@ package services
 
 import controllers.requests.LoginRequest
 import controllers.responses.LoginResponse
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import play.api.db.slick.DatabaseConfigProvider
 import slick.jdbc.JdbcProfile
 import tables.Account
 
 import scala.collection.mutable
 
+@Singleton
 class AuthService @Inject()(dbConfigProvider: DatabaseConfigProvider) {
   private val users = mutable.Map[String,String]("rogers"->"moaoe")
 
@@ -21,8 +22,9 @@ class AuthService @Inject()(dbConfigProvider: DatabaseConfigProvider) {
 
   //todo: Login Function
   def validate(loginRequest: LoginRequest): LoginResponse ={
-
-
+    db.run{
+      _table.map(x=>x.name).result
+    }
     users.get(loginRequest.username).exists(_== loginRequest.password)
     null
   }
