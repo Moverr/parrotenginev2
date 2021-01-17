@@ -43,3 +43,5 @@ class AccountTable(tag: Tag) extends Table[Account](tag, "account") {
   // def * = (id, owner, name, created_on, updated_on.?, author_id, updated_by, external_id).mapTo[Account]
 
 }
+
+
