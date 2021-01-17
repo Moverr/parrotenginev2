@@ -21,6 +21,8 @@ class AuthService @Inject()(dbConfigProvider: DatabaseConfigProvider) {
 
   //todo: Login Function
   def validate(loginRequest: LoginRequest): LoginResponse ={
+
+
     users.get(loginRequest.username).exists(_== loginRequest.password)
     null
   }
