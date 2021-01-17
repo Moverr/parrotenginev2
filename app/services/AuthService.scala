@@ -9,11 +9,14 @@ import tables.Account
 
 import scala.collection.mutable
 
-class AuthService @Inject()(dbConfigProvider: DatabaseConfigProvider,account: Account) {
+class AuthService @Inject()(dbConfigProvider: DatabaseConfigProvider) {
   private val users = mutable.Map[String,String]("rogers"->"moaoe")
 
   private  val dbConfig = dbConfigProvider.get[JdbcProfile]
 
+  import dbConfig._
+  import profile.api._
+  private  val _table = TableQuery[Account]
 
 
   //todo: Login Function
