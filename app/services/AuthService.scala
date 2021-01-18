@@ -20,7 +20,6 @@ class AuthService @Inject()(dbConfigProvider: DatabaseConfigProvider) {
   //todo: Login Function
   def validate(loginRequest: LoginRequest): Option[LoginResponse] ={
     None
-
   }
 
   //todo: Register Function
