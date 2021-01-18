@@ -18,11 +18,9 @@ class AuthService @Inject()(dbConfigProvider: DatabaseConfigProvider) {
   val user = new User(0l,"username","password",None)
 
   //todo: Login Function
-  def validate(loginRequest: LoginRequest): LoginResponse ={
+  def validate(loginRequest: LoginRequest): Option[LoginResponse] ={
+    None
 
-
-    users.get(loginRequest.username).exists(_== loginRequest.password)
-    null
   }
 
   //todo: Register Function
