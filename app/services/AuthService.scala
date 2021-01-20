@@ -9,6 +9,7 @@ import slick.jdbc.JdbcProfile
 import slick.lifted.TableQuery
 
 import scala.collection.mutable
+import slick.jdbc.PostgresProfile.api._
 
 @Singleton
 class AuthService @Inject()(dbConfigProvider: DatabaseConfigProvider) {
@@ -25,8 +26,9 @@ class AuthService @Inject()(dbConfigProvider: DatabaseConfigProvider) {
   //todo: Login Function
   def validate(loginRequest: LoginRequest): Option[LoginResponse] ={
     db.run(
-      UserTable.take(1).drop(2)
-    ).result()
+      UserTable.
+        filter(_.username === loginRequest.username).result
+    )
     None
   }
 
