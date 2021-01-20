@@ -17,6 +17,7 @@ class AuthService @Inject()(dbConfigProvider: DatabaseConfigProvider) {
   private  val dbConfig = dbConfigProvider.get[JdbcProfile]
 
 
+  import dbConfig._
   //todo: User Table
   lazy  val UserTable = TableQuery[UserTable]
 
@@ -24,8 +25,8 @@ class AuthService @Inject()(dbConfigProvider: DatabaseConfigProvider) {
   //todo: Login Function
   def validate(loginRequest: LoginRequest): Option[LoginResponse] ={
     db.run(
-      UserTable
-    )
+      UserTable.take(1).drop(2)
+    ).result()
     None
   }
 
