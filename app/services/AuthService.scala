@@ -26,8 +26,7 @@ class AuthService @Inject()(dbConfigProvider: DatabaseConfigProvider) {
   //todo: Login Function
   def validate(loginRequest: LoginRequest): Option[LoginResponse] ={
     db.run(
-      UserTable.
-        filter(_.username === loginRequest.username).result
+      UserTable.result
     )
     None
   }
