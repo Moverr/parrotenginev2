@@ -26,9 +26,11 @@ class AuthService @Inject()(dbConfigProvider: DatabaseConfigProvider) {
   //todo: Login Function
   def validate(loginRequest: LoginRequest): Option[LoginResponse] ={
    val result =  db.run(
-      UserTable.filter(_.username === loginRequest.username )
-       .filter(_.password === loginRequest.password)
-       .result.head
+      UserTable
+        .filter(_.username === loginRequest.username )
+        .filter(_.password === loginRequest.password)
+        .result
+        .head
     )
     None
   }
