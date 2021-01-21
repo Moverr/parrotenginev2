@@ -2,7 +2,7 @@ package services
 
 import controllers.requests.LoginRequest
 import controllers.responses.LoginResponse
-import db.tables.UserTable
+import db.tables.{User, UserTable}
 import javax.inject.{Inject, Singleton}
 import play.api.db.slick.DatabaseConfigProvider
 import slick.jdbc.JdbcProfile
@@ -10,6 +10,8 @@ import slick.lifted.TableQuery
 
 import scala.collection.mutable
 import slick.jdbc.PostgresProfile.api._
+
+import scala.concurrent.Future
 
 @Singleton
 class AuthService @Inject()(dbConfigProvider: DatabaseConfigProvider) {
@@ -24,16 +26,21 @@ class AuthService @Inject()(dbConfigProvider: DatabaseConfigProvider) {
 
 
   //todo: Login Function
-  def validate(loginRequest: LoginRequest): Option[LoginResponse] ={
-   val result =  db.run(
+  def validate(loginRequest: LoginRequest): LoginResponse ={
+   val result:Future[User] =  db.run(
       UserTable
         .filter(_.username === loginRequest.username )
         .filter(_.password === loginRequest.password)
-        .map((a)=>(a.username,a.account))
         .result
         .head
     )
-    None
+    if(result.isCompleted){
+      val response:LoginResponse = new LoginResponse("weewe","username")
+      response
+    }else{
+      null
+    }
+
   }
 
   //todo: Register Function
