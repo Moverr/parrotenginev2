@@ -19,8 +19,8 @@ class AuthController @Inject()(
       try{
         val username = arg("username").toString()
         val password = arg("password").toString()
-        val authentication = new LoginRequest(username,password)
-
+        val loginRequest = new LoginRequest(username,password)
+        authService.validate(loginRequest)
         Ok("Passing"+arg("name"))
       }
       catch {
