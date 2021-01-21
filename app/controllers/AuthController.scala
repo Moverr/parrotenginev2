@@ -3,9 +3,14 @@ package controllers
 import controllers.requests.LoginRequest
 import javax.inject.Inject
 import play.api.mvc.{AbstractController, ControllerComponents}
+import services.AuthService
 
 
-class AuthController @Inject()(cc:ControllerComponents)   extends AbstractController(cc){
+class AuthController @Inject()(
+                                cc:ControllerComponents
+                              ,authService: AuthService
+
+                              )   extends AbstractController(cc){
 
   def login() = Action {request=>
     val loginVals = request.body.asJson
@@ -15,6 +20,7 @@ class AuthController @Inject()(cc:ControllerComponents)   extends AbstractContro
         val username = arg("username").toString()
         val password = arg("password").toString()
         val authentication = new LoginRequest(username,password)
+
         Ok("Passing"+arg("name"))
       }
       catch {
