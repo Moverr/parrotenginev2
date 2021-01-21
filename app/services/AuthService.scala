@@ -29,6 +29,7 @@ class AuthService @Inject()(dbConfigProvider: DatabaseConfigProvider) {
       UserTable
         .filter(_.username === loginRequest.username )
         .filter(_.password === loginRequest.password)
+        .map((a)=>(a.username,a.account))
         .result
         .head
     )
