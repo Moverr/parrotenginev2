@@ -5,6 +5,8 @@ import javax.inject.Inject
 import play.api.mvc.{AbstractController, ControllerComponents}
 import services.AuthService
 
+import scala.concurrent.Future
+
 
 class AuthController @Inject()(
                                 cc:ControllerComponents
@@ -20,8 +22,8 @@ class AuthController @Inject()(
         val username = arg("username").toString()
         val password = arg("password").toString()
         val loginRequest = new LoginRequest(username,password)
-        authService.validate(loginRequest)
-        Ok("Passing"+arg("name"))
+        val response =  authService.validate(loginRequest)
+        Ok(response)
       }
       catch {
         case e:NoSuchElementException=>{
