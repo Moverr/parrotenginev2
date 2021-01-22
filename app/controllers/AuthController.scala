@@ -8,8 +8,7 @@ import services.AuthService
 
 class AuthController @Inject()(
                                 cc:ControllerComponents
-                              ,authService: AuthService
-
+                                ,authService: AuthService
                               )   extends AbstractController(cc){
 
   def login() = Action {request=>
