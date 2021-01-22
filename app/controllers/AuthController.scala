@@ -19,14 +19,13 @@ class AuthController @Inject()(
       try{
         val username = arg("username").toString()
         val password = arg("password").toString()
-        val loginRequest = new LoginRequest(username,password)
+        val loginRequest =  LoginRequest(username,password)
         val response =  authService.validate(loginRequest)
-        Ok(response.toString())
+        Ok(response.toString)
       }
       catch {
-        case e:NoSuchElementException=>{
-          BadRequest("Invalid Request")
-        }
+        case e:NoSuchElementException => BadRequest("Invalid Request")
+
       }
 
     }.getOrElse(Ok("Invalid Entries "))
