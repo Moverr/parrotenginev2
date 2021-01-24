@@ -20,7 +20,7 @@ class AuthController @Inject()(
         val password = arg("password").toString()
         val loginRequest =  LoginRequest(username,password)
         val response =  authService.validate(loginRequest)
-        Ok(response.toString)
+        Ok(username)
       }
       catch {
         case e:NoSuchElementException => BadRequest("Invalid Request")
