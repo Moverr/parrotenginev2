@@ -20,17 +20,18 @@ class AuthController @Inject()(
     val jsonBody= body.asJson
 
     jsonBody.map{ requestBody =>
-      val username = requestBody("username").toString
-      val password = requestBody("password").toString
+      //note. using to string adds "" charactes to the string. use as[String]
+      val username:String =  requestBody("username").as[String]
+      val password = requestBody("password").as[String]
+
       val loginRequest = LoginRequest(username, password)
-      authService.validate(loginRequest)  flatMap{
+      authService.validate(loginRequest)  flatMap {
         case Some(value) => Future.successful(Ok("Intersting  Vidbes"))
-        case None => Future.successful(BadRequest("Records missing Bive"))
+        case None => Future.successful(BadRequest(loginRequest.username.toString().trim()))
       }
     }.getOrElse{
       Future.successful(Ok("Scenario Fake "))
     }
-
 
 
     }
