@@ -1,9 +1,12 @@
 package controllers
 
 import controllers.requests.LoginRequest
+import db.tables.User
 import javax.inject.Inject
 import play.api.mvc.{AbstractController, ControllerComponents}
 import services.AuthService
+
+import scala.concurrent.Future
 
 
 class AuthController @Inject()(
@@ -19,8 +22,12 @@ class AuthController @Inject()(
         val username = arg("username").toString()
         val password = arg("password").toString()
         val loginRequest =  LoginRequest(username,password)
-        val response =  authService.validate(loginRequest)
-        Ok(username)
+        val response:Future[User] =  authService.validate(loginRequest)
+
+
+
+        Ok(s"Inters=esting $username")
+
       }
       catch {
         case e:NoSuchElementException => BadRequest("Invalid Request")
