@@ -19,12 +19,13 @@ class AuthController @Inject()(
     val body = request.body
     val jsonBody= body.asJson
 
-    jsonBody.map{x =>
-      val username = x("username").toString
-      val password = x("password").toString
+    jsonBody.map{ requestBody =>
+      val username = requestBody("username").toString
+      val password = requestBody("password").toString
       val loginRequest = LoginRequest(username, password)
-      authService.validate(loginRequest) map { items =>
-        Ok(x("password"))
+      authService.validate(loginRequest)  flatMap{
+        case Some(value) => Future.successful(Ok("Intersting  Vidbes"))
+        case None => Future.successful(BadRequest("Records missing Bive"))
       }
     }.getOrElse{
       Future.successful(Ok("Scenario Fake "))
