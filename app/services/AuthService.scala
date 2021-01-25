@@ -23,12 +23,10 @@ class AuthService @Inject()(dbConfigProvider: DatabaseConfigProvider) {
 
 
   //todo: Login Function
-  def validate(loginRequest: LoginRequest): Any ={
-
+  def validate(loginRequest: LoginRequest): User ={
     val q = UserTable.result.head
     val result:Future[User] = db.run(q)
     result
-
   }
 
   //todo: Register Function
