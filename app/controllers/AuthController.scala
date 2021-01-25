@@ -15,12 +15,13 @@ class AuthController @Inject()(
   extends AbstractController(cc){
 
   def login() = Action.async { implicit request: Request[AnyContent] =>
+    val body = request.body
 
     val username = "dd"
     val password = "ddd"
     val loginRequest = LoginRequest(username, password)
     authService.validate(loginRequest) map { items =>
-      Ok(s"Inters=esting $username")
+      Ok(items.password.toString)
     }
 
     }
