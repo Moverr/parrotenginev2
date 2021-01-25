@@ -26,14 +26,9 @@ class AuthService @Inject()(dbConfigProvider: DatabaseConfigProvider) {
   def validate(loginRequest: LoginRequest): Any ={
 
     val q = UserTable.result.head
+    val result:Future[User] = db.run(q)
+    result
 
-    Future[User] = db.run{
-      UserTable
-        //        .filter(_.username === loginRequest.username )
-        //        .filter(_.password === loginRequest.password)
-        .result
-        .head
-    }
   }
 
   //todo: Register Function
