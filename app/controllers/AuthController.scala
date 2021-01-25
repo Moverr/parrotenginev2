@@ -20,11 +20,11 @@ class AuthController @Inject()(
     val jsonBody= body.asJson
 
     jsonBody.map{x =>
-      val username = "dd"
-      val password = "ddd"
+      val username = x("username").toString
+      val password = x("password").toString
       val loginRequest = LoginRequest(username, password)
       authService.validate(loginRequest) map { items =>
-        Ok(x.toString)
+        Ok(x("password"))
       }
     }.getOrElse{
       Future.successful(Ok("Scenario Fake "))
