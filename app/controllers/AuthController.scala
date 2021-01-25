@@ -1,43 +1,29 @@
 package controllers
 
 import controllers.requests.LoginRequest
-import db.tables.User
 import javax.inject.Inject
-import play.api.mvc.{AbstractController, ControllerComponents}
+import play.api.mvc._
 import services.AuthService
 
-import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
 
 
 class AuthController @Inject()(
                                 cc:ControllerComponents
                                 ,authService: AuthService
-                              )   extends AbstractController(cc){
+                              )
+  extends AbstractController(cc){
 
-  def login() = Action {request=>
-    val loginVal = request.body.asJson
-    loginVal.map{ arg=>
+  def login() = Action.async { implicit request: Request[AnyContent] =>
 
-      try{
-        val username = arg("username").toString()
-        val password = arg("password").toString()
-        val loginRequest =  LoginRequest(username,password)
-        val response:Future[User] =  authService.validate(loginRequest)
+    val username = "dd"
+    val password = "ddd"
+    val loginRequest = LoginRequest(username, password)
+    authService.validate(loginRequest) map { items =>
+      Ok(s"Inters=esting $username")
+    }
 
-
-
-        Ok(s"Inters=esting $username")
-
-      }
-      catch {
-        case e:NoSuchElementException => BadRequest("Invalid Request")
-
-      }
-
-    }.getOrElse(Ok("Invalid Entries "))
-
-
-  }
+    }
 
   def register(): Unit ={
     TODO

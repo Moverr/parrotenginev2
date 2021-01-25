@@ -9,6 +9,7 @@ import slick.jdbc.PostgresProfile.api._
 import slick.lifted.TableQuery
 
 import scala.collection.mutable
+import scala.concurrent.Future
 
 @Singleton
 class AuthService @Inject()(dbConfigProvider: DatabaseConfigProvider) {
@@ -23,7 +24,7 @@ class AuthService @Inject()(dbConfigProvider: DatabaseConfigProvider) {
 
 
   //todo: Login Function
-  def validate(loginRequest: LoginRequest): User ={
+  def validate(loginRequest: LoginRequest): Future[User] ={
     val q = UserTable.result.head
     val result:Future[User] = db.run(q)
     result
