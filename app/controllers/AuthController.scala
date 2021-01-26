@@ -1,14 +1,14 @@
 package controllers
 
 import controllers.requests.LoginRequest
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import play.api.mvc._
 import services.AuthService
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
 
-
+@Singleton
 class AuthController @Inject()(
                                 cc:ControllerComponents
                                 ,authService: AuthService
@@ -16,32 +16,16 @@ class AuthController @Inject()(
   extends AbstractController(cc){
 
   def login() = Action.async { implicit request: Request[AnyContent] =>
-    val body = request.body
-    val jsonBody= body.asJson
 
-    jsonBody.map{ requestBody =>
-      //note. using to string adds "" charactes to the string. use as[String]
-      val username:String =  requestBody("username").as[String]
-      val password = requestBody("password").as[String]
+    val username:String = request.body.asFormUrlEncoded.flatMap(m => m.get("username").flatMap(_.headOption)).getOrElse("")
+    val password:String =  request.body.asFormUrlEncoded.flatMap(m => m.get("name").flatMap(_.headOption)).getOrElse("")
+    val loginRequest = LoginRequest(username, password)
 
-      val loginRequest = LoginRequest(username, password)
-       authService.validate(loginRequest)
-        .map{
-          x=>x
-        }
-      Future.successful(Ok("Intersting  Vidbes"))
-       /* .flatMap{
-          case value =>  Future.successful(Ok("Intersting  Vidbes"))
-          case None => Future.successful(BadRequest(loginRequest.username.toString().trim()))
-        }*/
-      /*flatMap {
-        case Some(value) => Future.successful(Ok("Intersting  Vidbes"))
-        case None => Future.successful(BadRequest(loginRequest.username.toString().trim()))
+    authService.validate(loginRequest)
+      .flatMap{
+        case Some(value) => Future.successful(Ok( value.access_token))
+        case None => Future.successful(BadRequest("Something went wrong"))
       }
-      */
-    }.getOrElse{
-      Future.successful(Ok("Scenario Fake "))
-    }
 
 
     }

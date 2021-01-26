@@ -26,15 +26,15 @@ class AuthService @Inject()(
 
 
   //todo: Login Function
-  def validate(loginRequest: LoginRequest): Future[LoginResponse] ={
+  def validate(loginRequest: LoginRequest): Future[Option[LoginResponse]] ={
 
    val response:Future[Option[User]] =  userDa.getUserByNameAndPassord(loginRequest.username,loginRequest.password)
 
-   val result =    response.flatMap {
+    response.flatMap {
         case Some(value) =>  Future.successful(populateResponse(value))
-        case None => Future.successful(null)
+        case None => Future.successful(None)
       }
-    result
+
   }
 
 
@@ -43,7 +43,11 @@ class AuthService @Inject()(
     ???
   }
 
-  def populateResponse(user: User): LoginResponse  =  LoginResponse("token",user.username)
+  //todo : populate Response
+  def populateResponse(user: User): Option[LoginResponse]  =  {
+    val resp =  LoginResponse("token",user.username)
+    Some(resp)
+  }
 
 
 
