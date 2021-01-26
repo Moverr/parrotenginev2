@@ -43,9 +43,8 @@ class AuthService @Inject()(
     ???
   }
 
-  def populateResponse(user: User): LoginResponse ={
-    val x = LoginResponse("token","username")
-    x
-  }
+  def populateResponse(user: User): LoginResponse  =  LoginResponse("token",user.username)
+
+
 
   }
