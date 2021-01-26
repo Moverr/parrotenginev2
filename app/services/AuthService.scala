@@ -37,15 +37,15 @@ class AuthService @Inject()(
     result
   }
 
-  def populateResponse(user: User): LoginResponse ={
-  val x = LoginResponse()
-    x
-  }
+
   //todo: Register Function
   def register(): Unit ={
     ???
   }
 
-
+  def populateResponse(user: User): LoginResponse ={
+    val x = LoginResponse("token","username")
+    x
+  }
 
   }
