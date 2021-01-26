@@ -27,7 +27,6 @@ class AuthController @Inject()(
         case None => Future.successful(BadRequest("Something went wrong"))
       }
 
-
     }
 
   def register(): Unit ={

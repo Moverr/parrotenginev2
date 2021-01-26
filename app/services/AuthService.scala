@@ -3,30 +3,17 @@ package services
 import controllers.requests.LoginRequest
 import controllers.responses.LoginResponse
 import daos.UserDao
-import db.tables.{User, UserTable}
+import db.tables.User
 import javax.inject.{Inject, Singleton}
-import play.api.db.slick.DatabaseConfigProvider
-import slick.jdbc.JdbcProfile
-import slick.lifted.TableQuery
 
-import scala.collection.mutable
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
-class AuthService @Inject()(
-                             dbConfigProvider: DatabaseConfigProvider
-                           ,userDa: UserDao
-                           ) {
-  private val users = mutable.Map[String,String]("rogers"->"moaoe")
-
-  private  val dbConfig = dbConfigProvider.get[JdbcProfile]
-  //todo: User Table
-  lazy  val UserTable = TableQuery[UserTable]
-
+class AuthService @Inject()( userDa: UserDao ) {
 
   //todo: Login Function
-  def validate(loginRequest: LoginRequest): Future[Option[LoginResponse]] ={
+  def validate(loginRequest: LoginRequest): Future[Option[LoginResponse]] = {
 
    val response:Future[Option[User]] =  userDa.getUserByNameAndPassord(loginRequest.username,loginRequest.password)
 
