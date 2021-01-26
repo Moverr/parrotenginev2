@@ -19,19 +19,25 @@ class UserDao @Inject()(dbConfigProvider: DatabaseConfigProvider) {
     Get User by Username
    */
   def getUserByName(useername:String): Future[Option[User]] ={
-    val query = UserTable.filter(_.username === useername)
+    val query = UserTable
+      .filter(_.username === useername)
       .result.headOption
       db.run(query)
   }
 
+  /*
+    Get User by Username and Password
+   */
   def getUserByNameAndPassord(useername:String,password:String): Future[Option[User]] ={
-    val query = UserTable.filter(_.username === useername)
+    val query = UserTable
+      .filter(_.username === useername)
+      .filter(_.password === password)
       .result.headOption
     db.run(query)
   }
 
   /*
-  Get all Users whose username is similar. not applicable but just saw for back-end usage. .
+    Get all Users whose username is similar. not applicable but just saw for back-end usage. .
    */
   def getUsersByUsername(useername:String,offset:Int,limit:Int): Future[Seq[User]] ={
     val query = UserTable.filter(_.username === useername)
