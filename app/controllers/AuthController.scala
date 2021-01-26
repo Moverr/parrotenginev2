@@ -25,10 +25,20 @@ class AuthController @Inject()(
       val password = requestBody("password").as[String]
 
       val loginRequest = LoginRequest(username, password)
-      authService.validate(loginRequest)  flatMap {
+       authService.validate(loginRequest)
+        .map{
+          x=>x
+        }
+      Future.successful(Ok("Intersting  Vidbes"))
+       /* .flatMap{
+          case value =>  Future.successful(Ok("Intersting  Vidbes"))
+          case None => Future.successful(BadRequest(loginRequest.username.toString().trim()))
+        }*/
+      /*flatMap {
         case Some(value) => Future.successful(Ok("Intersting  Vidbes"))
         case None => Future.successful(BadRequest(loginRequest.username.toString().trim()))
       }
+      */
     }.getOrElse{
       Future.successful(Ok("Scenario Fake "))
     }
