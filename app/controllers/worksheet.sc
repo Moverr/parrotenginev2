@@ -31,3 +31,7 @@ val result2 = result1.flatten
 
 val lol = List(List(1,2), List(3,4))
  lol.flatten
+ lol.flatten
+  .map(x => x + 1)
+//converting from muplipe lists to a single list.
+// then looping through the list.
