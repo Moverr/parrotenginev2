@@ -11,32 +11,32 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
-class AuthService @Inject()( userDa: UserDao ) {
+class AuthService @Inject()( userDa: UserDao ) extends AuthServiceTrait {
 
   //todo: Login Function
-  def validate(loginRequest: LoginRequest): Future[Option[LoginResponse]] = {
+  override def validate(loginRequest: LoginRequest): Future[Option[LoginResponse]] = {
 
-   val response:Future[Option[User]] =  userDa.getUserByNameAndPassord(loginRequest.username,Utilities.encrypt(loginRequest.password))
+    val response:Future[Option[User]] =  userDa.getUserByNameAndPassord(loginRequest.username,Utilities.encrypt(loginRequest.password))
 
     response.flatMap {
-        case Some(value) =>  Future.successful(populateResponse(value))
-        case None => Future.successful(None)
-      }
+      case Some(value) =>  Future.successful(populateResponse(value))
+      case None => Future.successful(None)
+    }
 
   }
 
 
   //todo: Register Function
-  def register(): Unit ={
+  override def register(): Unit ={
     ???
   }
 
   //todo : populate Response
-  def populateResponse(user: User): Option[LoginResponse]  =  {
+  override def populateResponse(user: User): Option[LoginResponse]  =  {
     val resp =  LoginResponse("token",user.username)
     Some(resp)
   }
 
 
 
-  }
+}

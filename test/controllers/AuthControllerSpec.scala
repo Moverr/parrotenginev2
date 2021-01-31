@@ -2,7 +2,6 @@ package controllers
 import org.scalatest._
 import org.scalatestplus.play.PlaySpec
 import play.api.mvc.Results
-import play.api.test.Helpers.stubControllerComponents
 
 class AuthControllerSpec extends PlaySpec with Results {
 
