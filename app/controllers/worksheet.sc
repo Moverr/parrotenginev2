@@ -24,3 +24,6 @@ val new_collection =collection.map(x=>{
 }).toSet
 
 
+val name = Seq("Nidhi", "Singh")
+val result1 = name.map(_.toLowerCase)
+val result2 = result1.flatten
