@@ -4,7 +4,7 @@ import java.security.MessageDigest
 
 object Utilities {
 
-  val encryptionAlgorithm:String  = "MD5"
+  private val encryptionAlgorithm:String  = "MD5"
 
   def encrypt(s:String): String ={
       MessageDigest.getInstance(encryptionAlgorithm).digest(s.getBytes)
