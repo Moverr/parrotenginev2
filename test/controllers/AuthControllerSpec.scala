@@ -1,21 +1,18 @@
 package controllers
 import org.scalatest._
 import org.scalatestplus.play.PlaySpec
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.Application
-import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.mvc.Results
+import play.api.test.FakeRequest
 
-class ExampleSpec extends PlaySpec with GuiceOneAppPerSuite {
+class AuthControllerSpec extends PlaySpec with Results {
 
-  // Override fakeApplication if you need a Application with other than
-  // default parameters.
-  override def fakeApplication(): Application = {
-    GuiceApplicationBuilder().configure(Map("ehcacheplugin" -> "disabled")).build()
+  "respond to the index Action" in new App(applicationWithRouter) {
+    val Some(result) = route(app, FakeRequest(GET_REQUEST, "/Bob"))
+
+    status(result) mustEqual OK
+    contentType(result) mustEqual Some("text/html")
+    contentAsString(result) must include("Hello Bob")
   }
 
-  "The GuiceOneAppPerSuite trait" must {
-    "provide an Application" in {
-      app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
-    }
-  }
+
 }
