@@ -4,6 +4,7 @@ import controllers.requests.LoginRequest
 import controllers.responses.LoginResponse
 import daos.UserDao
 import db.tables.User
+import helpers.Utilities
 import javax.inject.{Inject, Singleton}
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -15,7 +16,7 @@ class AuthService @Inject()( userDa: UserDao ) {
   //todo: Login Function
   def validate(loginRequest: LoginRequest): Future[Option[LoginResponse]] = {
 
-   val response:Future[Option[User]] =  userDa.getUserByNameAndPassord(loginRequest.username,loginRequest.password)
+   val response:Future[Option[User]] =  userDa.getUserByNameAndPassord(loginRequest.username,Utilities.encrypt(loginRequest.password))
 
     response.flatMap {
         case Some(value) =>  Future.successful(populateResponse(value))
