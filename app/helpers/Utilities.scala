@@ -6,8 +6,10 @@ class Utilities {
 
   val encryptionAlgorithm:String  = "MD5"
 
-  def encrypt(s:String): Unit ={
-    MessageDigest.getInstance(encryptionAlgorithm).digest(s.getBytes)
+  def encrypt(s:String): String ={
+    val digest:String =  MessageDigest.getInstance(encryptionAlgorithm).digest(s.getBytes)
+      .map(_.toChar).mkString
+      digest
   }
 
 
