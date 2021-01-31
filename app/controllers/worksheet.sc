@@ -11,3 +11,16 @@ val twentySomethings:List[Int] =
     yield user.age  // i.e. add this to a list
 
 twentySomethings.foreach(name => println(name))
+
+
+def square(x:Int):Int = x * x
+
+val collection = List(1, 3, 2, 5, 4, 7, 6)
+
+
+val new_collection =collection.map(x=>{
+  if(x % 2 == 0)  x*x*x
+  else 0
+}).toSet
+
+
