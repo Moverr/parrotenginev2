@@ -7,6 +7,8 @@ import play.api.test.Helpers._
 import play.api.test.Injecting
 import services.AuthService
 
+import org.mockito.Mockito._
+
 
 class AuthControllerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
 
@@ -15,6 +17,8 @@ class AuthControllerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting
 
       val userDao =  new UserDao(null)
       val authService = new AuthService(userDao)
+
+      val mockService = mock[AuthService]
 
       val controller = new AuthController(stubControllerComponents(),authService)
     }
