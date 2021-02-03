@@ -30,6 +30,8 @@ libraryDependencies ++= Seq(
   "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % "test"
 )
 
+// https://mvnrepository.com/artifact/org.mockito/mockito-core
+libraryDependencies += "org.mockito" % "mockito-core" % "3.7.7" % Test
 
 
 // https://mvnrepository.com/artifact/com.github.tminglei/slick-pg
