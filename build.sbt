@@ -31,7 +31,6 @@ libraryDependencies ++= Seq(
 )
 
 // https://mvnrepository.com/artifact/org.mockito/mockito-core
-libraryDependencies += "org.mockito" % "mockito-core" % "3.7.7" % "test"
 
 
 // https://mvnrepository.com/artifact/com.github.tminglei/slick-pg
