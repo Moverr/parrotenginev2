@@ -10,7 +10,7 @@ import services.AuthService
 
 
 
-class AuthControllerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
+class AuthControllerSpec() extends PlaySpec with GuiceOneAppPerTest with Injecting {
 
   "Example Page#index" should {
     "should be valid" in {

@@ -5,7 +5,7 @@ import db.tables.User
 
 import scala.concurrent.Future
 
-trait AuthServiceTrait {
+trait IAuthService {
 
   //todo: Login Function
   def validate(loginRequest: LoginRequest): Future[Option[LoginResponse]]

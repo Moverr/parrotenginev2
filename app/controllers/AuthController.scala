@@ -3,7 +3,7 @@ package controllers
 import controllers.requests.LoginRequest
 import javax.inject.{Inject, Singleton}
 import play.api.mvc._
-import services.AuthService
+import services.IAuthService
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -11,7 +11,7 @@ import scala.concurrent.Future
 @Singleton
 class AuthController @Inject()(
                                 cc:ControllerComponents
-                                ,authService: AuthService
+                                ,authService: IAuthService
                               )
   extends AbstractController(cc){
 
