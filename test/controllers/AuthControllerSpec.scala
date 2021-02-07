@@ -5,22 +5,18 @@ import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerTest
 import play.api.test.Helpers._
 import play.api.test.Injecting
-import services.AuthService
+import services.IAuthService
 
 
 
 
-class AuthControllerSpec() extends PlaySpec with GuiceOneAppPerTest with Injecting {
+class AuthControllerSpec(authservice: IAuthService) extends PlaySpec with GuiceOneAppPerTest with Injecting {
 
   "Example Page#index" should {
     "should be valid" in {
 
       val userDao =  new UserDao(null)
-      val authService = new AuthService(userDao)
-
-     // val mockService = mock[AuthService]
-
-      val controller = new AuthController(stubControllerComponents(),authService)
+      val controller = new AuthController(stubControllerComponents(),authservice)
     }
   }
 }
