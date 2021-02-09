@@ -10,5 +10,6 @@ class UserTable(tag: Tag) extends Table[User](tag,"users"){
   def username = column[String]("username",O.Unique)
   def password = column[String]("password")
   //def account  = column[Long]("account",O.Default(0))
-  override def * = (id,username,password) <> (User.tupled,User.unapply)
+  override def * = (id,username,password).mapTo[User]
+  //<> (User.tupled,User.unapply)
 }
