@@ -15,7 +15,7 @@ class AuthController @Inject()(
                               )
   extends AbstractController(cc){
 
-  def login() = Action.async { implicit request: Request[AnyContent] =>
+  def login() =   { implicit request: Request[AnyContent] =>
 
     val username:String = request.body.asFormUrlEncoded.flatMap(m => m.get("username").flatMap(_.headOption)).getOrElse("")
     val password:String =  request.body.asFormUrlEncoded.flatMap(m => m.get("password").flatMap(_.headOption)).getOrElse("")
