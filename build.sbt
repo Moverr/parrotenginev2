@@ -26,8 +26,10 @@ libraryDependencies ++= Seq(
   "com.typesafe.slick" %% "slick-codegen" % "3.3.2",
   "com.github.tminglei" %% "slick-pg" % "0.19.3",
   "com.typesafe.slick" %% "slick-hikaricp" % "3.3.2",
+
   "org.scalatest" %% "scalatest-flatspec" % "3.2.0" % "test",
-  "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % "test"
+  "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % "test",
+  "org.scalatestplus" %% "mockito-3-4" % "3.2.2.0" % "test"
 )
 
 // https://mvnrepository.com/artifact/org.mockito/mockito-core
