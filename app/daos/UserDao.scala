@@ -10,28 +10,28 @@ import slick.lifted.TableQuery
 import scala.concurrent.Future
 
 @Singleton
-class UserDao @Inject()(dbConfigProvider: DatabaseConfigProvider) {
+class UserDao @Inject()(dbConfigProvider: DatabaseConfigProvider) extends IUserDAO {
   private  val dbConfig = dbConfigProvider.get[JdbcProfile]
-  lazy  val UserTable = TableQuery[UserTable]
+  override lazy  val UserTable = TableQuery[UserTable]
   import dbConfig._
 
   /*
     Get User by Username
    */
-  def getUserByName(useername:String): Future[Option[User]] ={
+  override def getUserByName(useername:String): Future[Option[User]] ={
     val query = UserTable
       .filter(_.username === useername)
       .result.headOption
-      db.run(query)
+    db.run(query)
   }
 
   /*
     Get User by Username and Password
    */
-  def getUserByNameAndPassord(useername:String,password:String): Future[Option[User]] ={
+  override def getUserByNameAndPassord(useername:String,password:String): Future[Option[User]] ={
     val query = UserTable
       //.filter(_.username === useername)
-    //  .filter(_.password === password)
+      //  .filter(_.password === password)
       .result.headOption
     db.run(query)
   }
@@ -39,7 +39,7 @@ class UserDao @Inject()(dbConfigProvider: DatabaseConfigProvider) {
   /*
     Get all Users whose username is similar. not applicable but just saw for back-end usage. .
    */
-  def getUsersByUsername(useername:String,offset:Int,limit:Int): Future[Seq[User]] ={
+  override def getUsersByUsername(useername:String,offset:Int,limit:Int): Future[Seq[User]] ={
     val query = UserTable.filter(_.username === useername)
       .result
     db.run(query)
