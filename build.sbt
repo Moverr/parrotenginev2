@@ -29,7 +29,8 @@ libraryDependencies ++= Seq(
 
   "org.scalatest" %% "scalatest-flatspec" % "3.2.0" % "test",
   "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % "test",
-  "org.scalatestplus" %% "mockito-3-4" % "3.2.2.0" % "test"
+  "org.scalatestplus" %% "mockito-3-4" % "3.2.2.0" % "test",
+  "org.mockito" % "mockito-scala_2.13" % "1.16.23"
 )
 
 // https://mvnrepository.com/artifact/org.mockito/mockito-core

@@ -191,7 +191,7 @@
         "platform": {
             "name": "jvm",
             "config": {
-                "home": "C:\\Program Files\\Java\\jdk1.8.0_221\\jre",
+                "home": "C:\\Program Files\\JetBrains\\IntelliJ IDEA Community Edition 2019.2.1\\jbr",
                 "options": [
                     "-Duser.dir=D:\\mover\\parrotenginev2\\project\\project"
                 ]
