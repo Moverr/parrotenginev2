@@ -11,7 +11,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
-class AuthService @Inject()( userDa: IUserDAO ) extends IAuthService {
+class AuthService @Inject()( userDa: UserDao )  extends IAuthService {
 
   //todo: Login Function
   override def validate(loginRequest: LoginRequest): Future[Option[LoginResponse]] = {
