@@ -2,7 +2,7 @@ package services
 
 import controllers.requests.LoginRequest
 import controllers.responses.LoginResponse
-import daos.UserDao
+import daos.{IUserDAO, UserDao}
 import db.tables.User
 import helpers.Utilities
 import javax.inject.{Inject, Singleton}
@@ -11,7 +11,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
-class AuthService @Inject()( userDa: UserDao ) extends IAuthService {
+class AuthService @Inject()( userDa: IUserDAO ) extends IAuthService {
 
   //todo: Login Function
   override def validate(loginRequest: LoginRequest): Future[Option[LoginResponse]] = {
