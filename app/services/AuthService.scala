@@ -11,10 +11,10 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
-class AuthService @Inject()( userDa: UserDao )  extends IAuthService {
+class AuthService @Inject()( userDa: UserDao )   {
 
   //todo: Login Function
-  override def validate(loginRequest: LoginRequest): Future[Option[LoginResponse]] = {
+   def validate(loginRequest: LoginRequest): Future[Option[LoginResponse]] = {
 
     val response:Future[Option[User]] =  userDa.getUserByNameAndPassord(loginRequest.username,Utilities.encrypt(loginRequest.password))
 
@@ -27,12 +27,12 @@ class AuthService @Inject()( userDa: UserDao )  extends IAuthService {
 
 
   //todo: Register Function
-  override def register(): Unit ={
+   def register(): Unit ={
     ???
   }
 
   //todo : populate Response
-  override def populateResponse(user: User): Option[LoginResponse]  =  {
+  def populateResponse(user: User): Option[LoginResponse]  =  {
     val resp =  LoginResponse("token",user.username)
     Some(resp)
   }
