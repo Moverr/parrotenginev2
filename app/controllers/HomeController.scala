@@ -18,6 +18,7 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
    * a path of `/`.
    */
   def index() = Action { implicit request: Request[AnyContent] =>
-    Ok("Welcome Home")
+    val message:String = "version 1.0.0"
+    Ok(views.html.index(message))
   }
 }
