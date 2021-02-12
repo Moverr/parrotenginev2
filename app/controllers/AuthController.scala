@@ -7,26 +7,35 @@ import services.{AuthService, IAuthService}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-
+import play.mvc.Http
 @Singleton
 class AuthController @Inject()(
-                                cc:ControllerComponents
+                                 cc:ControllerComponents
                                 ,authService: AuthService
                               )
-  extends AbstractController(cc){
+  extends AbstractController(cc) {
 
-  def login() = Action.async { implicit request: Request[AnyContent] =>
+  def login = Action { implicit request  =>
 
+    Ok("Intesting")
+    /*
     val username:String = request.body.asFormUrlEncoded.flatMap(m => m.get("username").flatMap(_.headOption)).getOrElse("")
     val password:String =  request.body.asFormUrlEncoded.flatMap(m => m.get("password").flatMap(_.headOption)).getOrElse("")
     val loginRequest = LoginRequest(username, password)
 
+    */
+
+
+    /*
     authService.validate(loginRequest)
       .flatMap{
         case Some(value) => Future.successful(Ok( value.access_token))
         case None => Future.successful(BadRequest("Something went wrong"))
       }
-    }
+
+    */
+  }
+
 
   def register(): Unit ={
     TODO

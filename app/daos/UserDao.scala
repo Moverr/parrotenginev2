@@ -28,9 +28,9 @@ class UserDao @Inject()(dbConfigProvider: DatabaseConfigProvider) extends IUserD
   /*
     Get User by Username and Password
    */
-  override def getUserByNameAndPassord(useername:String,password:String): Future[Option[User]] ={
+  override def getUserByNameAndPassord(userName:String, password:String): Future[Option[User]] ={
     val query = UserTable
-      .filter(_.username === useername)
+      //.filter(_.username === userName)
       //  .filter(_.password === password)
       .result.headOption
     db.run(query)
