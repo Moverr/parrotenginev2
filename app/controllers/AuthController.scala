@@ -1,5 +1,7 @@
 package controllers
 
+import java.util.NoSuchElementException
+
 import controllers.requests.LoginRequest
 import javax.inject.{Inject, Singleton}
 import play.api.mvc._
@@ -17,10 +19,19 @@ class AuthController @Inject()(
 
   def login = Action { implicit request  =>
 
-    val username = request.body.asJson.get("username")
-    val password =  request.body.asJson.get("password")
+    try{
+      val username = request.body.asJson.get("username")
+      val password =  request.body.asJson.get("password")
+      Ok(username)
 
-    Ok(username)
+    }
+    catch {
+      case NoSuchElementException => BadRequest("Invalid Requeust body ")
+      case _ => InternalServerError("Something went wrong, contatct adminstrator")
+    }
+
+
+
     /*
     val username:String = request.body.asFormUrlEncoded.flatMap(m => m.get("username").flatMap(_.headOption)).getOrElse("")
     val password:String =  request.body.asFormUrlEncoded.flatMap(m => m.get("password").flatMap(_.headOption)).getOrElse("")
