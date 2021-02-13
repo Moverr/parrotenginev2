@@ -20,7 +20,7 @@ class AuthController @Inject()(
     val username = request.body.asJson.get("username")
     val password =  request.body.asJson.get("password")
 
-    Ok("Intesting")
+    Ok(username)
     /*
     val username:String = request.body.asFormUrlEncoded.flatMap(m => m.get("username").flatMap(_.headOption)).getOrElse("")
     val password:String =  request.body.asFormUrlEncoded.flatMap(m => m.get("password").flatMap(_.headOption)).getOrElse("")
