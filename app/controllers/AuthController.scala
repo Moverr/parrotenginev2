@@ -26,7 +26,7 @@ class AuthController @Inject()(
 
     }
     catch {
-      case NoSuchElementException => BadRequest("Invalid Requeust body ")
+      case e:NoSuchElementException => BadRequest("Invalid Requeust body ")
       case _ => InternalServerError("Something went wrong, contatct adminstrator")
     }
 
