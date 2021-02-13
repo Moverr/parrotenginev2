@@ -17,11 +17,11 @@ class AuthController @Inject()(
                               )
   extends AbstractController(cc) {
 
-  def login = Action { implicit request  =>
+  def login = Action.async{ implicit request  =>
 
     try{
-      val username = request.body.asJson.get("username")
-      val password =  request.body.asJson.get("password")
+      val username = request.body.asJson.get("username").as[String]
+      val password =  request.body.asJson.get("password").as[String]
 
 
       val loginRequest = LoginRequest(username, password)
@@ -31,12 +31,10 @@ class AuthController @Inject()(
           case None => Future.successful(BadRequest("Something went wrong"))
         }
 
-
-
     }
     catch {
-      case e:NoSuchElementException => BadRequest("Invalid Requeust body ")
-      case _ => InternalServerError("Something went wrong, contatct adminstrator")
+      case e:NoSuchElementException =>Future.successful(BadRequest("Invalid Requeust body "))
+      case _ => Future.successful(InternalServerError("Something went wrong, contatct adminstrator"))
     }
 
 
