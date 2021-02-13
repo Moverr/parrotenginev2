@@ -17,6 +17,9 @@ class AuthController @Inject()(
 
   def login = Action { implicit request  =>
 
+    val username = request.body.asJson.get("username")
+    val password =  request.body.asJson.get("password")
+
     Ok("Intesting")
     /*
     val username:String = request.body.asFormUrlEncoded.flatMap(m => m.get("username").flatMap(_.headOption)).getOrElse("")
