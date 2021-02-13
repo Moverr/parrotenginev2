@@ -22,7 +22,16 @@ class AuthController @Inject()(
     try{
       val username = request.body.asJson.get("username")
       val password =  request.body.asJson.get("password")
-      Ok(username)
+
+
+      val loginRequest = LoginRequest(username, password)
+      authService.validate(loginRequest)
+        .flatMap{
+          case Some(value) => Future.successful(Ok( value.access_token))
+          case None => Future.successful(BadRequest("Something went wrong"))
+        }
+
+
 
     }
     catch {
