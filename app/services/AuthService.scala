@@ -28,6 +28,12 @@ class AuthService @Inject()( userDa: UserDao )   {
 
   //todo: Register Function
    def register(registerRequest: RegisterRequest): Future[LoginResponse] ={
+     //todo: cehck to see that email exists
+     val x = 0;
+     if(x == 0){
+       throw new Exception("invalid")
+     }
+
     val response:Future[User] =    userDa.createUserAccount(registerRequest.email,Utilities.encrypt(registerRequest.password))
      response.map(res => populateBasic(res))
   }
