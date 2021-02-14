@@ -1,6 +1,6 @@
 package services
 
-import controllers.requests.LoginRequest
+import controllers.requests.{LoginRequest, RegisterRequest}
 import controllers.responses.LoginResponse
 import daos.{IUserDAO, UserDao}
 import db.tables.User
@@ -27,7 +27,9 @@ class AuthService @Inject()( userDa: UserDao )   {
 
 
   //todo: Register Function
-   def register(): Unit ={
+   def register(registerRequest: RegisterRequest): Unit ={
+     //todo: throw an error.
+     
     ???
   }
 
