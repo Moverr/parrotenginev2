@@ -37,11 +37,13 @@ class UserDao @Inject()(dbConfigProvider: DatabaseConfigProvider) extends IUserD
   /*
     Get all Users whose username is similar. not applicable but just saw for back-end usage. .
    */
-  override def getUsersByUsername(username:String, offset:Int, limit:Int): Future[Seq[User]] ={
+  override def getUsersByUsername(username:String): Future[Seq[User]] ={
     val query = UserTable.filter(_.username === username)
       .result
       db.run(query)
   }
+
+
 
   //insert new user account and return new id
   def createUserAccount(username:String,password:String): Future[User] ={

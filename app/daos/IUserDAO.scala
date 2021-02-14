@@ -21,5 +21,5 @@ trait IUserDAO {
   /*
     Get all Users whose username is similar. not applicable but just saw for back-end usage. .
    */
-  def getUsersByUsername(useername: String, offset: Int, limit: Int): Future[Seq[User]]
+  def getUsersByUsername(useername: String): Future[Seq[User]]
 }
