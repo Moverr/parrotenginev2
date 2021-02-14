@@ -29,7 +29,7 @@ class AuthService @Inject()( userDa: UserDao )   {
   //todo: Register Function
    def register(registerRequest: RegisterRequest): Unit ={
      //todo: throw an error.
-     
+
     ???
   }
 
