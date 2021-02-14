@@ -33,9 +33,9 @@ class AuthService @Inject()( userDa: UserDao )   {
      //todo: cehck to see that email exists
      val existingUser:Seq[User] =   Await.result( userDa.getUsersByUsername(registerRequest.email),Duration.Inf)
 
-     if(existingUser.head.isInstanceOf[User]) throw new Exception("invalid")
+     if(existingUser.head.isInstanceOf[User]) throw new Exception("User already Exists")
 
-    val response:Future[User] =    userDa.createUserAccount(registerRequest.email,Utilities.encrypt(registerRequest.password))
+    val response:Future[User] = userDa.createUserAccount(registerRequest.email,Utilities.encrypt(registerRequest.password))
      response.map(res => populateBasic(res))
   }
 
