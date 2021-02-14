@@ -1,7 +1,7 @@
 package services
 
 import controllers.requests.{LoginRequest, RegisterRequest}
-import controllers.responses.LoginResponse
+import controllers.responses.AuthResponse
 import daos.{IUserDAO, UserDao}
 import db.tables.User
 import helpers.Utilities
@@ -16,7 +16,7 @@ import scala.concurrent.{Await, Future}
 class AuthService @Inject()(userDao: UserDao )   {
 
   //todo: Login Function
-   def validate(loginRequest: LoginRequest): Future[Option[LoginResponse]] = {
+   def validate(loginRequest: LoginRequest): Future[Option[AuthResponse]] = {
 
     val response:Future[Option[User]] =  userDao.getUserByUsernameAndPassword(loginRequest.username,Utilities.encrypt(loginRequest.password))
 
@@ -29,7 +29,7 @@ class AuthService @Inject()(userDao: UserDao )   {
 
 
   //todo: Register Function
-   def register(registerRequest: RegisterRequest): Future[LoginResponse] ={
+   def register(registerRequest: RegisterRequest): Future[AuthResponse] ={
      //todo: cehck to see that email exists
      val existingUser:Seq[User] =   Await.result( userDao.getUsersByUsername(registerRequest.email),Duration.Inf)
 
@@ -40,14 +40,14 @@ class AuthService @Inject()(userDao: UserDao )   {
   }
 
   //todo : populate Response
-  def populateResponse(user: User): Option[LoginResponse]  =  {
-    val resp: LoginResponse = populateBasic(user)
+  def populateResponse(user: User): Option[AuthResponse]  =  {
+    val resp: AuthResponse = populateBasic(user)
     Some(resp)
   }
 
 
-  private def populateBasic(user: User): LoginResponse = {
-    val resp = LoginResponse("token", user.username)
+  private def populateBasic(user: User): AuthResponse = {
+    val resp = AuthResponse("token", user.username)
     resp
   }
 
