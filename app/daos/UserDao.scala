@@ -44,6 +44,6 @@ class UserDao @Inject()(dbConfigProvider: DatabaseConfigProvider) extends IUserD
   }
 
   def createUserAccount(username:String,password:String): Unit ={
-    var query = UserTable.
+    var query = UserTable(username,password)
   }
 }
