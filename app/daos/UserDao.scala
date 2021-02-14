@@ -44,8 +44,8 @@ class UserDao @Inject()(dbConfigProvider: DatabaseConfigProvider) extends IUserD
   }
 
   //insert new user account and return new id
-  def createUserAccount(username:String,password:String): Future[Long] ={
-    val query = UserTable.returning(UserTable.map(_.id)) += User(0L,username,password)
+  def createUserAccount(username:String,password:String): Future[User] ={
+    val query = UserTable.returning(UserTable) += User(0L,username,password)
     db.run(query)
   }
 }
