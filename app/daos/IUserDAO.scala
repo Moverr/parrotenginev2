@@ -11,15 +11,15 @@ trait IUserDAO {
   /*
     Get User by Username
    */
-  def getUserByName(useername: String): Future[Option[User]]
+  def getUserByName(username: String): Future[Option[User]]
 
   /*
     Get User by Username and Password
    */
-  def getUserByNameAndPassord(useername: String, password: String): Future[Option[User]]
+  def getUserByUsernameAndPassword(username: String, password: String): Future[Option[User]]
 
   /*
     Get all Users whose username is similar. not applicable but just saw for back-end usage. .
    */
-  def getUsersByUsername(useername: String): Future[Seq[User]]
+  def getUsersByUsername(username: String): Future[Seq[User]]
 }
