@@ -27,18 +27,24 @@ class AuthService @Inject()( userDa: UserDao )   {
 
 
   //todo: Register Function
-   def register(registerRequest: RegisterRequest): Unit ={
+   def register(registerRequest: RegisterRequest): Future[LoginResponse] ={
      //todo: throw an error.
+    val response:Future[Long] =    userDa.createUserAccount(registerRequest.email,Utilities.encrypt(registerRequest.password))
 
-    ???
+
+
+     Future.successful(null)
   }
 
   //todo : populate Response
   def populateResponse(user: User): Option[LoginResponse]  =  {
-    val resp =  LoginResponse("token",user.username)
+    val resp: LoginResponse = populateResponse(user)
     Some(resp)
   }
 
 
-
+  private def populateResponse(user: User): LoginResponse = {
+    val resp = LoginResponse("token", user.username)
+    resp
+  }
 }
