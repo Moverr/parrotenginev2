@@ -7,18 +7,18 @@ import db.tables.User
 import helpers.Utilities
 import javax.inject.{Inject, Singleton}
 
-import scala.collection.immutable.LinearSeq
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
 
 @Singleton
-class AuthService @Inject()( userDa: UserDao )   {
+class AuthService @Inject()(userDao: UserDao )   {
 
   //todo: Login Function
    def validate(loginRequest: LoginRequest): Future[Option[LoginResponse]] = {
 
-    val response:Future[Option[User]] =  userDa.getUserByUsernameAndPassword(loginRequest.username,Utilities.encrypt(loginRequest.password))
+    val response:Future[Option[User]] =  userDao.getUserByUsernameAndPassword(loginRequest.username,Utilities.encrypt(loginRequest.password))
 
     response.flatMap {
       case Some(value) =>  Future.successful(populateResponse(value))
@@ -31,11 +31,11 @@ class AuthService @Inject()( userDa: UserDao )   {
   //todo: Register Function
    def register(registerRequest: RegisterRequest): Future[LoginResponse] ={
      //todo: cehck to see that email exists
-     val existingUser:Seq[User] =   Await.result( userDa.getUsersByUsername(registerRequest.email),Duration.Inf)
+     val existingUser:Seq[User] =   Await.result( userDao.getUsersByUsername(registerRequest.email),Duration.Inf)
 
      if(existingUser.length > 0 ) throw new Exception("User already Exists")
 
-    val response:Future[User] = userDa.createUserAccount(registerRequest.email,Utilities.encrypt(registerRequest.password))
+    val response:Future[User] = userDao.createUserAccount(registerRequest.email,Utilities.encrypt(registerRequest.password))
      response.map(res => populateBasic(res))
   }
 
