@@ -1,4 +1,3 @@
 package controllers.requests
 
-
-case class Registration(email:String,password:String)
+case class RegisterRequest(email:String,password:String)
