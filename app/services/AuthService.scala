@@ -7,8 +7,10 @@ import db.tables.User
 import helpers.Utilities
 import javax.inject.{Inject, Singleton}
 
+import scala.collection.immutable.LinearSeq
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, Future}
 
 @Singleton
 class AuthService @Inject()( userDa: UserDao )   {
@@ -29,11 +31,9 @@ class AuthService @Inject()( userDa: UserDao )   {
   //todo: Register Function
    def register(registerRequest: RegisterRequest): Future[LoginResponse] ={
      //todo: cehck to see that email exists
-     val existingUser = userDa.getUsersByUsername(registerRequest.email)
-     val x = 0;
-     if(x == 0){
-       throw new Exception("invalid")
-     }
+     val existingUser:Seq[User] =   Await.result( userDa.getUsersByUsername(registerRequest.email),Duration.Inf)
+
+     if(existingUser.head.isInstanceOf[User]) throw new Exception("invalid")
 
     val response:Future[User] =    userDa.createUserAccount(registerRequest.email,Utilities.encrypt(registerRequest.password))
      response.map(res => populateBasic(res))
