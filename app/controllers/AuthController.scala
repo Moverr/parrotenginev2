@@ -36,29 +36,10 @@ class AuthController @Inject()(
       case e:NoSuchElementException =>Future.successful(BadRequest("Invalid Requeust body "))
       case _ => Future.successful(InternalServerError("Something went wrong, contatct adminstrator"))
     }
-
-
-
-    /*
-    val username:String = request.body.asFormUrlEncoded.flatMap(m => m.get("username").flatMap(_.headOption)).getOrElse("")
-    val password:String =  request.body.asFormUrlEncoded.flatMap(m => m.get("password").flatMap(_.headOption)).getOrElse("")
-    val loginRequest = LoginRequest(username, password)
-
-    */
-
-
-    /*
-    authService.validate(loginRequest)
-      .flatMap{
-        case Some(value) => Future.successful(Ok( value.access_token))
-        case None => Future.successful(BadRequest("Something went wrong"))
-      }
-
-    */
   }
 
 
-  def register(): Unit ={
-    TODO
-  }
+   def register   = Action{ implicit request =>
+    Ok("Interesting scenario")
+   }
 }
