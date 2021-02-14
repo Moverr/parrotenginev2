@@ -59,7 +59,7 @@ class AuthController @Inject()(
        }
 
 
-       Future.successful(Ok(Json.toJson(response)))
+       Future.successful(Ok(Json.toJson(resposnse)))
      }
      catch {
        case e:Exception => Future.successful(BadRequest(e.getMessage))
