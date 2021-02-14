@@ -18,17 +18,17 @@ class UserDao @Inject()(dbConfigProvider: DatabaseConfigProvider) extends IUserD
   /*
     Get User by Username
    */
-  override def getUserByName(useername:String): Future[Option[User]] ={
+  override def getUserByName(username:String): Future[Option[User]] ={
     val query = UserTable
-      .filter(_.username === useername)
+      .filter(_.username === username)
       .result.headOption
       db.run(query)
   }
 
 
-  override def getUserByNameAndPassord(userName:String, password:String): Future[Option[User]] ={
+  override def getUserByNameAndPassord(username:String, password:String): Future[Option[User]] ={
     val query = UserTable
-      .filter(_.username === userName)
+      .filter(_.username === username)
       .filter(_.password === password)
       .result.headOption
       db.run(query)
@@ -37,8 +37,8 @@ class UserDao @Inject()(dbConfigProvider: DatabaseConfigProvider) extends IUserD
   /*
     Get all Users whose username is similar. not applicable but just saw for back-end usage. .
    */
-  override def getUsersByUsername(useername:String,offset:Int,limit:Int): Future[Seq[User]] ={
-    val query = UserTable.filter(_.username === useername)
+  override def getUsersByUsername(username:String, offset:Int, limit:Int): Future[Seq[User]] ={
+    val query = UserTable.filter(_.username === username)
       .result
       db.run(query)
   }
