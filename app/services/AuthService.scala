@@ -29,6 +29,7 @@ class AuthService @Inject()( userDa: UserDao )   {
   //todo: Register Function
    def register(registerRequest: RegisterRequest): Future[LoginResponse] ={
      //todo: cehck to see that email exists
+     val existingUser = userDa.getUsersByUsername(registerRequest.email)
      val x = 0;
      if(x == 0){
        throw new Exception("invalid")
