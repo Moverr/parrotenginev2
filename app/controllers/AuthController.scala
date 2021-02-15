@@ -5,7 +5,7 @@ import java.util.NoSuchElementException
 import controllers.requests.{LoginRequest, RegisterRequest}
 import controllers.responses.AuthResponse
 import javax.inject.{Inject, Singleton}
-import play.api.libs.json.{Json, Writes}
+import play.api.libs.json.{JsPath, Json, Writes}
 import play.api.mvc._
 import services.{AuthService, IAuthService}
 
@@ -52,14 +52,11 @@ class AuthController @Inject()(
        val registrationRequest =  RegisterRequest(email,password)
        val response:Future[AuthResponse] =  authService.register(registrationRequest)
 
-       implicit val resposnse = new Writes[AuthResponse] {
-         def writes(_auth: AuthResponse) = Json.obj(
-           "username" -> _auth.username
-         )
-       }
+        implicit val writes:Writes[AuthResponse] =
+          ((JsPath \ "username").write[String])    (Function.unlift(AuthResponse.unapply))
 
 
-       Future.successful(Ok(Json.toJson(resposnse)))
+       Future.successful(Ok(Json.toJson(writes)))
      }
      catch {
        case e:Exception => Future.successful(BadRequest(e.getMessage))
