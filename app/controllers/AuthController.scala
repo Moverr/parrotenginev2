@@ -25,26 +25,11 @@ class AuthController @Inject()(
                               )
   extends AbstractController(cc) {
 
-  case class Location(lat: Double, long: Double)
-  case class Place(name: String, location: Location)
+  implicit val authResponseWrites: Writes[AuthResponse] = (
+    (JsPath \ "access_token").write[String] and
+      (JsPath \ "username").write[String]
 
-  implicit val locationWrites: Writes[Location] = (
-    (JsPath \ "lat").write[Double] and
-      (JsPath \ "long").write[Double]
-    )(unlift(Location.unapply))
-
-
-
-  implicit val placeWrites: Writes[Place] = (
-    (JsPath \ "name").write[String] and
-      (JsPath \ "location").write[Location]
-
-    )(unlift(Place.unapply))
-
-
-
-  implicit val jsonWrites: Writes[AuthResponse] = Json.writes[AuthResponse]
-
+    )(unlift(AuthResponse.unapply))
 
 
   def login = Action.async{ implicit request  =>
@@ -74,15 +59,16 @@ class AuthController @Inject()(
        val email = request.body.asJson.get("email").as[String]
        val password =  request.body.asJson.get("password").as[String]
        val registrationRequest =  RegisterRequest(email,password)
-       val response:Future[AuthResponse] =  authService.register(registrationRequest)
 
 
-       val place = Place(
-         "Watership Down",
-         Location(51.235685, -1.309197)
-       )
 
-       Future.successful(Ok(Json.toJson(place)))
+
+
+       val response:AuthResponse =  authService.register(registrationRequest)
+
+
+
+       Future.successful(Ok(Json.toJson(response)))
      }
      catch {
        case e:Exception => Future.successful(BadRequest(e.getMessage))
