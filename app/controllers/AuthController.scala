@@ -40,12 +40,11 @@ class AuthController @Inject()(
 
 
       val loginRequest = LoginRequest(username, password)
-      authService.validate(loginRequest)
-        .flatMap{
-          case Some(value) => Future.successful(Ok( value.access_token))
-          case None => Future.successful(BadRequest("Something went wrong"))
+      val result = authService.validate(loginRequest)
+        result match {
+          case Some(response) => Future.successful(Ok(Json.toJson(response)))
+          case None => Future.successful(Unauthorized("Invalid User Credentials"))
         }
-
     }
     catch {
       case e:NoSuchElementException =>Future.successful(BadRequest("Invalid Requeust body "))
