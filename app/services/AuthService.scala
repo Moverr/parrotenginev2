@@ -54,16 +54,9 @@ class AuthService @Inject()(userDao: UserDao )   {
     val resp: AuthResponse = populateBasic(user)
     Some(resp)
   }
-
-  implicit val authResponseWrites: Writes[AuthResponse] = (
-    (JsPath \ "access_token").write[String] and
-      (JsPath \ "username").write[String]
-
-    )(unlift(AuthResponse.unapply))
+ 
 
   private def populateBasic(user: User): AuthResponse = {
-
-
 
     val resp = AuthResponse("token", user.username)
     resp
