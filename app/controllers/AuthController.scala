@@ -12,12 +12,36 @@ import services.{AuthService, IAuthService}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import play.mvc.Http
+
+import play.api.libs.functional.syntax._
+import play.api.libs.json.Reads._
+import play.api.libs.json._
+
+
 @Singleton
 class AuthController @Inject()(
                                  cc:ControllerComponents
                                 ,authService: AuthService
                               )
   extends AbstractController(cc) {
+
+  case class Location(lat: Double, long: Double)
+  case class Place(name: String, location: Location)
+
+  implicit val locationWrites: Writes[Location] = (
+    (JsPath \ "lat").write[Double] and
+      (JsPath \ "long").write[Double]
+    )(unlift(Location.unapply))
+
+
+
+  implicit val placeWrites: Writes[Place] = (
+    (JsPath \ "name").write[String] and
+      (JsPath \ "location").write[Location]
+
+    )(unlift(Place.unapply))
+
+
 
   implicit val jsonWrites: Writes[AuthResponse] = Json.writes[AuthResponse]
 
@@ -52,11 +76,14 @@ class AuthController @Inject()(
        val registrationRequest =  RegisterRequest(email,password)
        val response:Future[AuthResponse] =  authService.register(registrationRequest)
 
-        implicit val writes:Writes[AuthResponse] =
-          ((JsPath \ "username").write[String])    (Function.unlift(AuthResponse.unapply))
+
+       val place = Place(
+         "Watership Down",
+         Location(51.235685, -1.309197)
+       )
 
 
-       Future.successful(Ok(Json.toJson(writes)))
+       Future.successful(Ok(Json.toJson(place)))
      }
      catch {
        case e:Exception => Future.successful(BadRequest(e.getMessage))

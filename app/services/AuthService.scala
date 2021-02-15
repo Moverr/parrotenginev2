@@ -15,6 +15,8 @@ import scala.concurrent.{Await, Future}
 @Singleton
 class AuthService @Inject()(userDao: UserDao )   {
 
+
+
   //todo: Login Function
    def validate(loginRequest: LoginRequest): Future[Option[AuthResponse]] = {
 
