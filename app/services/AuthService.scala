@@ -29,6 +29,8 @@ class AuthService @Inject()(userDao: UserDao )   {
 
     val response:Option[User]=  Await.result(userDao.getUserByUsernameAndPassword(loginRequest.username,Utilities.encrypt(loginRequest.password)))
 
+
+
      response  match {
        case Some(value) =>populateResponse(value)
        case None =>  None
@@ -40,6 +42,8 @@ class AuthService @Inject()(userDao: UserDao )   {
 
    def register(registerRequest: RegisterRequest): AuthResponse ={
      val existingUser:Seq[User] =   Await.result( userDao.getUsersByUsername(registerRequest.email),Duration.Inf)
+
+     val _po = userDao.getUsersByUsername(registerRequest.email
 
      if(existingUser.length > 0 ) throw new Exception("User already Exists")
 
