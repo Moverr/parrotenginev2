@@ -82,7 +82,6 @@ class AuthController @Inject()(
          Location(51.235685, -1.309197)
        )
 
-
        Future.successful(Ok(Json.toJson(place)))
      }
      catch {
