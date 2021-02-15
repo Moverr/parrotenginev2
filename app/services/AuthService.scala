@@ -27,13 +27,15 @@ class AuthService @Inject()(userDao: UserDao )   {
   //todo: Login Function
    def validate(loginRequest: LoginRequest): Option[AuthResponse] = {
 
-    val response:Option[User] =  Await.result(userDao.getUserByUsernameAndPassword(loginRequest.username,Utilities.encrypt(loginRequest.password)),Duration.Inf )
+    val response:Future[Option[User]]=  userDao.getUserByUsernameAndPassword(loginRequest.username,Utilities.encrypt(loginRequest.password))
 
-     response match {
-       case Some(value) =>populateResponse(value)
-       case None =>  None
+
+     response.map{
+       x => x match {
+         case Some(value) =>populateResponse(value)
+         case None =>  None
      }
-
+       //response.map(_.map(populateResponse))
   }
 
 
@@ -43,7 +45,7 @@ class AuthService @Inject()(userDao: UserDao )   {
 
      if(existingUser.length > 0 ) throw new Exception("User already Exists")
 
-     val res = Await.result( userDao.createUserAccount(registerRequest.email,Utilities.encrypt(registerRequest.password)),Duration.Inf)
+     val res =  userDao.createUserAccount(registerRequest.email,Utilities.encrypt(registerRequest.password))
      populateBasic(res)
 
   }
