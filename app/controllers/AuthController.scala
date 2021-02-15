@@ -59,15 +59,7 @@ class AuthController @Inject()(
        val email = request.body.asJson.get("email").as[String]
        val password =  request.body.asJson.get("password").as[String]
        val registrationRequest =  RegisterRequest(email,password)
-
-
-
-
-
        val response:AuthResponse =  authService.register(registrationRequest)
-
-
-
        Future.successful(Ok(Json.toJson(response)))
      }
      catch {
