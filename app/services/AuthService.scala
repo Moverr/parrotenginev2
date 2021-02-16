@@ -44,6 +44,8 @@ class AuthService @Inject()(userDao: UserDao )   {
 
      val userresult :Future[Seq[User]]  =  userDao.getUsersByUsername(registerRequest.email)
 
+     val xt:Future[Int] = userresult.map(ss=>ss.length)
+      
 
      if(existingUser.length > 0 ) throw new Exception("User already Exists")
 
