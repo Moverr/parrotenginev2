@@ -12,7 +12,7 @@ import play.api.mvc._
 import services.AuthService
 
 import scala.concurrent.Future
-
+import scala.concurrent.ExecutionContext.Implicits.global
 
 @Singleton
 class AuthController @Inject()(
@@ -37,10 +37,11 @@ class AuthController @Inject()(
 
       val loginRequest = LoginRequest(username, password)
       val result = authService.validate(loginRequest)
-        result match {
-          case Some(response) => Future.successful(Ok(Json.toJson(response)))
-          case None => Future.successful(Unauthorized("Invalid User Credentials"))
-        }
+      result .flatMap{
+        case Some(response) =>  Future.successful(Ok(Json.toJson(response)))
+        case None => Future.successful(Unauthorized("Invalid User Credentials"))
+      }
+
     }
     catch {
       case e:NoSuchElementException =>Future.successful(BadRequest("Invalid Requeust body "))
