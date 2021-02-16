@@ -11,7 +11,7 @@ import play.api.libs.json.{JsPath, Writes}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
-import scala.concurrent.{Await, ExecutionContext, Future}
+import scala.concurrent.{Await, ExecutionContext, Future, Promise}
 import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
 import play.api.libs.json._
@@ -30,6 +30,12 @@ class AuthService @Inject()(userDao: UserDao )   {
 
     val response:Future[Option[User]]=  userDao.getUserByUsernameAndPassword(loginRequest.username,Utilities.encrypt(loginRequest.password))
 
+
+
+   response.map{
+             case Some(value) => Some(populateBasic(value))
+             case None => None
+           }.map(x=>x.get(0))
 
 
      /*
