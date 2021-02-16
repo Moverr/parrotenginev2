@@ -28,18 +28,11 @@ class AuthService @Inject()(userDao: UserDao )   {
   //todo: Login Function
    def validate(loginRequest: LoginRequest): Option[AuthResponse] = {
 
-    val response:Future[Option[User]]=  userDao.getUserByUsernameAndPassword(loginRequest.username,Utilities.encrypt(loginRequest.password))
+    val response =  userDao.getUserByUsernameAndPassword(loginRequest.username,Utilities.encrypt(loginRequest.password))
+
+     val pp = response.flatMap9)
 
 
-
-
- response.flatMap(x=>x)
-
-     /*
-     response  match {
-       case Some(value) =>populateResponse(value)
-       case None =>  None
-     }*/
 
   }
 
@@ -67,6 +60,14 @@ class AuthService @Inject()(userDao: UserDao )   {
     val resp = AuthResponse("token", user.username)
     resp
   }
+
+
+  private def populateBasiatc(user: Option[User]): AuthResponse = {
+
+    val resp = AuthResponse("token", "de")
+    resp
+  }
+
 
 
 }
