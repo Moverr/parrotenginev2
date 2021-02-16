@@ -30,7 +30,12 @@ class AuthService @Inject()(userDao: UserDao )   {
 
     val response =  userDao.getUserByUsernameAndPassword(loginRequest.username,Utilities.encrypt(loginRequest.password))
 
-     val pp = response.flatMap9)
+    val x =  response.flatMap(a=> a.getOrElse(null))
+
+     val pp = response.map{
+       x => x.headOption
+     }
+     pp
 
 
 
