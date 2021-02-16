@@ -39,15 +39,20 @@ class AuthService @Inject()(userDao: UserDao )   {
 
 
 
+  def validateUser(userLength:Int):Boolean=(userLength > 0 )
+
+
    def register(registerRequest: RegisterRequest): AuthResponse ={
-     val existingUser:Seq[User] =   Await.result( userDao.getUsersByUsername(registerRequest.email),Duration.Inf)
+     //val existingUser:Seq[User] =   Await.result( userDao.getUsersByUsername(registerRequest.email),Duration.Inf)
 
-     val userresult :Future[Seq[User]]  =  userDao.getUsersByUsername(registerRequest.email)
+     val userResult :Future[Seq[User]]  =  userDao.getUsersByUsername(registerRequest.email)
+     val userCount:Future[Int] = userResult.map(res=>res.length)
+     userResult.map(res=>res.length).map(x=>validateUser(x) == true)
 
-     val xt:Future[Int] = userresult.map(ss=>ss.length)
-      
+    if(userCount.map(x=>validateUser(x)) == true){
+      throw new Exception("User already exists in the system ")
+    }
 
-     if(existingUser.length > 0 ) throw new Exception("User already Exists")
 
      val res =  Await.result(userDao.createUserAccount(registerRequest.email,Utilities.encrypt(registerRequest.password)),Duration.Inf)
      populateBasic(res)
