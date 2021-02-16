@@ -4,16 +4,15 @@ import java.util.NoSuchElementException
 
 import controllers.requests.{LoginRequest, RegisterRequest}
 import controllers.responses.AuthResponse
+import implicits.AuthResponseWrites._
 import javax.inject.{Inject, Singleton}
-import play.api.libs.functional.syntax._
+import play.api.libs.json.Json
 import play.api.libs.json.Reads._
-import play.api.libs.json.{JsPath, Json, Writes}
 import play.api.mvc._
 import services.AuthService
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
-import implicits.AuthResponseWrites._
+import scala.concurrent.Future
 
 
 @Singleton
