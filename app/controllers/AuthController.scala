@@ -13,6 +13,8 @@ import services.AuthService
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import implicits.AuthResponseWrites._
+
 
 @Singleton
 class AuthController @Inject()(
@@ -20,12 +22,6 @@ class AuthController @Inject()(
                                 ,authService: AuthService
                               )
   extends AbstractController(cc) {
-
-  implicit val authResponseWrites: Writes[AuthResponse] = (
-    (JsPath \ "access_token").write[String] and
-      (JsPath \ "username").write[String]
-
-    )(unlift(AuthResponse.unapply))
 
 
   def login = Action.async{ implicit request  =>

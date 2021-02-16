@@ -32,18 +32,4 @@ libraryDependencies ++= Seq(
   "org.scalatestplus" %% "mockito-3-4" % "3.2.2.0" % "test"
 
 )
-// https://mvnrepository.com/artifact/com.jason-goodwin/authentikat-jwt
 
-
-// https://mvnrepository.com/artifact/org.mockito/mockito-core
-
-
-// https://mvnrepository.com/artifact/com.github.tminglei/slick-pg
-//Slick extensions for PostgreSQL
-
-
-// Adds additional packages into Twirl
-//TwirlKeys.templateImports += "com.example.controllers._"
-
-// Adds additional packages into conf/routes
-// play.sbt.routes.RoutesKeys.routesImport += "com.example.binders._"
