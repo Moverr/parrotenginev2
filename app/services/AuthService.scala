@@ -11,11 +11,12 @@ import play.api.libs.json.{JsPath, Writes}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
-import scala.concurrent.{Await, Future}
-
+import scala.concurrent.{Await, ExecutionContext, Future}
 import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
 import play.api.libs.json._
+
+import scala.util.{Failure, Success}
 
 
 
@@ -27,14 +28,15 @@ class AuthService @Inject()(userDao: UserDao )   {
   //todo: Login Function
    def validate(loginRequest: LoginRequest): Option[AuthResponse] = {
 
-    val response:Option[User]=  Await.result(userDao.getUserByUsernameAndPassword(loginRequest.username,Utilities.encrypt(loginRequest.password)))
+    val response:Future[Option[User]]=  userDao.getUserByUsernameAndPassword(loginRequest.username,Utilities.encrypt(loginRequest.password)).onComplete(x=>x.)
 
 
 
+     /*
      response  match {
        case Some(value) =>populateResponse(value)
        case None =>  None
-     }
+     }*/
 
   }
 
