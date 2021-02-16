@@ -28,7 +28,7 @@ class AuthService @Inject()(userDao: UserDao )   {
   //todo: Login Function
    def validate(loginRequest: LoginRequest): Option[AuthResponse] = {
 
-    val response:Future[Option[User]]=  userDao.getUserByUsernameAndPassword(loginRequest.username,Utilities.encrypt(loginRequest.password)).onComplete(x=>x.)
+    val response:Future[Option[User]]=  userDao.getUserByUsernameAndPassword(loginRequest.username,Utilities.encrypt(loginRequest.password))
 
 
 
