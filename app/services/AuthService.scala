@@ -32,11 +32,8 @@ class AuthService @Inject()(userDao: UserDao )   {
 
 
 
-   response.map{
-             case Some(value) => Some(populateBasic(value))
-             case None => None
-           }.map(x=>x.get(0))
 
+ response.flatMap(x=>x)
 
      /*
      response  match {
