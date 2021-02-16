@@ -2,21 +2,14 @@ package services
 
 import controllers.requests.{LoginRequest, RegisterRequest}
 import controllers.responses.AuthResponse
-import daos.{IUserDAO, UserDao}
+import daos.UserDao
 import db.tables.User
 import helpers.Utilities
 import javax.inject.{Inject, Singleton}
-import play.api.libs.functional.syntax.unlift
-import play.api.libs.json.{JsPath, Writes}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
-import scala.concurrent.{Await, ExecutionContext, Future, Promise}
-import play.api.libs.functional.syntax._
-import play.api.libs.json.Reads._
-import play.api.libs.json._
-
-import scala.util.{Failure, Success}
+import scala.concurrent.{Await, Future}
 
 
 
@@ -37,7 +30,7 @@ class AuthService @Inject()(userDao: UserDao )   {
 
   }
 
- 
+
 
   def validateUser(userLength:Int):Boolean=(userLength > 0 )
 
