@@ -6,6 +6,7 @@ import daos.UserDao
 import db.tables.User
 import helpers.Utilities
 import javax.inject.{Inject, Singleton}
+import utitlities.JwtUtility
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
@@ -14,7 +15,7 @@ import scala.concurrent.{Await, Future}
 
 
 @Singleton
-class AuthService @Inject()(userDao: UserDao )   {
+class AuthService @Inject()(userDao: UserDao,jwtUtility: JwtUtility )   {
 
 
 
@@ -50,7 +51,7 @@ class AuthService @Inject()(userDao: UserDao )   {
 
   private def populateBasic(user: User): AuthResponse = {
 
-    val resp = AuthResponse("token", user.username)
+    val resp = AuthResponse(jwtUtility.createToken("moverr@gmail.com"), user.username)
     resp
   }
 

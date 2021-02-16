@@ -24,3 +24,4 @@ class JwtUtility {
       case _ => None
     }
 }
+
