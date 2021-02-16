@@ -30,9 +30,9 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest-flatspec" % "3.2.0" % "test",
   "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % "test",
   "org.scalatestplus" %% "mockito-3-4" % "3.2.2.0" % "test"
+
 )
 // https://mvnrepository.com/artifact/com.jason-goodwin/authentikat-jwt
-libraryDependencies += "com.jason-goodwin" %% "authentikat-jwt" % "1.0.0-M1"
 
 
 // https://mvnrepository.com/artifact/org.mockito/mockito-core
