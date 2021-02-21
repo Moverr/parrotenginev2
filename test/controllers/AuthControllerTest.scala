@@ -6,15 +6,23 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.mvc.{ControllerComponents, Results}
 import play.api.test._
 import services.AuthService
+import org.mockito.Mockito._
+
+import scala.concurrent.Future
 
 
+class AuthControllerTest  @Inject()(authService:AuthService) extends PlaySpec     {
 
-class AuthControllerTest @Inject()(authservice:AuthService) extends PlaySpec  with Results   {
 
+  //val authService = new AuthService(null,null)
 
   "AuthControllerTest" should {
     "login"   in  {
-      val controller = new AuthController(Helpers.stubControllerComponents(), authservice)
+
+
+      when(authService.validate(null)).thenReturn( Future.successful(None))
+
+      val controller = new AuthController(Helpers.stubControllerComponents(), authService)
       
     /*   val controller = new AuthController(stubControllerComponents(), null)
       val json = Json.parse("{\"firstName\":\"Foo\", \"lastName\":\"Bar\", \"age\":13}")
