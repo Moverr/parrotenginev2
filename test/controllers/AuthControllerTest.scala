@@ -1,5 +1,7 @@
 package controllers
 
+import java.util.concurrent.CompletableFuture
+
 import com.google.inject.Inject
 import db.tables.User
 import org.mockito.Mockito
@@ -18,16 +20,18 @@ import scala.concurrent.{Await, Future}
 
 class AuthControllerTest extends PlaySpec     {
 
-  val authService:AuthService = Mockito.mock(classOf[AuthService])
+
   //val authService = new AuthService(null,null)
   val user:User  = new User(1,"username","password")
 
   "AuthControllerTest" should {
     "login"   in  {
+      val authService:AuthService = Mockito.mock(classOf[AuthService])
+      Mockito.when(authService.validate(null)).thenThrow()
+      //Future.successful(authService.populateResponse(user)
+     // val controller = new AuthController(Helpers.stubControllerComponents(), authService)
 
-      when(authService.validate(null)).thenReturn( Future.successful(authService.populateResponse(user)))
-      val controller = new AuthController(Helpers.stubControllerComponents(), authService)
-      val json = Json.parse("{\"username\":\"username\", \"password\":\"password\" }")
+     /* val json = Json.parse("{\"username\":\"username\", \"password\":\"password\" }")
 
 
       val result: Future[Result] = controller.login().apply(FakeRequest(Helpers.POST, "/v1/auth/login").withJsonBody(json))
@@ -36,6 +40,7 @@ class AuthControllerTest extends PlaySpec     {
       val bodyText: String = contentAsString(result)
       println(bodyText)
       bodyText mustBe "ok"
+      */
 
 
     }
