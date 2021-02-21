@@ -21,11 +21,12 @@ class JwtUtility {
     jwsObject.serialize();
   }
 
-  def retrievPasswordPair(payload:String): Unit ={
+  def retrievPasswordPair(payload:String): String ={
     val rsaJWK:RSAKey  =generateKey(keySize,keyId)
     val rsaPublicJWK:RSAKey = rsaJWK.toPublicJWK()
     val jwsObject = JWSObject.parse(payload);
     val verifier:JWSVerifier  = new RSASSAVerifier(rsaPublicJWK);
+    jwsObject.getPayload().toString()
   }
 
   def generateKey(keySize:Int,keyId:String): RSAKey =   new RSAKeyGenerator(keySize) .keyID(keyId) .generate()
