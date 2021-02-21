@@ -6,6 +6,7 @@ import com.google.inject.Inject
 import controllers.requests.LoginRequest
 import controllers.responses.AuthResponse
 import db.tables.User
+import helpers.Utilities
 import org.mockito.Mockito
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
@@ -25,7 +26,7 @@ class AuthControllerTest extends PlaySpec     {
 
 
   //val authService = new AuthService(null,null)
-  val user:User  = new User(1,"username","password")
+  val user:User  = new User(1,"moverr@gmail.com","P@ssword?123")
   val pairString:String = "moverr@gmail.com:P@ssword?123"
 
 
@@ -40,8 +41,11 @@ class AuthControllerTest extends PlaySpec     {
       val controller   = new AuthController(Helpers.stubControllerComponents(),authService)
       val p = controller.login().apply(FakeRequest(Helpers.POST, "/v1/auth/login").withJsonBody(json))
       val bodyText: String = contentAsString(p)
-      println(bodyText)
-      bodyText mustBe "Something went wrong, contatct adminstrator"
+
+      val resu:AuthResponse = Utilities.fromJson[AuthResponse](bodyText)
+
+
+      resu.username mustBe "moverr@gmail.com"
     }
 
     "register" in {
