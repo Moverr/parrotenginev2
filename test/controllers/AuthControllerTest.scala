@@ -6,11 +6,11 @@ import play.api.test._
 
 
 
-class AuthControllerTest  extends PlaySpec    {
+class AuthControllerTest  extends PlaySpec  with Injecting   {
 
-  val controller  = Inject[AuthController]
+  val controller  = inject[AuthController]
   "AuthControllerTest" should {
-    "login" in {
+    "login"   in  {
     /*   val controller = new AuthController(stubControllerComponents(), null)
       val json = Json.parse("{\"firstName\":\"Foo\", \"lastName\":\"Bar\", \"age\":13}")
 
