@@ -28,25 +28,26 @@ class AuthControllerTest extends PlaySpec     {
   //val authService = new AuthService(null,null)
   val user:User  = new User(1,"moverr@gmail.com","P@ssword?123")
   val pairString:String = "moverr@gmail.com:P@ssword?123"
-
+  val request:LoginRequest = new LoginRequest(user.username,user.password)
+  val authResponse =   AuthResponse(JwtUtility.generateKey(pairString), user.username)
+  val jsonRequest = Json.parse("{\"username\":\""+user.username+"\", \"password\":\""+user.password+"\" }")
 
 
   "AuthControllerTest" should {
     "login"   in  {
-      val request:LoginRequest = new LoginRequest("moverr@gmail.com","P@ssword?123")
-      val result =   AuthResponse(JwtUtility.generateKey(pairString), user.username)
 
       val authService:AuthService = Mockito.mock(classOf[AuthService])
-      Mockito.when(authService.validate(request)).thenReturn(Future.successful(Some(result)))
-      val json = Json.parse("{\"username\":\"moverr@gmail.com\", \"password\":\"P@ssword?123\" }")
+      Mockito.when(authService.validate(request)).thenReturn(Future.successful(Some(authResponse)))
+
+
       val controller   = new AuthController(Helpers.stubControllerComponents(),authService)
-      val p = controller.login().apply(FakeRequest(Helpers.POST, "/v1/auth/login").withJsonBody(json))
-      val bodyText: String = contentAsString(p)
+      val response = controller.login().apply(FakeRequest(Helpers.POST, "/v1/auth/login").withJsonBody(jsonRequest))
+      val bodyText: String = contentAsString(response)
 
-      val resu:AuthResponse = Utilities.fromJson[AuthResponse](bodyText)
+      val expectedResult:AuthResponse = Utilities.fromJson[AuthResponse](bodyText)
 
 
-      resu.username mustBe "moverr@gmail.com"
+      expectedResult.username mustBe "moverr@gmail.com"
     }
 
     "register" in {
