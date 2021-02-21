@@ -33,3 +33,4 @@ class JwtUtility {
 
 }
 
+object JwtUtility extends JwtUtility

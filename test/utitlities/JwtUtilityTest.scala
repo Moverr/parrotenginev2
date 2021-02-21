@@ -7,18 +7,16 @@ class JwtUtilityTest extends PlaySpec {
 
   "Test KeySize" should{
     "should be 2048 " in {
-      val x = new JwtUtility()
-      x.keySize mustBe(2048)
+
+      JwtUtility.keySize mustBe(2048)
     }
   }
 
 
   "Test generateKey" should{
-    val x = new JwtUtility()
 
     "Should return the original text after encryption  " in {
-       val encryptedResponse =  x.generateKey("key")
-        x.retrievPasswordPair(encryptedResponse) mustBe("key")
+      JwtUtility.retrievPasswordPair(JwtUtility.generateKey("key")) mustBe("key")
     }
   }
 
