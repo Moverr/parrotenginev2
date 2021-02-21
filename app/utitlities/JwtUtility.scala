@@ -14,11 +14,9 @@ class JwtUtility {
   val keyId = "secretKey"
 
   def generateKey(payload:String): String ={
-    val rsaJWK:RSAKey  =generateKey(keySize,keyId)
+    val rsaJWK:RSAKey  = generateKey(keySize,keyId)
     val signer:JWSSigner  = new RSASSASigner(rsaJWK)
-    val jwsObject:JWSObject  = new JWSObject(
-      new JWSHeader.Builder(JWSAlgorithm.RS256).keyID(rsaJWK.getKeyID()).build(),
-      new Payload(payload));
+    val jwsObject:JWSObject  = new JWSObject(new JWSHeader.Builder(JWSAlgorithm.RS256).keyID(rsaJWK.getKeyID()).build(), new Payload(payload));
     jwsObject.sign(signer)
     jwsObject.serialize();
   }
