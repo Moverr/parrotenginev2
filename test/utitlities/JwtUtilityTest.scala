@@ -1,6 +1,5 @@
 package utitlities
 
-import org.scalatest.FunSuite
 import org.scalatestplus.play.PlaySpec
 
 class JwtUtilityTest extends PlaySpec {
@@ -12,7 +11,7 @@ class JwtUtilityTest extends PlaySpec {
   }
 
 
-  "Test generateKey" should{ 
+  "Test generateKey" should{
     "Should return the original text after encryption  " in {
       JwtUtility.retrievPasswordPair(JwtUtility.generateKey("key")) mustBe("key")
     }
