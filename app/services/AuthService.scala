@@ -31,8 +31,6 @@ class AuthService @Inject()(userDao: UserDao,jwtUtility: JwtUtility )   {
 
   }
 
-
-
    def register(registerRequest: RegisterRequest): AuthResponse ={
      val existingUser:Seq[User] =   Await.result( userDao.getUsersByUsername(registerRequest.email),Duration.Inf)
      if(existingUser.length > 0 ){
@@ -50,9 +48,8 @@ class AuthService @Inject()(userDao: UserDao,jwtUtility: JwtUtility )   {
   }
 
   private def populateBasic(user: User): AuthResponse = {
-
-    val resp = AuthResponse(jwtUtility.createToken("moverr@gmail.com"), user.username)
-    resp
+    val pairString:String = user.username+":"+user.password
+    AuthResponse(jwtUtility.generateKey(pairString), user.password)
   }
 
 
