@@ -2,26 +2,17 @@ package utitlities
 
 import javax.inject.Singleton
 import authentikat.jwt.{JsonWebToken, JwtClaimsSet, JwtHeader}
+import com.nimbusds.jose.{JWSAlgorithm, JWSHeader, JWSObject, Payload}
 
 @Singleton
 class JwtUtility {
   val JwtSecretKey = "secretKey"
   val JwtSecretAlgo = "HS256"
 
-  def createToken(payload: String): String = {
-    val header = JwtHeader(JwtSecretAlgo)
-    val claimsSet = JwtClaimsSet(payload)
+  JWSObject jwsObject = new JWSObject(new JWSHeader(JWSAlgorithm.HS256),new Payload("Hello, world!"))
 
-    JsonWebToken(header, claimsSet, JwtSecretKey)
-  }
 
-  def isValidToken(jwtToken: String): Boolean =
-    JsonWebToken.validate(jwtToken, JwtSecretKey)
 
-  def decodePayload(jwtToken: String): Option[String] =
-    jwtToken match {
-      case JsonWebToken(header, claimsSet, signature) => Option(claimsSet.asJsonString)
-      case _ => None
-    }
+
 }
 
