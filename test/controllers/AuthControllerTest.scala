@@ -11,8 +11,7 @@ import play.api.test.Helpers._
 import services.AuthService
 import org.mockito.Mockito._
 import play.api.libs.json.Json
-import play.test
-import play.test.Helpers._
+
 
 import scala.concurrent.{Await, Future}
 
@@ -35,29 +34,9 @@ class AuthControllerTest  @Inject()(authService:AuthService) extends PlaySpec   
 
 
       val bodyText: String = contentAsString(result)
+      println(bodyText)
       bodyText mustBe "ok"
 
-    /*  val request:FakeRequest[AnyContent] = FakeRequest(POST, "/v1/auth/login").withJsonBody(json)
-
-
-      val action: EssentialAction = Action { request =>
-        val value = (request.body.asJson.get \ "field").as[String]
-        Ok(value)
-      }
-
-
-
-      val  result = Helpers.call(action,request)
-      */
-
-    /*   val controller = new AuthController(stubControllerComponents(), null)
-      val json = Json.parse("{\"firstName\":\"Foo\", \"lastName\":\"Bar\", \"age\":13}")
-
-
-      val request:FakeRequest[AnyContent] = FakeRequest(POST, "/v1/auth/login").withJsonBody(json)
-      val result = controller.login().apply(request)
-
-      status(result) mustBe OK */
 
     }
 
