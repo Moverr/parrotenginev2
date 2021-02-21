@@ -9,15 +9,16 @@ import play.api.test._
 import play.api.test.Helpers._
 
 import services.AuthService
-import org.mockito.Mockito._
 import play.api.libs.json.Json
 
+//todo: Import mockito
+import org.mockito.Mockito._
 
 import scala.concurrent.{Await, Future}
 
 
 class AuthControllerTest extends PlaySpec     {
-  
+
   val authService:AuthService = new AuthService(null,null)
   //val authService = new AuthService(null,null)
   val user:User  = new User(1,"username","password")
@@ -25,7 +26,7 @@ class AuthControllerTest extends PlaySpec     {
   "AuthControllerTest" should {
     "login"   in  {
 
-      when(authService.validate(null)).thenReturn( Future.successful(authService.populateResponse(user)))
+      when(authService.validate(null))( Future.successful(authService.populateResponse(user)))
       val controller = new AuthController(Helpers.stubControllerComponents(), authService)
       val json = Json.parse("{\"username\":\"username\", \"password\":\"password\" }")
 
