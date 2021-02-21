@@ -34,7 +34,8 @@ class AuthControllerTest extends PlaySpec     {
   "AuthControllerTest" should {
     "login"   in  {
       val request:LoginRequest = new LoginRequest("moverr@gmail.com","P@ssword?123")
-      val result =   AuthResponse(JwtUtility.generateKey(pairString), user.password)
+      val result =   AuthResponse(JwtUtility.generateKey(pairString), user.username)
+
       val authService:AuthService = Mockito.mock(classOf[AuthService])
       Mockito.when(authService.validate(request)).thenReturn(Future.successful(Some(result)))
       val json = Json.parse("{\"username\":\"moverr@gmail.com\", \"password\":\"P@ssword?123\" }")
