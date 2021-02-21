@@ -16,9 +16,9 @@ import play.api.libs.json.Json
 import scala.concurrent.{Await, Future}
 
 
-class AuthControllerTest  @Inject()(authService:AuthService) extends PlaySpec     {
-
-
+class AuthControllerTest extends PlaySpec     {
+  
+  val authService:AuthService = new AuthService(null,null)
   //val authService = new AuthService(null,null)
   val user:User  = new User(1,"username","password")
 
