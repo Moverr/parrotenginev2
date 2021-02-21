@@ -40,7 +40,7 @@ class AuthController @Inject()(
     }
     catch {
       case e:NoSuchElementException =>Future.successful(BadRequest("Invalid Requeust body "))
-      case _ => Future.successful(InternalServerError("Something went wrong, contatct adminstrator"))
+      case _ :Throwable => Future.successful(InternalServerError("Something went wrong, contatct adminstrator"))
     }
   }
 

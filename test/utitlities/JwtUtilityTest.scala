@@ -13,7 +13,7 @@ class JwtUtilityTest extends PlaySpec {
 
   "Test generateKey" should{
     "Should return the original text after encryption  " in {
-      JwtUtility.retrievPasswordPair(JwtUtility.generateKey("key")) mustBe("key")
+      JwtUtility retrievPasswordPair(JwtUtility generateKey("key")) mustBe("key")
     }
   }
 
