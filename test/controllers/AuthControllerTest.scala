@@ -3,6 +3,7 @@ package controllers
 import java.util.concurrent.CompletableFuture
 
 import com.google.inject.Inject
+import controllers.requests.LoginRequest
 import controllers.responses.AuthResponse
 import db.tables.User
 import org.mockito.Mockito
@@ -25,15 +26,17 @@ class AuthControllerTest extends PlaySpec     {
 
   //val authService = new AuthService(null,null)
   val user:User  = new User(1,"username","password")
-  val pairString:String = user.username+":"+user.password
-  val result = AuthResponse(JwtUtility.generateKey(pairString), user.password)
+  val pairString:String = "moverr@gmail.com:P@ssword?123"
+
 
 
   "AuthControllerTest" should {
     "login"   in  {
+      val request:LoginRequest = new LoginRequest("moverr@gmail.com","P@ssword?123")
+      val result =   AuthResponse(JwtUtility.generateKey(pairString), user.password)
       val authService:AuthService = Mockito.mock(classOf[AuthService])
-      Mockito.when(authService.validate(null)).thenReturn(Future.successful(Some(result)))
-      val json = Json.parse("{\"username\":\"username\", \"password\":\"password\" }")
+      Mockito.when(authService.validate(request)).thenReturn(Future.successful(Some(result)))
+      val json = Json.parse("{\"username\":\"moverr@gmail.com\", \"password\":\"P@ssword?123\" }")
       val controller   = new AuthController(Helpers.stubControllerComponents(),authService)
       val p = controller.login().apply(FakeRequest(Helpers.POST, "/v1/auth/login").withJsonBody(json))
       val bodyText: String = contentAsString(p)
