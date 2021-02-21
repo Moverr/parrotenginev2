@@ -12,4 +12,16 @@ class JwtUtilityTest extends PlaySpec {
     }
   }
 
+
+  "Test generateKey" should{
+    val x = new JwtUtility()
+
+    "Should return the original text after encryption  " in {
+       val encryptedResponse =  x.generateKey("key")
+        x.retrievPasswordPair(encryptedResponse) mustBe("key")
+    }
+  }
+
+
+
 }

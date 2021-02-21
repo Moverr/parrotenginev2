@@ -26,7 +26,7 @@ jwsObject.sign(signer);
 // mZq3ivwoAjqa1uUkSBKFIX7ATndFF5ivnt-m8uApHO4kfIFOrW7w2Ezmlg3Qd
 // maXlS9DhN0nUk_hGI3amEjkKd0BWYCB8vfUbUv0XGjQip78AI4z1PrFRNidm7
 // -jPDm5Iq0SZnjKjCNS5Q15fokXZc8u0A
-val s:String = jwsObject.serialize();
+val s:String = jwsObject.serialize()
 
 // To parse the JWS and verify it, e.g. on client-side
 jwsObject = JWSObject.parse(s);
