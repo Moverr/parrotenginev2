@@ -1,12 +1,14 @@
 package controllers
 
+import com.google.inject.Inject
 import org.scalatestplus.play.PlaySpec
+import play.api.test._
 
 
 
 class AuthControllerTest  extends PlaySpec    {
 
-  //val controller  = inject[AuthController]
+  val controller  = Inject[AuthController]
   "AuthControllerTest" should {
     "login" in {
     /*   val controller = new AuthController(stubControllerComponents(), null)
