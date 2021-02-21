@@ -7,7 +7,7 @@ import com.nimbusds.jose.jwk.gen._
 // RSA signatures require a public and private RSA key pair,
 // the public key must be made known to the JWS recipient to
 // allow the signatures to be verified
-val rsaJWK:RSAKey  = new RSAKeyGenerator(2048) .keyID("123") .generate();
+val rsaJWK:RSAKey  = new RSAKeyGenerator(2048) .keyID("sectret") .generate();
 val rsaPublicJWK:RSAKey = rsaJWK.toPublicJWK();
 
 // Create RSA-signer with the private key
@@ -36,4 +36,4 @@ val verifier:JWSVerifier  = new RSASSAVerifier(rsaPublicJWK);
 
 assert(jwsObject.verify(verifier));
 
-assert("In RSA we trust!".equals(jwsObject.getPayload().toString()));
+println( jwsObject.getPayload().toString());
