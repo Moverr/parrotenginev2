@@ -24,8 +24,11 @@ class AuthController @Inject()(
 
 
   def login = Action.async{ implicit request  =>
+    val username = request.body.asJson.get("username").as[String]
+    val password =  request.body.asJson.get("password").as[String]
+    Future.successful(Ok("sdee"))
 
-    try{
+    /*try{
       val username = request.body.asJson.get("username").as[String]
       val password =  request.body.asJson.get("password").as[String]
 
@@ -40,8 +43,10 @@ class AuthController @Inject()(
     }
     catch {
       case e:NoSuchElementException =>Future.successful(BadRequest("Invalid Requeust body "))
-      case _ :Throwable => Future.successful(InternalServerError("Something went wrong, contatct adminstrator"))
+      case x :Throwable => Future.successful(InternalServerError(x.getMessage()))
     }
+
+    */
   }
 
 

@@ -38,22 +38,7 @@ class AuthControllerTest extends PlaySpec     {
       val p = controller.login().apply(FakeRequest(Helpers.POST, "/v1/auth/login").withJsonBody(json))
       val bodyText: String = contentAsString(p)
       println(bodyText)
-      bodyText mustBe "ok"
-      //Future.successful(authService.populateResponse(user)
-     // val controller = new AuthController(Helpers.stubControllerComponents(), authService)
-
-     /* val json = Json.parse("{\"username\":\"username\", \"password\":\"password\" }")
-
-
-      val result: Future[Result] = controller.login().apply(FakeRequest(Helpers.POST, "/v1/auth/login").withJsonBody(json))
-
-
-      val bodyText: String = contentAsString(result)
-      println(bodyText)
-      bodyText mustBe "ok"
-      */
-
-
+      bodyText mustBe "Something went wrong, contatct adminstrator"
     }
 
     "register" in {
