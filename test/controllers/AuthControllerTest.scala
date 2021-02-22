@@ -1,25 +1,18 @@
 package controllers
 
-import java.util.concurrent.CompletableFuture
-
-import com.google.inject.Inject
 import controllers.requests.LoginRequest
 import controllers.responses.AuthResponse
 import db.tables.User
 import helpers.Utilities
 import org.mockito.Mockito
 import org.scalatestplus.play.PlaySpec
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.mvc.{AnyContent, ControllerComponents, EssentialAction, Result, Results}
-import play.api.test._
-import play.api.test.Helpers._
-import services.AuthService
-import org.mockito.Mockito._
 import play.api.libs.json.Json
-import org.mockito.Mockito._
+import play.api.test.Helpers._
+import play.api.test._
+import services.AuthService
 import utitlities.JwtUtility
 
-import scala.concurrent.{Await, Future}
+import scala.concurrent.Future
 
 
 class AuthControllerTest extends PlaySpec     {
