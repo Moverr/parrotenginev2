@@ -27,11 +27,11 @@ class AuthControllerTest extends PlaySpec     {
 
 
   "AuthControllerTest" should {
+    val authService:AuthService = Mockito.mock(classOf[AuthService])
     "login"   in  {
 
-      val authService:AuthService = Mockito.mock(classOf[AuthService])
-      Mockito.when(authService.validate(request)).thenReturn(Future.successful(Some(authResponse)))
 
+      Mockito.when(authService.validate(request)).thenReturn(Future.successful(Some(authResponse)))
 
       val controller   = new AuthController(Helpers.stubControllerComponents(),authService)
       val response = controller.login().apply(FakeRequest(Helpers.POST, "/v1/auth/login").withJsonBody(jsonRequest))
@@ -42,7 +42,7 @@ class AuthControllerTest extends PlaySpec     {
     }
 
     "register" in {
-      
+
     }
   }
 }
