@@ -4,6 +4,7 @@ import java.security.MessageDigest
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.scala.{DefaultScalaModule, ScalaObjectMapper}
+import java.util.regex.Pattern
 
 object Utilities {
 
@@ -26,11 +27,7 @@ object Utilities {
     mapper.readValue[T](json)
   }
 
-  def validateString(string: String):Boolean={
-
-
-   false
-  }
+  def validateString(string: String):Boolean= Pattern.compile(emailRegex).matcher(string).matches()
 
 
 }
