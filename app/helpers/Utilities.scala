@@ -17,7 +17,8 @@ object Utilities {
   mapper.registerModule(DefaultScalaModule)
 
 
-  def encrypt(s:String): String =   MessageDigest.getInstance(encryptionAlgorithm).digest(s.getBytes)
+
+  def encrypt(s:String): String =  MessageDigest.getInstance(encryptionAlgorithm).digest(s.getBytes)
       .map(_.toChar).mkString
 
 
