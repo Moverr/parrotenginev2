@@ -41,7 +41,20 @@ class UtilitiesTest extends PlaySpec {
      Utilities.fromJson[LoginRequest](jsonBoy.toString()).password mustBe("password")
     }
 
+  }
 
+
+  "validateRegexString" should{
+    val correctEmail = "moverr@gmail.com"
+    val incorrectEmail = "smesiwei"
+
+    " validate correct email address " in {
+      Utilities.validateRegexString(correctEmail,"email").mustBe(true)
+    }
+
+    " validate an incorrect email address " in {
+      Utilities.validateRegexString(correctEmail,incorrectEmail).mustBe(false)
+    }
 
   }
 
