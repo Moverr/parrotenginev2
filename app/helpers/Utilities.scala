@@ -10,22 +10,23 @@ object Utilities {
 
   val emailRegex:String = "^(.+)@(.+)$"
 
-
-  private val encryptionAlgorithm:String  = "MD5"
   val mapper = new ObjectMapper() with ScalaObjectMapper
-  //this line my be needed depending on your case classes
+
   mapper.registerModule(DefaultScalaModule)
 
+  def matchEncryption(x:Int) : String = x match {
+    case 1=> "MD5"
+    case 2=> "AES"
+    case _=>"MD5"
+  }
 
 
-  def encrypt(s:String): String =  MessageDigest.getInstance(encryptionAlgorithm).digest(s.getBytes)
-      .map(_.toChar).mkString
+  def encrypt(s:String): String =  MessageDigest.getInstance(matchEncryption(0)).digest(s.getBytes)      .map(_.toChar).mkString
 
 
   def fromJson[T](json: String)(implicit m: Manifest[T]): T = mapper.readValue[T](json)
 
-
-  def validateString(matchString: String, regex:String):Boolean= Pattern.compile(regex).matcher(matchString).matches()
+  def validateRegexString(matchString: String, regex:String):Boolean= Pattern.compile(regex).matcher(matchString).matches()
 
 
 }
