@@ -9,7 +9,8 @@ import java.util.regex.Pattern
 object Utilities {
 
   val emailRegex:String = "^(.+)@(.+)$"
-  val phoneRegex:String = "^(.+)@(.+)$"
+  val simplePhonePatternRegex:String = "^\\d{10}$"
+  val phoneWithSpacePatternRegex:String = "^(\\d{3}[- .]?){2}\\d{4}$"
   val mapper = new ObjectMapper() with ScalaObjectMapper
 
   mapper.registerModule(DefaultScalaModule)
@@ -23,8 +24,9 @@ object Utilities {
 
   def matchRegex(matchType:String) : String = matchType match {
     case "email"=> emailRegex
-    case "phone"=> phoneRegex
-    case _=>""
+    case "simplephonepattern"=> simplePhonePatternRegex
+    case "phonewithSpacePatternRegex"=> phoneWithSpacePatternRegex
+    case _=>  ""
   }
 
 
