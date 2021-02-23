@@ -38,13 +38,11 @@ class AuthControllerTest extends PlaySpec     {
       val bodyText: String = contentAsString(response)
 
       val expectedResult:AuthResponse = Utilities.fromJson[AuthResponse](bodyText)
-
-
       expectedResult.username mustBe user.username
     }
 
     "register" in {
-
+      
     }
   }
 }
