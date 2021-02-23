@@ -18,7 +18,6 @@ import scala.concurrent.Future
 class AuthControllerTest extends PlaySpec     {
 
 
-  //val authService = new AuthService(null,null)
   val user:User  = new User(1,"moverr@gmail.com","P@ssword?123")
   val pairString:String = "moverr@gmail.com:P@ssword?123"
   val request:LoginRequest = new LoginRequest(user.username,user.password)
