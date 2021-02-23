@@ -39,7 +39,7 @@ class AuthController @Inject()(
     catch {
       case e:NoSuchElementException =>Future.successful(BadRequest("Invalid Requeust body "))
       case x :NullPointerException => Future.successful(InternalServerError(x.getMessage()))
-      case e:_ => Future.successful(InternalServerError(e.getMessage()))
+      case x:_ => Future.successful(InternalServerError(x.getMessage()))
     }
 
   }
@@ -55,7 +55,7 @@ class AuthController @Inject()(
      }
      catch {
        case e:Exception => Future.successful(BadRequest(e.getMessage))
-       case e:_ => Future.successful(InternalServerError(e.getMessage))
+       case x:_ => Future.successful(InternalServerError(x.getMessage))
      }
 
 
