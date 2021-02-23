@@ -37,7 +37,7 @@ class UtilitiesTest extends PlaySpec {
     val jsonBoy = Json.parse("{\"username\":\"username\", \"password\":\"password\" }")
 
 
-    "   convert from json to a case class succesfully" in {
+    "   convert from json to a case class successfully" in {
      Utilities.fromJson[LoginRequest](jsonBoy.toString()).password mustBe("password")
     }
 
