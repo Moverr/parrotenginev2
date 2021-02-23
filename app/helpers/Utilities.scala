@@ -17,17 +17,14 @@ object Utilities {
   mapper.registerModule(DefaultScalaModule)
 
 
-  def encrypt(s:String): String ={
-      MessageDigest.getInstance(encryptionAlgorithm).digest(s.getBytes)
+  def encrypt(s:String): String =   MessageDigest.getInstance(encryptionAlgorithm).digest(s.getBytes)
       .map(_.toChar).mkString
-  }
 
 
-  def fromJson[T](json: String)(implicit m: Manifest[T]): T = {
-    mapper.readValue[T](json)
-  }
+  def fromJson[T](json: String)(implicit m: Manifest[T]): T = mapper.readValue[T](json)
 
-  def validateString(string: String):Boolean= Pattern.compile(emailRegex).matcher(string).matches()
+
+  def validateString(matchString: String, regex:String):Boolean= Pattern.compile(regex).matcher(matchString).matches()
 
 
 }
