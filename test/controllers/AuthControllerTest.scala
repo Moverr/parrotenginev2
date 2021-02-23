@@ -40,7 +40,7 @@ class AuthControllerTest extends PlaySpec     {
     }
 
     "register" in {
-
+//todo: test out the registration
     }
   }
 }
