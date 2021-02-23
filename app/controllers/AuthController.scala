@@ -55,7 +55,6 @@ class AuthController @Inject()(
      }
      catch {
        case e:Exception => Future.successful(BadRequest(e.getMessage))
-       case _ => Future.successful(InternalServerError("Something went wrong "))
      }
 
 
