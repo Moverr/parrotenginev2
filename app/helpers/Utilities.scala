@@ -23,5 +23,11 @@ object Utilities {
     mapper.readValue[T](json)
   }
 
+  def validateString(string: String):Boolean={
+
+
+   false
+  }
+
 
 }
