@@ -7,6 +7,9 @@ import com.fasterxml.jackson.module.scala.{DefaultScalaModule, ScalaObjectMapper
 
 object Utilities {
 
+  val emailRegex:String = "^(.+)@(.+)$"
+
+
   private val encryptionAlgorithm:String  = "MD5"
   val mapper = new ObjectMapper() with ScalaObjectMapper
   //this line my be needed depending on your case classes
