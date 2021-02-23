@@ -15,4 +15,18 @@ class UtilitiesTest extends PlaySpec {
     }
 
   }
+
+
+  "matchRegex" should{
+    "Should return the correct regex expression" in {
+      Utilities.matchRegex("email") mustBe(Utilities.emailRegex)
+    }
+
+    "Should return  empty string " in {
+      Utilities.matchRegex("ssjsjs") mustBe("")
+    }
+
+  }
+
+
 }
