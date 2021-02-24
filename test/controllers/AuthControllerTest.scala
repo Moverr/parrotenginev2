@@ -23,7 +23,7 @@ class AuthControllerTest extends PlaySpec     {
   val request:LoginRequest = new LoginRequest(user.username,user.password)
   val authResponse =   AuthResponse(JwtUtility.generateKey(pairString), user.username)
   val jsonLoginRequest = Json.parse("{\"username\":\""+user.username+"\", \"password\":\""+user.password+"\" }")
-  val jsonRegistrationRequest = Json.parse("{\"email\":\"moverr@gmail.com\", \"password\":\"Password\" }")
+  val jsonRegistrationRequest = Json.parse("{\"email\":\""+user.username+"\", \"password\":\""+user.password+"\" }")
 
 
 
@@ -48,8 +48,7 @@ class AuthControllerTest extends PlaySpec     {
 
 
   "AuthController register" should {
-    val registrationRequest:RegisterRequest = RegisterRequest("moverr@gmail.com","password")
-    val authResponse:AuthResponse = AuthResponse("token","moverr@gmail.com")
+    val registrationRequest:RegisterRequest = RegisterRequest(user.username,user.password)
 
     val authService:AuthService = Mockito.mock(classOf[AuthService])
     "Return positive login "   in  {
