@@ -46,6 +46,7 @@ class AuthControllerTest extends PlaySpec     {
   }
 
 
+  /*
   "AuthController register" should {
     val registrationRequest:RegisterRequest = RegisterRequest("moverr@gmail.com","password")
     val authResponse:AuthResponse = AuthResponse("token","moverr@gmail.com")
@@ -65,6 +66,7 @@ class AuthControllerTest extends PlaySpec     {
 
 
   }
+  */
 
 
 
