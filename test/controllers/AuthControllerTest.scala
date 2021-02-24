@@ -46,7 +46,7 @@ class AuthControllerTest extends PlaySpec     {
   }
 
 
-  /*
+
   "AuthController register" should {
     val registrationRequest:RegisterRequest = RegisterRequest("moverr@gmail.com","password")
     val authResponse:AuthResponse = AuthResponse("token","moverr@gmail.com")
@@ -57,7 +57,7 @@ class AuthControllerTest extends PlaySpec     {
       Mockito.when(authService.register(registrationRequest)).thenReturn(authResponse)
 
       val controller   = new AuthController(Helpers.stubControllerComponents(),authService)
-      val response = controller.login().apply(FakeRequest(Helpers.POST, "/v1/auth/register").withJsonBody(jsonRegistrationRequest))
+      val response = controller.register().apply(FakeRequest(Helpers.POST, "/v1/auth/register").withJsonBody(jsonRegistrationRequest))
       val bodyText: String = contentAsString(response)
 
       val expectedResult:AuthResponse = Utilities.fromJson[AuthResponse](bodyText)
@@ -66,7 +66,7 @@ class AuthControllerTest extends PlaySpec     {
 
 
   }
-  */
+
 
 
 
