@@ -32,9 +32,7 @@ class AuthService @Inject()(userDao: UserDao,jwtUtility: JwtUtility )   {
 
    def register(registerRequest: RegisterRequest): AuthResponse ={
      val existingUser:Seq[User] =   Await.result( userDao.getUsersByUsername(registerRequest.email),Duration.Inf)
-     if(existingUser.length > 0 ){
-       throw new Exception("User already exists in the system ")
-     }
+     if(existingUser.length > 0 ) throw new Exception("User already exists in the system ")
 
      val res =  Await.result(userDao.createUserAccount(registerRequest.email,Utilities.encrypt(registerRequest.password)),Duration.Inf)
      populateBasic(res)
@@ -42,8 +40,7 @@ class AuthService @Inject()(userDao: UserDao,jwtUtility: JwtUtility )   {
 
 
   def populateResponse(user: User): Option[AuthResponse]  =  {
-    val resp: AuthResponse = populateBasic(user)
-    Some(resp)
+    Some(populateBasic(user))
   }
 
   private def populateBasic(user: User): AuthResponse = {

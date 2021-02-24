@@ -25,7 +25,7 @@ class AuthControllerTest extends PlaySpec     {
   val jsonRequest = Json.parse("{\"username\":\""+user.username+"\", \"password\":\""+user.password+"\" }")
 
 
-  "AuthController" should {
+  "AuthController login" should {
     val authService:AuthService = Mockito.mock(classOf[AuthService])
     "Return positive login "   in  {
 
@@ -39,8 +39,27 @@ class AuthControllerTest extends PlaySpec     {
       expectedResult.username mustBe user.username
     }
 
-    "register" in {
-//todo: test out the registration
-    }
+
   }
+
+
+  "AuthController register" should {
+    val authService:AuthService = Mockito.mock(classOf[AuthService])
+    "Return positive login "   in  {
+
+      Mockito.when(authService.validate(request)).thenReturn(Future.successful(Some(authResponse)))
+
+      val controller   = new AuthController(Helpers.stubControllerComponents(),authService)
+      val response = controller.login().apply(FakeRequest(Helpers.POST, "/v1/auth/login").withJsonBody(jsonRequest))
+      val bodyText: String = contentAsString(response)
+
+      val expectedResult:AuthResponse = Utilities.fromJson[AuthResponse](bodyText)
+      expectedResult.username mustBe user.username
+    }
+
+
+  }
+
+
+
 }
