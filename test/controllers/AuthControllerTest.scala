@@ -18,8 +18,8 @@ import scala.concurrent.Future
 class AuthControllerTest extends PlaySpec     {
 
 
-  val user:User  = new User(1,"moverr@gmail.com","P@ssword?123")
-  val pairString:String = "moverr@gmail.com:P@ssword?123"
+  val user:User  = new User(1,"moverr@gmail.com","Password")
+  val pairString:String = "moverr@gmail.com:Password"
   val request:LoginRequest = new LoginRequest(user.username,user.password)
   val authResponse =   AuthResponse(JwtUtility.generateKey(pairString), user.username)
   val jsonLoginRequest = Json.parse("{\"username\":\""+user.username+"\", \"password\":\""+user.password+"\" }")
@@ -28,8 +28,9 @@ class AuthControllerTest extends PlaySpec     {
 
   "AuthController login" should {
     val authService:AuthService = Mockito.mock(classOf[AuthService])
-    "Return positive login "   in  {
+    "Return positive regisiter "   in  {
 
+      val registerRequest:RegisterRequest = RegisterRequest("moverr@gmail.com","Password")
       Mockito.when(authService.validate(request)).thenReturn(Future.successful(Some(authResponse)))
 
       val controller   = new AuthController(Helpers.stubControllerComponents(),authService)

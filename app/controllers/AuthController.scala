@@ -47,7 +47,7 @@ class AuthController @Inject()(
 
    def register   = Action.async{ implicit request =>
      try {
-       //RegisterRequest
+
        val email = request.body.asJson.get("email").as[String]
        val password =  request.body.asJson.get("password").as[String]
        val registrationRequest =  RegisterRequest(email,password)
