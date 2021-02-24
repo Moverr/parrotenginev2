@@ -1,10 +1,12 @@
 # parrotenginev2
-Play version 2.8x
+Installation 
+- Framework : Play 2.8x
+
+<br/>
+
 ![Scala CI](https://github.com/Moverr/parrotenginev2/workflows/Scala%20CI/badge.svg?branch=master)
 <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
-<style type="text/css">
-background:yellow;
-</style>
+ 
 
 <br/>
 <ol>
