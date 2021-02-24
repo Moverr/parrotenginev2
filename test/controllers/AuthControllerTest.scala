@@ -23,6 +23,7 @@ class AuthControllerTest extends PlaySpec     {
   val request:LoginRequest = new LoginRequest(user.username,user.password)
   val authResponse =   AuthResponse(JwtUtility.generateKey(pairString), user.username)
   val jsonLoginRequest = Json.parse("{\"username\":\""+user.username+"\", \"password\":\""+user.password+"\" }")
+  val jsonRegistrationRequest = Json.parse("{\"email\":\"moverr@gmail.com\", \"password\":\"Password\" }")
 
 
 
@@ -30,11 +31,11 @@ class AuthControllerTest extends PlaySpec     {
     val authService:AuthService = Mockito.mock(classOf[AuthService])
     "Return positive regisiter "   in  {
 
-      val registerRequest:RegisterRequest = RegisterRequest("moverr@gmail.com","Password")
+
       Mockito.when(authService.validate(request)).thenReturn(Future.successful(Some(authResponse)))
 
       val controller   = new AuthController(Helpers.stubControllerComponents(),authService)
-      val response = controller.login().apply(FakeRequest(Helpers.POST, "/v1/auth/login").withJsonBody(jsonLoginRequest))
+      val response = controller.register().apply(FakeRequest(Helpers.POST, "/v1/auth/login").withJsonBody(jsonLoginRequest))
       val bodyText: String = contentAsString(response)
 
       val expectedResult:AuthResponse = Utilities.fromJson[AuthResponse](bodyText)
@@ -46,16 +47,16 @@ class AuthControllerTest extends PlaySpec     {
 
 
   "AuthController register" should {
-    val registration:RegisterRequest = RegisterRequest("moverr@gmail.com","password")
+    val registrationRequest:RegisterRequest = RegisterRequest("moverr@gmail.com","password")
     val authResponse:AuthResponse = AuthResponse("token","moverr@gmail.com")
 
     val authService:AuthService = Mockito.mock(classOf[AuthService])
     "Return positive login "   in  {
 
-      Mockito.when(authService.register(registration)).thenReturn(authResponse)
+      Mockito.when(authService.register(registrationRequest)).thenReturn(authResponse)
 
       val controller   = new AuthController(Helpers.stubControllerComponents(),authService)
-      val response = controller.login().apply(FakeRequest(Helpers.POST, "/v1/auth/login").withJsonBody(jsonLoginRequest))
+      val response = controller.login().apply(FakeRequest(Helpers.POST, "/v1/auth/register").withJsonBody(jsonRegistrationRequest))
       val bodyText: String = contentAsString(response)
 
       val expectedResult:AuthResponse = Utilities.fromJson[AuthResponse](bodyText)
