@@ -1,6 +1,6 @@
 package controllers
 
-import controllers.requests.LoginRequest
+import controllers.requests.{LoginRequest, RegisterRequest}
 import controllers.responses.AuthResponse
 import db.tables.User
 import helpers.Utilities
@@ -25,6 +25,7 @@ class AuthControllerTest extends PlaySpec     {
   val jsonRequest = Json.parse("{\"username\":\""+user.username+"\", \"password\":\""+user.password+"\" }")
 
 
+
   "AuthController login" should {
     val authService:AuthService = Mockito.mock(classOf[AuthService])
     "Return positive login "   in  {
@@ -44,10 +45,13 @@ class AuthControllerTest extends PlaySpec     {
 
 
   "AuthController register" should {
+    val registration:RegisterRequest = RegisterRequest("moverr@gmail.com","password")
+    val authResponse:AuthResponse = AuthResponse("token","moverr@gmail.com")
+
     val authService:AuthService = Mockito.mock(classOf[AuthService])
     "Return positive login "   in  {
 
-      Mockito.when(authService.validate(request)).thenReturn(Future.successful(Some(authResponse)))
+      Mockito.when(authService.register(registration)).thenReturn(Future.successful(Some(authResponse)))
 
       val controller   = new AuthController(Helpers.stubControllerComponents(),authService)
       val response = controller.login().apply(FakeRequest(Helpers.POST, "/v1/auth/login").withJsonBody(jsonRequest))
