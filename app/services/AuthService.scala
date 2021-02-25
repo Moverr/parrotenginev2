@@ -30,7 +30,17 @@ class AuthService @Inject()(userDao: UserDao,jwtUtility: JwtUtility )   {
 
   }
 
-   def register(registerRequest: RegisterRequest): AuthResponse ={
+
+  def validate(token: String): Future[Option[AuthResponse]] = {
+
+    JwtUtility.retrievePasswordPair(token)
+
+  }
+
+
+
+
+  def register(registerRequest: RegisterRequest): AuthResponse ={
      val existingUser:Seq[User] =   Await.result( userDao.getUsersByUsername(registerRequest.email),Duration.Inf)
      if(existingUser.length > 0 ) throw new Exception("User already exists in the system ")
 
