@@ -63,17 +63,20 @@ class AuthController @Inject()(
 
 
   def validate   = Action.async{ implicit request =>
-    try {
-
+    try{
       val token = request.body.asJson.get("token").as[String]
+      val result = authService.validate(token)
+      result .flatMap{
+        case Some(response) =>  Future.successful(Ok(Json.toJson(response)))
+        case None => Future.successful(Unauthorized("Invalid User Credentials"))
+      }
 
-      val response:AuthResponse =  authService.register(registrationRequest)
-      Future.successful(Ok(Json.toJson(response)))
     }
     catch {
-      case e:Exception => Future.successful(BadRequest(e.getMessage))
+      case e:NoSuchElementException =>Future.successful(BadRequest("Invalid Requeust body "))
+      case x :NullPointerException => Future.successful(InternalServerError(x.getMessage))
+      case e:Exception => Future.successful(InternalServerError(e.getMessage))
     }
-
 
   }
 
