@@ -1,13 +1,17 @@
 package daos
 
 import db.tables.{Organization, OrganizationTable, User, UserTable}
-import javax.inject.Inject
-import play.api.db.slick.DatabaseConfigProvider
-import slick.jdbc.JdbcProfile
-import slick.lifted.TableQuery
+
 
 import scala.concurrent.Future
 
+import javax.inject.{Inject, Singleton}
+import play.api.db.slick.DatabaseConfigProvider
+import slick.jdbc.JdbcProfile
+import slick.jdbc.PostgresProfile.api._
+import slick.lifted.TableQuery
+
+@Singleton
 class OrganisationDAO  @Inject()(dbConfigProvider: DatabaseConfigProvider) {
 
 
@@ -17,10 +21,8 @@ class OrganisationDAO  @Inject()(dbConfigProvider: DatabaseConfigProvider) {
 
 
   //todo: fetch organisation by owner
+    def getUserByUsernameAndPassword(owner:Long): Future[Seq[Organization]]  =  db.run(orgTable.filter(_.owner === owner) .result)
 
-    def getUserByUsernameAndPassword(owner:Long): Future[Seq[Organization]]  ={
-      db.run(orgTable.filter(_.owner === owner))
-  }
 
   //todo: fetch
 }
