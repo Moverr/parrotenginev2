@@ -21,7 +21,7 @@ class OrganisationDAO  @Inject()(dbConfigProvider: DatabaseConfigProvider) {
 
 
   //todo: fetch organisation by owner
-  def getOrganisations(owner:Long,offset:Int,limit:Int): Future[Seq[Organization]]  =  db.run(orgTable.filter(_.owner === owner).take(limit).drop(offset).result)
+  def getOrganisations(owner:Long,offset:Int,limit:Int): Future[Seq[Organization]]  =  db.run(orgTable.filter(_.owner === owner).drop(offset).take(limit).result)
 
 
   //todo: fetch organisation by owner
