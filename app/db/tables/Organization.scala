@@ -7,7 +7,7 @@ import slick.sql.SqlProfile.ColumnOption.SqlType
 import slick.jdbc.PostgresProfile.api._
 import slick.lifted.TableQuery
 
-case class Organization(id:Long = 0L, name:String, details:String,owner:Long, date_created:Timestamp, date_updated:Timestamp)
+case class Organization(id:Long = 0L, name:String, details:String,owner:Long, date_created:Timestamp,author_id:Long=null, date_updated:Timestamp,updated_by:Long =null)
 
 
 class OrganizationTable(tag: Tag) extends Table[Organization](tag,"organisations"){
@@ -18,5 +18,8 @@ class OrganizationTable(tag: Tag) extends Table[Organization](tag,"organisations
   def owner =  column[Long]("owner")
   def date_created = column[Timestamp]("date_updated", SqlType("timestamp not null default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP"))
   def date_updated = column[Timestamp]("date_updated", SqlType("timestamp not null default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP"))
-  override def * = (id.?,name,details,owner,date_created,date_updated).mapTo[Organization]
+  def author_id =  column[Long]("author_id")
+  def updated_by =  column[Long]("updated_by")
+
+  override def * = (id.?,name,details,owner,date_created,author_id,date_updated,updated_by).mapTo[Organization]
 }
