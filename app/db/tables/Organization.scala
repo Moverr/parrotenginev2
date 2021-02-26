@@ -12,8 +12,9 @@ class OrganizationTable(tag: Tag) extends Table[Organization](tag,"organisations
   def id = column[Long]("id",O.PrimaryKey, O.AutoInc)
   def name = column[String]("name")
   def details = column[String]("details")
-  def owner = column[User]("owner")
+  def ownerid =  column("owner",)
+  def owner =  foreignKey("owner")
   def date_created = column[Timestamp]("date_updated", SqlType("timestamp not null default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP"))
   def date_updated = column[Timestamp]("date_updated", SqlType("timestamp not null default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP"))
-  override def * = (id,name,details,date_created,date_updated).mapTo[Organization]
+  override def * = (id.?,name,details,date_created,date_updated).mapTo[Organization]
 }
