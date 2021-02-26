@@ -31,9 +31,8 @@ class AuthService @Inject()(userDao: UserDao,jwtUtility: JwtUtility )   {
   }
 
 
-  def validate(token: String): Future[Option[AuthResponse]] = {
-    validate(decryptPairString(token))
-  }
+  def validate(token: String): Future[Option[AuthResponse]] =  validate(decryptPairString(token))
+
 
 
   def register(registerRequest: RegisterRequest): AuthResponse ={
@@ -45,9 +44,7 @@ class AuthService @Inject()(userDao: UserDao,jwtUtility: JwtUtility )   {
   }
 
 
-  def populateResponse(user: User): Option[AuthResponse]  =  {
-    Some(populateBasic(user))
-  }
+  def populateResponse(user: User): Option[AuthResponse]  =  Some(populateBasic(user))
 
   private def populateBasic(user: User): AuthResponse = {
     val pairString:String = user.username+":"+user.password
@@ -56,7 +53,7 @@ class AuthService @Inject()(userDao: UserDao,jwtUtility: JwtUtility )   {
 
   private def decryptPairString(pairString:String ):LoginRequest ={
     val loginiArray:Array[String] = pairString.split(":")
-    LoginRequest(loginiArray(0),loginiArray(2))
+    LoginRequest(loginiArray(0),loginiArray(1))
   }
 
 
