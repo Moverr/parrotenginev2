@@ -21,5 +21,5 @@ class OrganizationTable(tag: Tag) extends Table[Organization](tag,"organisations
   def author_id =  column[Long]("author_id")
   def updated_by =  column[Long]("updated_by")
 
-  override def * = (id.?,name,details,owner,date_created,author_id,date_updated,updated_by).mapTo[Organization]
+  override def * = (id.?,name,details,owner,date_created,author_id,date_updated.?,updated_by.?).mapTo[Organization]
 }
