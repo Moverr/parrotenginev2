@@ -21,15 +21,21 @@ class OrganisationDAO  @Inject()(dbConfigProvider: DatabaseConfigProvider) {
   import dbConfig._
 
 
-  //todo: fetch organisation by owner
-  def getOrganisations(owner:Long,offset:Int,limit:Int): Future[Seq[Organization]]  =  db.run(orgTable.filter(_.owner === owner).drop(offset).take(limit).result)
+ /*
+ *
+ * Get Organisation by owner
 
-  def createOrganisation() = ???
+  */
+  def getOrganisations(owner:Long,offset:Int,limit:Int): Future[Seq[Organization]]  =
+    db.run(orgTable.filter(_.owner === owner).drop(offset).take(limit).result)
 
 
-  def createOrganisation(name:String,details:String,owner:Long): Future[Organization] ={
-    val query = orgTable.returning(orgTable) += Organization(0L,name,details,owner,Timestamp.from(DateTime.now(DateTimeZone.UTC).millisOfSecond()))
-    db.run(query)
-  }
+  /*
+  *
+  * Create Organisation
+ */
+  def createOrganisation(name:String,details:String,owner:Long): Future[Organization] =
+    db.run(orgTable.returning(orgTable) += Organization(0L,name,details,owner, null,null,null,null))
+
 
 }
