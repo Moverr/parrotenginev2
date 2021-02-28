@@ -22,13 +22,10 @@ class OrganizationService  @Inject()(organisationDAO: OrganisationDAO)  {
   //todo: list organinsations
   def list(authResponse: AuthResponse,limit:Int, offset:Int): Future[Seq[OrganisationResponse]]  = {
     if(authResponse == null ) throw new Exception("Invalid Authentication")
-   val bn: =  organisationDAO.getOrganisations(authResponse.user_id,limit,offset)
-        .map(x=>x).map{
-      res=>
-        val x:Seq[AuthResponse]  =  res.foreach(x => populateResponse(x))
+    val result:Future[Seq[Organization]] =  organisationDAO.getOrganisations(authResponse.user_id,limit,offset)
 
-      x
-    }
+
+
 
   }
   //todo: Get Organization
