@@ -26,15 +26,25 @@ class OrganisationDAO  @Inject()(dbConfigProvider: DatabaseConfigProvider) exten
   * Get Organisation by owner
 
    */
-  override def getOrganisations(owner:Long,offset:Int,limit:Int): Future[Seq[Organization]]  =
+    def getOrganisations(owner:Long,offset:Int,limit:Int): Future[Seq[Organization]]  =
     db.run(orgTable.filter(_.owner === owner).drop(offset).take(limit).result)
+
+
+  /*
+  
+     Get  Organisatioon by Id
+   */
+  def getOrganisation(owner:Long,orgId:Long): Future[Option[Organization]]  =
+    db.run(orgTable.filter(_.owner === owner).filter(_.id === orgId).result.headOption)
+
+
 
 
   /*
   *
   * Create Organisation
  */
-  override def createOrganisation(name:String,details:String,owner:Long): Future[Organization] =
+    def createOrganisation(name:String,details:String,owner:Long): Future[Organization] =
     db.run(orgTable.returning(orgTable) += Organization(0L,name,details,owner, null,null,null,null))
 
 
