@@ -16,6 +16,9 @@ class OrganizationService  @Inject()(organisationDAO: OrganisationDAO,authServic
   def create(authResponse: AuthResponse,request:OrganisationRequest): Future[OrganisationResponse] ={
    val result:Future[Seq[Organization]] =  organisationDAO.createOrganisation(request.name,request.details,authResponse.user_id)
 
+    result.map{
+      x => x.
+    }
 
   }
   //todo: list organinsations
@@ -27,5 +30,8 @@ class OrganizationService  @Inject()(organisationDAO: OrganisationDAO,authServic
   def get(authResponse: AuthResponse,id:Int,): Future[Option[OrganisationResponse]] ={
 
     ???
+  }
+  def populateResponse(): Unit ={
+    
   }
 }
