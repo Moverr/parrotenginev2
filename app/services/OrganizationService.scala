@@ -25,10 +25,9 @@ class OrganizationService  @Inject()(organisationDAO: OrganisationDAO)  {
    val bn: =  organisationDAO.getOrganisations(authResponse.user_id,limit,offset)
         .map(x=>x).map{
       res=>
-        list[Se]
-        res.foreach{
-        x => populateResponse(x)
-      }
+        val x:Seq[AuthResponse]  =  res.foreach(x => populateResponse(x))
+
+      x
     }
 
   }
