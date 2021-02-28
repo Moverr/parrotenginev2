@@ -15,7 +15,7 @@ import scala.concurrent.{Await, Future}
 
 
 @Singleton
-class AuthService @Inject()(userDao: UserDao,jwtUtility: JwtUtility )   {
+class AuthService @Inject()(userDao: UserDao )   {
 
 
   //todo: Login Function
@@ -48,7 +48,7 @@ class AuthService @Inject()(userDao: UserDao,jwtUtility: JwtUtility )   {
 
   private def populateBasic(user: User): AuthResponse = {
     val pairString:String = user.username+":"+user.password
-    AuthResponse(jwtUtility.generateKey(pairString), user.username)
+    AuthResponse(JwtUtility.generateKey(pairString), user.username)
   }
 
   private def decryptPairString(pairString:String ):LoginRequest ={
