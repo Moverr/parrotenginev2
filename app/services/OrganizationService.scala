@@ -6,20 +6,18 @@ import daos.{OrganisationDAO, UserDao}
 import db.tables.Organization
 import javax.inject.{Inject, Singleton}
 import utitlities.JwtUtility
-
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
-class OrganizationService  @Inject()(organisationDAO: OrganisationDAO,authService: AuthService)  {
+class OrganizationService  @Inject()(organisationDAO: OrganisationDAO)  {
 
   //todo: create organisation
   def create(authResponse: AuthResponse,request:OrganisationRequest): Future[OrganisationResponse] ={
-   val result:Future[Seq[Organization]] =  organisationDAO.createOrganisation(request.name,request.details,authResponse.user_id)
+    if(authResponse == null ) throw new Exception("Invalid Auth Response ")
 
-    result.map{
-      x => x.
-    }
-
+     organisationDAO.createOrganisation(request.name,request.details,authResponse.user_id)
+       .map(x=>populateResponse(x))
   }
   //todo: list organinsations
   def list(authResponse: AuthResponse,limit:Int, offset:Int): Future[Seq[OrganisationResponse]]  = {
@@ -31,7 +29,8 @@ class OrganizationService  @Inject()(organisationDAO: OrganisationDAO,authServic
 
     ???
   }
-  def populateResponse(): Unit ={
-    
+  def populateResponse(organisation:Organization): OrganisationResponse ={
+  val res = OrganisationResponse(organisation.id,organisation.name,organisation.details,organisation.date_created.to
+
   }
 }
