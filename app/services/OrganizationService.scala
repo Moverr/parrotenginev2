@@ -14,7 +14,7 @@ class OrganizationService  @Inject()(organisationDAO: OrganisationDAO)  {
     ???
   }
   //todo: list organinsations
-  def list(authorization:AuthResponse,limit:Int, offset:Int): Unit ={
+  def list(authorization:AuthResponse,limit:Int, offset:Int): Unit = {
     ???
   }
   //todo: Get Organization
