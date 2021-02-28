@@ -31,10 +31,13 @@ class OrganizationService  @Inject()(organisationDAO: OrganisationDAO)  {
   def get(authResponse: AuthResponse,id:Int): Future[Option[OrganisationResponse]] ={
     if(authResponse == null ) throw new Exception("Invalid Authentication")
     organisationDAO.getOrganisation(authResponse.user_id,id)
-    ???
+      .flatMap{
+        case Some(value) => Future.successful(Some(populateResponse(value)))
+        case None =>  Future.successful(None)
+      }
+
   }
   def populateResponse(organisation:Organization): OrganisationResponse ={
-  val res = OrganisationResponse(organisation.id,organisation.name,organisation.details,organisation.date_created.to
-
+   OrganisationResponse(organisation.id,organisation.name,organisation.details,organisation.date_created) 
   }
 }
