@@ -28,8 +28,8 @@ class OrganizationService  @Inject()(organisationDAO: OrganisationDAO)  {
       organisationDAO.getOrganisations(authResponse.user_id,limit,offset).map(y=>y.map(p=>populateResponse(p)))
   }
   //todo: Get Organization
-  def get(authResponse: AuthResponse,id:Int,): Future[Option[OrganisationResponse]] ={
-
+  def get(authResponse: AuthResponse,id:Int): Future[Option[OrganisationResponse]] ={
+    if(authResponse == null ) throw new Exception("Invalid Authentication")
     ???
   }
   def populateResponse(organisation:Organization): OrganisationResponse ={
