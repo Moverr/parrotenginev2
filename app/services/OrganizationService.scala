@@ -22,11 +22,13 @@ class OrganizationService  @Inject()(organisationDAO: OrganisationDAO)  {
      organisationDAO.createOrganisation(request.name,request.details,authResponse.user_id)
        .map(x=>populateResponse(x))
   }
+
   //todo: list organinsations
   def list(authResponse: AuthResponse,limit:Int, offset:Int): Future[Seq[OrganisationResponse]]  = {
     if(authResponse == null ) throw new Exception("Invalid Authentication")
       organisationDAO.getOrganisations(authResponse.user_id,limit,offset).map(y=>y.map(p=>populateResponse(p)))
   }
+
   //todo: Get Organization
   def get(authResponse: AuthResponse,id:Int): Future[Option[OrganisationResponse]] ={
     if(authResponse == null ) throw new Exception("Invalid Authentication")
