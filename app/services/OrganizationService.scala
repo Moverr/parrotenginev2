@@ -12,18 +12,18 @@ import scala.concurrent.Future
 class OrganizationService  @Inject()(organisationDAO: OrganisationDAO,authService: AuthService)  {
 
   //todo: create organisation
-  def create(token:String,request:OrganisationRequest): Future[OrganisationResponse] ={
-     val auth:Future[Option[AuthResponse]] =  authService.validate(token)
+  def create(authResponse: AuthResponse,request:OrganisationRequest): Future[OrganisationResponse] ={
+
     ???
   }
   //todo: list organinsations
-  def list(token:String,limit:Int, offset:Int): Future[Seq[OrganisationResponse]]  = {
-    val auth:Future[Option[AuthResponse]] =  authService.validate(token)
+  def list(authResponse: AuthResponse,limit:Int, offset:Int): Future[Seq[OrganisationResponse]]  = {
+
     ???
   }
   //todo: Get Organization
-  def get(token:String,id:Int,): Future[Option[OrganisationResponse]] ={
-    val auth:Future[Option[AuthResponse]] =  authService.validate(token)
+  def get(authResponse: AuthResponse,id:Int,): Future[Option[OrganisationResponse]] ={
+
     ???
   }
 }
