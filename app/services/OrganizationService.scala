@@ -3,6 +3,7 @@ package services
 import controllers.requests.OrganisationRequest
 import controllers.responses.{AuthResponse, OrganisationResponse}
 import daos.{OrganisationDAO, UserDao}
+import db.tables.Organization
 import javax.inject.{Inject, Singleton}
 import utitlities.JwtUtility
 
@@ -13,8 +14,9 @@ class OrganizationService  @Inject()(organisationDAO: OrganisationDAO,authServic
 
   //todo: create organisation
   def create(authResponse: AuthResponse,request:OrganisationRequest): Future[OrganisationResponse] ={
+   val result:Future[Seq[Organization]] =  organisationDAO.createOrganisation(request.name,request.details,authResponse.user_id)
 
-    ???
+
   }
   //todo: list organinsations
   def list(authResponse: AuthResponse,limit:Int, offset:Int): Future[Seq[OrganisationResponse]]  = {
