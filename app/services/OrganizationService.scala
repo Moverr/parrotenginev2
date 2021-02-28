@@ -11,25 +11,25 @@ import scala.concurrent.Future
 
 
 @Singleton
-class OrganizationService  @Inject()(organisationDAO: OrganisationDAO)  {
+class OrganizationService  @Inject()(organisationDAO: OrganisationDAO)  extends IOrganisationServiceTrait {
 
   //todo: create organisation
-  def create(authResponse: AuthResponse,request:OrganisationRequest): Future[OrganisationResponse] ={
+  override def create(authResponse: AuthResponse,request:OrganisationRequest): Future[OrganisationResponse] ={
     if(authResponse == null ) throw new Exception("Invalid Authentication")
 
-     organisationDAO.createOrganisation(request.name,request.details,authResponse.user_id)
-       .map(x=>populateResponse(x))
+    organisationDAO.createOrganisation(request.name,request.details,authResponse.user_id)
+      .map(x=>populateResponse(x))
   }
 
   //todo: list organinsations
-  def list(authResponse: AuthResponse,limit:Int, offset:Int): Future[Seq[OrganisationResponse]]  = {
+  override def list(authResponse: AuthResponse,limit:Int, offset:Int): Future[Seq[OrganisationResponse]]  = {
     if(authResponse == null ) throw new Exception("Invalid Authentication")
-      organisationDAO.getOrganisations(authResponse.user_id,limit,offset)
-        .map(y=>y.map(p=>populateResponse(p)))
+    organisationDAO.getOrganisations(authResponse.user_id,limit,offset)
+      .map(y=>y.map(p=>populateResponse(p)))
   }
 
   //todo: Get Organization
-  def get(authResponse: AuthResponse,id:Int): Future[Option[OrganisationResponse]] ={
+  override def get(authResponse: AuthResponse,id:Int): Future[Option[OrganisationResponse]] ={
     if(authResponse == null ) throw new Exception("Invalid Authentication")
     organisationDAO.getOrganisation(authResponse.user_id,id)
       .flatMap{
@@ -41,6 +41,6 @@ class OrganizationService  @Inject()(organisationDAO: OrganisationDAO)  {
   /*
       Populate Response
    */
-  def populateResponse(organisation:Organization): OrganisationResponse =
-   OrganisationResponse(organisation.id,organisation.name,organisation.details,organisation.date_created.getTime,organisation.author_id,organisation.date_updated.getTime,organisation.updated_by)
+  override def populateResponse(organisation:Organization): OrganisationResponse =
+    OrganisationResponse(organisation.id,organisation.name,organisation.details,organisation.date_created.getTime,organisation.author_id,organisation.date_updated.getTime,organisation.updated_by)
 }
