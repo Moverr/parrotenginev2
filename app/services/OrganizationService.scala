@@ -21,8 +21,16 @@ class OrganizationService  @Inject()(organisationDAO: OrganisationDAO)  {
   }
   //todo: list organinsations
   def list(authResponse: AuthResponse,limit:Int, offset:Int): Future[Seq[OrganisationResponse]]  = {
+    if(authResponse == null ) throw new Exception("Invalid Authentication")
+   val bn: =  organisationDAO.getOrganisations(authResponse.user_id,limit,offset)
+        .map(x=>x).map{
+      res=>
+        list[Se]
+        res.foreach{
+        x => populateResponse(x)
+      }
+    }
 
-    ???
   }
   //todo: Get Organization
   def get(authResponse: AuthResponse,id:Int,): Future[Option[OrganisationResponse]] ={
