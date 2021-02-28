@@ -31,13 +31,11 @@ class OrganisationDAO  @Inject()(dbConfigProvider: DatabaseConfigProvider) exten
 
 
   /*
-  
-     Get  Organisatioon by Id
+
+     Get  Organisation by Id
    */
   def getOrganisation(owner:Long,orgId:Long): Future[Option[Organization]]  =
     db.run(orgTable.filter(_.owner === owner).filter(_.id === orgId).result.headOption)
-
-
 
 
   /*
