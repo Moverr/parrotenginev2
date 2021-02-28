@@ -13,20 +13,20 @@ import slick.jdbc.PostgresProfile.api._
 import slick.lifted.TableQuery
 
 @Singleton
-class OrganisationDAO  @Inject()(dbConfigProvider: DatabaseConfigProvider) {
+class OrganisationDAO  @Inject()(dbConfigProvider: DatabaseConfigProvider) extends IOrganisatioonDAO {
 
 
   private  val dbConfig = dbConfigProvider.get[JdbcProfile]
-  lazy  val orgTable = TableQuery[OrganizationTable]
+  override lazy  val orgTable = TableQuery[OrganizationTable]
   import dbConfig._
 
 
- /*
- *
- * Get Organisation by owner
+  /*
+  *
+  * Get Organisation by owner
 
-  */
-  def getOrganisations(owner:Long,offset:Int,limit:Int): Future[Seq[Organization]]  =
+   */
+  override def getOrganisations(owner:Long,offset:Int,limit:Int): Future[Seq[Organization]]  =
     db.run(orgTable.filter(_.owner === owner).drop(offset).take(limit).result)
 
 
@@ -34,7 +34,7 @@ class OrganisationDAO  @Inject()(dbConfigProvider: DatabaseConfigProvider) {
   *
   * Create Organisation
  */
-  def createOrganisation(name:String,details:String,owner:Long): Future[Organization] =
+  override def createOrganisation(name:String,details:String,owner:Long): Future[Organization] =
     db.run(orgTable.returning(orgTable) += Organization(0L,name,details,owner, null,null,null,null))
 
 
