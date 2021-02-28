@@ -14,7 +14,7 @@ class OrganizationService  @Inject()(organisationDAO: OrganisationDAO)  {
 
   //todo: create organisation
   def create(authResponse: AuthResponse,request:OrganisationRequest): Future[OrganisationResponse] ={
-    if(authResponse == null ) throw new Exception("Invalid Auth Response ")
+    if(authResponse == null ) throw new Exception("Invalid Authentication")
 
      organisationDAO.createOrganisation(request.name,request.details,authResponse.user_id)
        .map(x=>populateResponse(x))
