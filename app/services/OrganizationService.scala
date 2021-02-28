@@ -35,9 +35,11 @@ class OrganizationService  @Inject()(organisationDAO: OrganisationDAO)  {
         case Some(value) => Future.successful(Some(populateResponse(value)))
         case None =>  Future.successful(None)
       }
+  }
 
-  }
-  def populateResponse(organisation:Organization): OrganisationResponse ={
-   OrganisationResponse(organisation.id,organisation.name,organisation.details,organisation.date_created) 
-  }
+  /*
+      Populate Response
+   */
+  def populateResponse(organisation:Organization): OrganisationResponse =
+   OrganisationResponse(organisation.id,organisation.name,organisation.details,organisation.date_created.getTime,organisation.author_id,organisation.date_updated.getTime,organisation.updated_by)
 }
