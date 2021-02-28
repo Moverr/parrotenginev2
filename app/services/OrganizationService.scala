@@ -10,10 +10,15 @@ import utitlities.JwtUtility
 class OrganizationService  @Inject()(organisationDAO: OrganisationDAO)  {
 
   //todo: create organisation
-  def create(request:OrganisationRequest,authorization:AuthResponse): Unit ={
+  def create(authorization:AuthResponse,request:OrganisationRequest): Unit ={
     ???
   }
   //todo: list organinsations
-
+  def list(authorization:AuthResponse,limit:Int, offset:Int): Unit ={
+    ???
+  }
   //todo: Get Organization
+  def get(authorization:AuthResponse,id:Int,): Unit ={
+    ???
+  }
 }
