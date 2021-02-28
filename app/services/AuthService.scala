@@ -48,7 +48,7 @@ class AuthService @Inject()(userDao: UserDao )   {
 
   private def populateBasic(user: User): AuthResponse = {
     val pairString:String = user.username+":"+user.password
-    AuthResponse(JwtUtility.generateKey(pairString), user.username)
+    AuthResponse(JwtUtility.generateKey(pairString), user.username,user.id)
   }
 
   private def decryptPairString(pairString:String ):LoginRequest ={

@@ -8,7 +8,7 @@ import utitlities.JwtUtility
 
 @Singleton
 class OrganizationService  @Inject()(organisationDAO: OrganisationDAO)  {
-
+  OrganisationResponse
   //todo: create organisation
   def create(authorization:AuthResponse,request:OrganisationRequest): Unit ={
     ???
