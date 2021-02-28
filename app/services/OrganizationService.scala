@@ -2,15 +2,13 @@ package services
 
 import controllers.requests.OrganisationRequest
 import controllers.responses.{AuthResponse, OrganisationResponse}
-import daos.{OrganisationDAO, UserDao}
+import daos.{OrganisationDAO}
 import db.tables.Organization
 import javax.inject.{Inject, Singleton}
-import utitlities.JwtUtility
 
-import scala.collection.mutable.ListBuffer
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import scala.util.{Failure, Success}
+
 
 @Singleton
 class OrganizationService  @Inject()(organisationDAO: OrganisationDAO)  {
@@ -26,7 +24,8 @@ class OrganizationService  @Inject()(organisationDAO: OrganisationDAO)  {
   //todo: list organinsations
   def list(authResponse: AuthResponse,limit:Int, offset:Int): Future[Seq[OrganisationResponse]]  = {
     if(authResponse == null ) throw new Exception("Invalid Authentication")
-      organisationDAO.getOrganisations(authResponse.user_id,limit,offset).map(y=>y.map(p=>populateResponse(p)))
+      organisationDAO.getOrganisations(authResponse.user_id,limit,offset)
+        .map(y=>y.map(p=>populateResponse(p)))
   }
 
   //todo: Get Organization
