@@ -21,15 +21,15 @@ class OrganizationController  @Inject()(val cc: ControllerComponents,
   //todo: create Organization
   def create = Action.async { implicit  request =>
     //todo: read the header params
-    val token = request.headers.get("authorization").get
-    val authResponse:AuthResponse  = authService.validateToken(token).map[AuthResponse]
+    val authResponse:AuthResponse  = authService.validateToken(request.headers.get("authorization").get).map[AuthResponse]
 
 
     //todo: read the body params
     val name = request.body.asJson.get("name").as[String]
     val details =  request.body.asJson.get("details").as[String]
     val orgRequest =   OrganisationRequest(name,details)
-    //orgservice.create(orgRequest)
+
+    orgservice.create(authResponse,orgRequest)
     Future.successful(Ok)
   }
 
