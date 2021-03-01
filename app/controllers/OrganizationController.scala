@@ -10,10 +10,14 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
-class OrganizationController  @Inject()(cc: ControllerComponents,orgservice: OrganizationService)
+class OrganizationController  @Inject()(val cc: ControllerComponents,val orgservice: OrganizationService)
   extends AbstractController(cc){
 
   //todo: create Organization
+  def create = Action.async { implicit  request => 
+
+    Future.successful(Ok)
+  }
 
 
   //todo: list Organization
