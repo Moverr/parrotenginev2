@@ -2,9 +2,10 @@ package controllers
 
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{AbstractController, ControllerComponents}
+import services.OrganizationService
 
 @Singleton
-class OrganizationController @Inject()(cc: ControllerComponents) extends AbstractController(cc){
+class OrganizationController @Inject()(cc: ControllerComponents,orgservice: OrganizationService) extends AbstractController(cc){
 
   //todo: create Organization
 
@@ -14,3 +15,5 @@ class OrganizationController @Inject()(cc: ControllerComponents) extends Abstrac
 
 
 }
+
+//noted : level. topics >>
