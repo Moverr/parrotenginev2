@@ -22,13 +22,8 @@ class OrganizationController  @Inject()(val cc: ControllerComponents,
   def create = Action.async { implicit  request =>
     //todo: read the header params
     val token = request.headers.get("authorization").get
-    val results  = authService.validateToken(token)
-    
-    val result  = authService.validateToken(token)
-    result.flatMap{
-      case Some(value) => Future.successful("None")
-      case None => Future.successful("Invalid Username and Passowrd ")
-    }
+    val authResponse:AuthResponse  = authService.validateToken(token).map[AuthResponse]
+
 
     //todo: read the body params
     val name = request.body.asJson.get("name").as[String]
