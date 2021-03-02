@@ -30,7 +30,10 @@ class OrganizationController  @Inject()(val cc: ControllerComponents,
     val orgRequest =   OrganisationRequest(name,details)
 
     orgservice.create(authResponse,orgRequest)
-    Future.successful(Ok)
+        .flatMap{
+          x=>Future.successful(Ok(x))
+        }
+
   }
 
 
