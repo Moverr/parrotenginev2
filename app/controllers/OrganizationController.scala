@@ -44,7 +44,7 @@ def list(from:Int,limit:Int) = Action.async{
 }
   //todo: Get Organization by Id
 
-  def get(organisation:Int) = Action.async{
+  def get(id:Int) = Action.async{
 
     Future.successful(Ok("Interestging"))
   }
