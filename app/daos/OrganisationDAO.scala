@@ -41,7 +41,7 @@ class OrganisationDAO  @Inject()(dbConfigProvider: DatabaseConfigProvider) exten
   * Create Organisation
  */
     def createOrganisation(name:String,details:String,owner:Long): Future[Organization] =
-    db.run(orgTable.returning(orgTable) += Organization(0L,name,details,owner, null,null,null,null))
+    db.run(orgTable.returning(orgTable) += Organization(0L,name,details,owner, null,0L,null,0L))
 
 
 }

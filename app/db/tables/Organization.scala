@@ -7,7 +7,7 @@ import slick.sql.SqlProfile.ColumnOption.SqlType
 import slick.jdbc.PostgresProfile.api._
 import slick.lifted.TableQuery
 
-case class Organization(id:Long = 0L, name:String, details:String,owner:Long, date_created:Timestamp,author_id:Long=null, date_updated:Timestamp,updated_by:Long =null)
+case class Organization(id:Long = 0L, name:String, details:String,owner:Long, date_created:Timestamp,author_id:Option[Long], date_updated:Option[Timestamp],updated_by:Option[Long])
 
 
 class OrganizationTable(tag: Tag) extends Table[Organization](tag,"organisations"){
