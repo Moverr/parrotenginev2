@@ -21,7 +21,8 @@ class OrganizationController  @Inject()(val cc: ControllerComponents,
   //todo: create Organization
   def create = Action.async { implicit  request =>
     //todo: read the header params
-    val authResponse:AuthResponse  = authService.validateToken(request.headers.get("authorization").get).map[AuthResponse]
+    val authResponse:AuthResponse  = null
+      //authService.validateToken(request.headers.get("authorization").get).map[AuthResponse]
 
 
     //todo: read the body params
