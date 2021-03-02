@@ -38,10 +38,16 @@ class OrganizationController  @Inject()(val cc: ControllerComponents,
 
 
   //todo: list Organization
+def list(from:Int,limit:Int) = Action.async{
 
+  Future.successful(Ok("Interestging"))
+}
   //todo: Get Organization by Id
 
+  def get(organisation:Int) = Action.async{
 
+    Future.successful(Ok("Interestging"))
+  }
 }
 
 //noted : level. topics >>
