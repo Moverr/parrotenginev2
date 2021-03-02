@@ -32,7 +32,7 @@ class OrganizationController  @Inject()(val cc: ControllerComponents,
 
     orgservice.create(authResponse,orgRequest)
         .flatMap{
-          x=>Future.successful(Ok(x))
+          x=>Future.successful(Ok("Writable Select"))
         }
 
   }
