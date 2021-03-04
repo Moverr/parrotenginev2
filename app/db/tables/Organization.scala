@@ -10,7 +10,7 @@ import slick.lifted.TableQuery
 case class Organization(id:Long = 0L, name:String, details:String,owner:Long, date_created:Timestamp,author_id:Long, date_updated:Timestamp,updated_by:Long)
 
 
-class OrganizationTable(tag: Tag) extends Table[(Long , String, String,Long, Timestamp,Long, Timestamp,Long)](tag,"organisations"){
+class OrganizationTable(tag: Tag) extends Table[Organization](tag,"organisations"){
 
   def id = column[Long]("id",O.PrimaryKey, O.AutoInc)
   def name = column[String]("name")
@@ -21,6 +21,6 @@ class OrganizationTable(tag: Tag) extends Table[(Long , String, String,Long, Tim
   def author_id =  column[Long]("author_id")
   def updated_by =  column[Long]("updated_by")
 
-  def * = (id,name,details,owner,date_created,author_id,date_updated,updated_by)
+  def * = (id,name,details,owner,date_created,author_id,date_updated,updated_by).mapTo[Organization]
   //mapTo[Organization]
 }
