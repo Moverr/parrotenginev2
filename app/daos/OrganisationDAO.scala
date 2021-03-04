@@ -6,7 +6,7 @@ import db.tables.{Organization, OrganizationTable, User, UserTable}
 
 import scala.concurrent.Future
 import javax.inject.{Inject, Singleton}
-import org.joda.time.{DateTime, DateTimeZone}
+import org.joda.time.{DateTime, DateTimeZone, LocalDateTime}
 import play.api.db.slick.DatabaseConfigProvider
 import slick.jdbc.JdbcProfile
 import slick.jdbc.PostgresProfile.api._
@@ -41,7 +41,7 @@ class OrganisationDAO  @Inject()(dbConfigProvider: DatabaseConfigProvider) exten
   * Create Organisation
  */
     def createOrganisation(name:String,details:String,owner:Long): Future[Organization] =
-    db.run(orgTable.returning(orgTable) += Organization(0L,name,details,owner, null,null,null,null))
+    db.run(orgTable.returning(orgTable) += Organization(0L,name,details,owner, new Timestamp(0L),0L,new Timestamp(0L),0L))
 
 
 }

@@ -21,7 +21,8 @@ class OrganizationController  @Inject()(val cc: ControllerComponents,
   //todo: create Organization
   def create = Action.async { implicit  request =>
     //todo: read the header params
-    val authResponse:AuthResponse  = authService.validateToken(request.headers.get("authorization").get).map[AuthResponse]
+    val authResponse:AuthResponse  = null
+      //authService.validateToken(request.headers.get("authorization").get).map[AuthResponse]
 
 
     //todo: read the body params
@@ -31,17 +32,23 @@ class OrganizationController  @Inject()(val cc: ControllerComponents,
 
     orgservice.create(authResponse,orgRequest)
         .flatMap{
-          x=>Future.successful(Ok(x))
+          x=>Future.successful(Ok("Writable Select"))
         }
 
   }
 
 
   //todo: list Organization
+def list(from:Int,limit:Int) = Action.async{
 
+  Future.successful(Ok("Interestging"))
+}
   //todo: Get Organization by Id
 
+  def get(id:Int) = Action.async{
 
+    Future.successful(Ok("Interestging"))
+  }
 }
 
 //noted : level. topics >>

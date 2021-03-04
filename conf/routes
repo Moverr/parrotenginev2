@@ -12,6 +12,12 @@ POST /v1/auth/register               controllers.AuthController.register
 POST /v1/auth/validate               controllers.AuthController.validate
 
 #Organisation Management 
+POST /v1/organisation                 controllers.OrganizationController.create
+GET  /v1/organisation/list            controllers.OrganizationController.list(offset:Int,limit:Int)
+GET  /v1/organisation                 controllers.OrganizationController.get(id:Long)
+
+#Station Management
+
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
