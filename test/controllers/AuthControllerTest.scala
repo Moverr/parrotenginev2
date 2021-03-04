@@ -21,7 +21,7 @@ class AuthControllerTest extends PlaySpec     {
   val user:User  = new User(1,"moverr@gmail.com","Password")
   val pairString:String = "moverr@gmail.com:Password"
   val request:LoginRequest = new LoginRequest(user.username,user.password)
-  val authResponse =   AuthResponse(JwtUtility.generateKey(pairString), user.username)
+  val authResponse =   AuthResponse(JwtUtility.generateKey(pairString), user.username,0L)
   val jsonLoginRequest = Json.parse("{\"username\":\""+user.username+"\", \"password\":\""+user.password+"\" }")
   val jsonRegistrationRequest = Json.parse("{\"email\":\""+user.username+"\", \"password\":\""+user.password+"\" }")
 
