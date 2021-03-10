@@ -14,7 +14,7 @@ POST /v1/auth/validate               controllers.AuthController.validate
 #Organisation Management 
 POST /v1/organisation                 controllers.OrganizationController.create
 GET  /v1/organisation/list            controllers.OrganizationController.list(offset:Int,limit:Int)
-GET  /v1/organisation                 controllers.OrganizationController.get(id:Long)
+GET  /v1/organisation                 controllers.OrganizationController.get(id:Int)
 
 #Station Management
 
