@@ -31,7 +31,7 @@ class AddressTable(tag: Tag) extends  Table[Address](tag,"addreses"){
   def updated_by =  column[Long]("updated_by")
 
 
-  override def * = (id,address_type,name,details,parent_type,parent_id,date_created,date_updated,author_id,updated_by).mapTo[Address]
+  override def * = (id,address_type,name,details,parent_type,parent_id,date_created,author_id,date_updated,updated_by).mapTo[Address]
 
 
 }
