@@ -31,7 +31,9 @@ class AuthService @Inject()(userDao: UserDao )   {
   }
 
 
-  def validateToken(token: String): Future[Option[AuthResponse]] =  validate(decryptPairString(token))
+  def validateToken(token: String): Future[Option[AuthResponse]] = {
+    validate(decryptPairString(token))
+  }
 
 
 
