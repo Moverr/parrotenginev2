@@ -14,10 +14,11 @@ import scala.concurrent.Future
 class OrganizationService  @Inject()(organisationDAO: OrganisationDAO)  extends IOrganisationServiceTrait {
 
   //todo: create organisation
-  override def create(authResponse: AuthResponse,request:OrganisationRequest): Future[OrganisationResponse] ={
+  override def create(authResponse: Future[AuthResponse],request:OrganisationRequest): Future[OrganisationResponse] ={
     if(authResponse == null ) throw new Exception("Invalid Authentication")
 
-    organisationDAO.createOrganisation(request.name,request.details,authResponse.user_id)
+
+    organisationDAO.createOrganisation(request.name,request.details,authResponse)
       .map(x=>populateResponse(x))
   }
 
