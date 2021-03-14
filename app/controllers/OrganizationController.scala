@@ -42,7 +42,7 @@ class OrganizationController  @Inject()(val cc: ControllerComponents,
     orgservice.create(authResponse.head,orgRequest)
         .flatMap{
               //todo: implicit writable for organiszation response
-          result=>Future.successful(Ok("Writable Select"))
+          result=>Future.successful(Ok(result))
         }
 
   }
