@@ -27,7 +27,8 @@ class OrganizationController  @Inject()(val cc: ControllerComponents,
     //val result:Future[AuthResponse]  =  authService.validateToken(authorization)
 
     val authResponse:AuthResponse = (authService.validateToken(authorization)
-                                    .map(response=>response).value.get).get.get
+                                    .map(response=>response).value.get).get.getOrElse(Unauthorized("Invalid "))
+
 
 
     //todo: read the body params
