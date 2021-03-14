@@ -24,19 +24,22 @@ class OrganizationController  @Inject()(val cc: ControllerComponents,
   def create = Action.async { implicit  request =>
     //todo: read the header params
     val authorization:String = request.headers.get("authorization").getOrElse("")
-    //val result:Future[AuthResponse]  =  authService.validateToken(authorization)
-
-    val authResponse:AuthResponse = (authService.validateToken(authorization)
-                                    .map(response=>response).value.get).get.getOrElse(Unauthorized("Invalid "))
 
 
+    val authResponse:Option[AuthResponse] = (authService.validateToken(authorization)
+                                    .map(response=>response).value.get).get
+
+    //todo: Matching
+    authResponse match {
+      case None =>   Future.successful(Unauthorized("You are not authorized to this item "))
+    }
 
     //todo: read the body params
     val name = request.body.asJson.get("name").as[String]
     val details =  request.body.asJson.get("details").as[String]
     val orgRequest =   OrganisationRequest(name,details)
 
-    orgservice.create(authResponse,orgRequest)
+    orgservice.create(authResponse.head,orgRequest)
         .flatMap{
           x=>Future.successful(Ok("Writable Select"))
         }
