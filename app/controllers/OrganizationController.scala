@@ -28,6 +28,7 @@ class OrganizationController  @Inject()(val cc: ControllerComponents,
 
     //todo: Matching
     authResponse match {
+      case Some(value) => ???
       case None =>   Future.successful(Unauthorized("You are not authorized to this item "))
     }
 
