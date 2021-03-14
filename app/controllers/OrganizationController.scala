@@ -4,6 +4,7 @@ import controllers.requests.OrganisationRequest
 import controllers.responses.AuthResponse
 import play.api.mvc._
 import javax.inject.{Inject, Singleton}
+import play.api.libs.json.Json
 import play.api.mvc.{AbstractController, ControllerComponents}
 import play.mvc.Action
 import services.{AuthService, OrganizationService}
@@ -42,7 +43,7 @@ class OrganizationController  @Inject()(val cc: ControllerComponents,
     orgservice.create(authResponse.head,orgRequest)
         .flatMap{
               //todo: implicit writable for organiszation response
-          result=>Future.successful(Ok(result))
+          result=>Future.successful(Ok(Json.toJson(result)))
         }
 
   }
