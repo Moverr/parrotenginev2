@@ -66,6 +66,7 @@ class AuthController @Inject()(
     try{
       val token = request.body.asJson.get("token").as[String]
       val result = authService.validateToken(token)
+
       result .flatMap{
         case Some(response) =>  Future.successful(Ok(Json.toJson(response)))
         case None => Future.successful(Unauthorized("Invalid User Credentials"))

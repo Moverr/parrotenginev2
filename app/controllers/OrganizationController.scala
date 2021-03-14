@@ -26,8 +26,8 @@ class OrganizationController  @Inject()(val cc: ControllerComponents,
     val authorization:String = request.headers.get("authorization").getOrElse("")
     //val result:Future[AuthResponse]  =  authService.validateToken(authorization)
 
-    val authResponse:AuthResponse = (authService.validateToken(authorization).map(response=>response).value.get).get
-
+    val authResponse:AuthResponse = (authService.validateToken(authorization)
+                                    .map(response=>response).value.get).get.get
 
 
     //todo: read the body params
