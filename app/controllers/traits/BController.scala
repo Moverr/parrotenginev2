@@ -9,15 +9,16 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 abstract  class BController @Inject()( val authService:AuthService,
                                        val cc: ControllerComponents) extends AbstractController(cc){
-  def validateToken(authorization:String ): Unit ={
+  def validateToken(authorization:String ): AuthResponse ={
+
+    if(authorization == "") throw  new Exception("You are not authorized to this item ")
 
     val authResponse:Option[AuthResponse] = (authService.validateToken(authorization)
       .map(response=>response).value.get).get
 
-    //todo: Matching
     authResponse match {
-      case Some(value) => ???
-      case None =>   Future.successful(Unauthorized("You are not authorized to this item "))
+      case Some(value) => value
+      case None =>   throw  new Exception("You are not authorized to this item ")
     }
   }
 }

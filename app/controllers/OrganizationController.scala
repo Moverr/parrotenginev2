@@ -15,7 +15,7 @@ import implicits.OrganizationResponseWrites._
 @Singleton
 class OrganizationController  @Inject()(val cc: ControllerComponents,
                                         val orgservice: OrganizationService,
-                                        val authService:AuthService
+                                        override val authService:AuthService
                                        )
   extends BController(cc){
 
@@ -23,25 +23,15 @@ class OrganizationController  @Inject()(val cc: ControllerComponents,
   def create = Action.async { implicit  request =>
     //todo: read the header params
     val authorization:String = request.headers.get("authorization").getOrElse("")
-
-
-    val authResponse:Option[AuthResponse] = (authService.validateToken(authorization)
-                                    .map(response=>response).value.get).get
-
-    //todo: Matching
-    authResponse match {
-      case Some(value) => ???
-      case None =>   Future.successful(Unauthorized("You are not authorized to this item "))
-    }
+    val authResponse:AuthResponse = validateToken(authorization)
 
     //todo: read the body params
     val name = request.body.asJson.get("name").as[String]
     val details =  request.body.asJson.get("details").as[String]
     val orgRequest =   OrganisationRequest(name,details)
 
-    orgservice.create(authResponse.head,orgRequest)
+    orgservice.create(authResponse,orgRequest)
         .flatMap{
-              //todo: implicit writable for organiszation response
           result=>Future.successful(Ok(Json.toJson(result)))
         }
 
