@@ -2,12 +2,14 @@ package controllers
 
 import controllers.requests.OrganisationRequest
 import controllers.responses.AuthResponse
+import controllers.traits.BController
 import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Json
 import play.api.mvc.{AbstractController, ControllerComponents}
 import services.{AuthService, OrganizationService}
+
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.{ Future}
+import scala.concurrent.Future
 import implicits.OrganizationResponseWrites._
 
 @Singleton
@@ -15,7 +17,7 @@ class OrganizationController  @Inject()(val cc: ControllerComponents,
                                         val orgservice: OrganizationService,
                                         val authService:AuthService
                                        )
-  extends AbstractController(cc){
+  extends BController(cc){
 
   //todo: create Organization
   def create = Action.async { implicit  request =>
