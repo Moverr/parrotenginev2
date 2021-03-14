@@ -2,12 +2,13 @@ package services
 
 import controllers.requests.OrganisationRequest
 import controllers.responses.{AuthResponse, OrganisationResponse}
-import daos.{OrganisationDAO}
+import daos.OrganisationDAO
 import db.tables.Organization
 import javax.inject.{Inject, Singleton}
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, Future}
 
 
 @Singleton
@@ -16,6 +17,8 @@ class OrganizationService  @Inject()(organisationDAO: OrganisationDAO)  extends 
   //todo: create organisation
   override def create(authResponse: AuthResponse,request:OrganisationRequest): Future[OrganisationResponse] ={
     if(authResponse == null ) throw new Exception("Invalid Authentication")
+
+
 
     organisationDAO.createOrganisation(request.name,request.details,authResponse.user_id)
       .map(x=>populateResponse(x))

@@ -30,8 +30,18 @@ class AuthService @Inject()(userDao: UserDao )   {
 
   }
 
+  // Validate Token
+  def validateToken(authorizationToken: String):  AuthResponse = {
+    if(authorizationToken == "") throw  new Exception("You are not authorized to this item ")
+    val authResponse:Option[AuthResponse] = ( validate(decryptPairString(authorizationToken))
+      .map(response=>response).value.get).get
+    authResponse match {
+      case Some(value) => value
+      case None =>   throw  new Exception("You are not authorized to this item ")
+    }
 
-  def validateToken(token: String): Future[Option[AuthResponse]] =  validate(decryptPairString(token))
+  }
+
 
 
 
