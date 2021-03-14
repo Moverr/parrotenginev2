@@ -11,6 +11,7 @@ import services.{AuthService, OrganizationService}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
+import scala.util.Try
 
 @Singleton
 class OrganizationController  @Inject()(val cc: ControllerComponents,
@@ -23,10 +24,11 @@ class OrganizationController  @Inject()(val cc: ControllerComponents,
   def create = Action.async { implicit  request =>
     //todo: read the header params
     val authorization:String = request.headers.get("authorization").getOrElse("")
-    val authResponse  =  Await.result(authService.validateToken(authorization),Duration.Inf)
+    //val result:Future[AuthResponse]  =  authService.validateToken(authorization)
 
-    val auth:AuthResponse = authService.validateToken(authorization)
-      .onComplete(f=>f.fold())
+    val authResponse:AuthResponse = (authService.validateToken(authorization).map(response=>response).value.get).get
+
+
 
     //todo: read the body params
     val name = request.body.asJson.get("name").as[String]
