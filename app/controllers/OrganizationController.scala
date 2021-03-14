@@ -9,7 +9,8 @@ import play.mvc.Action
 import services.{AuthService, OrganizationService}
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, Future}
 
 @Singleton
 class OrganizationController  @Inject()(val cc: ControllerComponents,
@@ -22,14 +23,10 @@ class OrganizationController  @Inject()(val cc: ControllerComponents,
   def create = Action.async { implicit  request =>
     //todo: read the header params
     val authorization:String = request.headers.get("authorization").getOrElse("")
-    val authResponse  = authService.validateToken(authorization)
+    val authResponse  =  Await.result(authService.validateToken(authorization),Duration.Inf)
 
-
-
-
-
-     // .map[AuthResponse]
-
+    val auth:AuthResponse = authService.validateToken(authorization)
+      .onComplete(f=>f.fold())
 
     //todo: read the body params
     val name = request.body.asJson.get("name").as[String]
