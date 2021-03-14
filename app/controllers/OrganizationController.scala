@@ -13,17 +13,19 @@ import scala.concurrent.Future
 import implicits.OrganizationResponseWrites._
 
 @Singleton
-class OrganizationController  @Inject()(val cc: ControllerComponents,
+class OrganizationController  @Inject()(
                                         val orgservice: OrganizationService,
-                                        override val authService:AuthService
+                                        val authService:AuthService,
+                                        val cc: ControllerComponents
+
                                        )
-  extends BController(cc){
+  extends AbstractController(cc){
 
   //todo: create Organization
   def create = Action.async { implicit  request =>
     //todo: read the header params
     val authorization:String = request.headers.get("authorization").getOrElse("")
-    val authResponse:AuthResponse = validateToken(authorization)
+    val authResponse:AuthResponse = authService.validateToken(authorization)
 
     //todo: read the body params
     val name = request.body.asJson.get("name").as[String]
