@@ -4,6 +4,11 @@ import com.nimbusds.jose.jwk._
 import com.nimbusds.jose.jwk.gen._
 
 
+def summation[A](value1:A,valueb:A): A = {
+  value1
+}
+
+summation(3,4)
 // RSA signatures require a public and private RSA key pair,
 // the public key must be made known to the JWS recipient to
 // allow the signatures to be verified
