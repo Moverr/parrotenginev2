@@ -43,6 +43,7 @@ class OrganizationController  @Inject()(
   //todo: list Organization
 def list(from:Int,limit:Int) = Action.async{
 
+  //todo: get Oganiszaton off to the new list 
   Future.successful(Ok("Interestging"))
 }
   //todo: Get Organization by Id
