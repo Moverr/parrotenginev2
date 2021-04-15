@@ -12,33 +12,37 @@ import scala.concurrent.{Await, Future}
 
 
 @Singleton
-class OrganizationService  @Inject()(organisationDAO: OrganisationDAO)  extends IOrganisationServiceTrait {
+class OrganizationService  @Inject()(organisationDAO: OrganisationDAO)  extends IOrganisationServiceTrait
+{
 
   //todo: create organisation
-  override def create(authResponse: AuthResponse,request:OrganisationRequest): Future[OrganisationResponse] ={
-    if(authResponse == null ) throw new Exception("Invalid Authentication")
+  override def create(authResponse: AuthResponse,request:OrganisationRequest): Either[java.lang.Throwable,Future[OrganisationResponse]]={
+    if(authResponse == null )   return  Left(new Exception("Invalid Authentication"))
 
-
-
-    organisationDAO.createOrganisation(request.name,request.details,authResponse.user_id)
-      .map(x=>populateResponse(x))
+       Right(organisationDAO.createOrganisation(request.name,request.details,authResponse.user_id)
+      .map(x=>populateResponse(x)))
   }
 
   //todo: list organinsations
-  override def list(authResponse: AuthResponse,limit:Int, offset:Int): Future[Seq[OrganisationResponse]]  = {
-    if(authResponse == null ) throw new Exception("Invalid Authentication")
+  override def list(authResponse: AuthResponse,limit:Int, offset:Int): Either[java.lang.Throwable,Future[Seq[OrganisationResponse]] ]= {
+    if(authResponse == null ) return  Left(new Exception("Invalid Authentication"))
+    Right(
     organisationDAO.getOrganisations(authResponse.user_id,limit,offset)
       .map(y=>y.map(p=>populateResponse(p)))
+    )
   }
 
   //todo: Get Organization
-  override def get(authResponse: AuthResponse,id:Int): Future[Option[OrganisationResponse]] ={
-    if(authResponse == null ) throw new Exception("Invalid Authentication")
+  override def get(authResponse: AuthResponse,id:Int):  Either[java.lang.Throwable,Future[Option[OrganisationResponse]]] ={
+    if(authResponse == null )  return  Left(new Exception("Invalid Authentication"))
+
+    Right(
     organisationDAO.getOrganisation(authResponse.user_id,id)
       .flatMap{
         case Some(value) => Future.successful(Some(populateResponse(value)))
         case None =>  Future.successful(None)
       }
+    )
   }
 
   /*

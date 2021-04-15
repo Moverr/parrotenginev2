@@ -1,7 +1,7 @@
 package controllers
 
 import controllers.requests.OrganisationRequest
-import controllers.responses.AuthResponse
+import controllers.responses.{AuthResponse, OrganisationResponse}
 import controllers.traits.BController
 import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Json
@@ -14,9 +14,9 @@ import implicits.OrganizationResponseWrites._
 
 @Singleton
 class OrganizationController  @Inject()(
-                                        val orgservice: OrganizationService,
-                                        val authService:AuthService,
-                                        val cc: ControllerComponents
+                                         val orgService: OrganizationService,
+                                         val authService:AuthService,
+                                         val cc: ControllerComponents
 
                                        )
   extends AbstractController(cc){
@@ -32,24 +32,65 @@ class OrganizationController  @Inject()(
     val details =  request.body.asJson.get("details").as[String]
     val orgRequest =   OrganisationRequest(name,details)
 
-    orgservice.create(authResponse,orgRequest)
-        .flatMap{
+    try{
+    orgService.create(authResponse,orgRequest)
+    match {
+        case Left(exception) =>Future.successful(BadRequest(Json.toJson(exception.getMessage)))
+        case Right(value) =>value.flatMap{
           result=>Future.successful(Ok(Json.toJson(result)))
         }
+      }
+
+    }
+    catch {
+      case e:Exception=>Future.successful(InternalServerError(e.getMessage))
+    }
 
   }
 
 
   //todo: list Organization
-def list(from:Int,limit:Int) = Action.async{
+def list(offset:Int,limit:Int) = Action.async{  implicit  request =>
+  val authorization:String = request.headers.get("authorization").getOrElse("")
+  val authResponse:AuthResponse = authService.validateToken(authorization)
+  try {
+     orgService.list(authResponse, limit, offset)
+     match {
+      case Left(exception) => Future.successful(BadRequest(Json.toJson(exception.getMessage)))
+      case Right(result) => result flatMap {
+                            result => Future.successful(Ok(Json.toJson(result)))
+                            }
+    }
 
-  Future.successful(Ok("Interestging"))
+  }
+  catch {
+    case e:Exception=>Future.successful(InternalServerError(e.getMessage))
+  }
+
 }
   //todo: Get Organization by Id
 
-  def get(id:Int) = Action.async{
+  def get(id:Int) = Action.async{  implicit  request =>
+    val authorization:String = request.headers.get("authorization").getOrElse("")
+    val authResponse:AuthResponse = authService.validateToken(authorization)
+    try {
 
-    Future.successful(Ok("Interestging"))
+
+    val res = orgService.get(authResponse,id)
+
+      res match {
+        case Left(exception) => Future.successful(BadRequest(Json.toJson(exception.getMessage)))
+        case Right(result) =>  result.flatMap{
+            result =>
+                 Future.successful(Ok(Json.toJson(result.get)))
+      }
+      }
+
+    }
+    catch {
+      case e:Exception=>Future.successful(InternalServerError(e.getMessage))
+    }
+
   }
 }
 
