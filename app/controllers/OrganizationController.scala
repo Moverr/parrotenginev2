@@ -32,10 +32,16 @@ class OrganizationController  @Inject()(
     val details =  request.body.asJson.get("details").as[String]
     val orgRequest =   OrganisationRequest(name,details)
 
-    orgservice.create(authResponse,orgRequest)
+    try{
+      orgservice.create(authResponse,orgRequest)
         .flatMap{
           result=>Future.successful(Ok(Json.toJson(result)))
         }
+
+    }
+    catch {
+      case e:Exception=>Future.successful(InternalServerError(e.getMessage))
+    }
 
   }
 
@@ -43,7 +49,7 @@ class OrganizationController  @Inject()(
   //todo: list Organization
 def list(from:Int,limit:Int) = Action.async{
 
-  //todo: get Oganiszaton off to the new list 
+  //todo: get Oganiszaton off to the new list
   Future.successful(Ok("Interestging"))
 }
   //todo: Get Organization by Id
