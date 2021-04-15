@@ -33,13 +33,16 @@ class OrganizationService  @Inject()(organisationDAO: OrganisationDAO)  extends 
   }
 
   //todo: Get Organization
-  override def get(authResponse: AuthResponse,id:Int): Future[Option[OrganisationResponse]] ={
-    if(authResponse == null ) throw new Exception("Invalid Authentication")
+  override def get(authResponse: AuthResponse,id:Int):  Either[java.lang.Throwable,Future[Option[OrganisationResponse]]] ={
+    if(authResponse == null )  return  Left(new Exception("Invalid Authentication"))
+
+    Right(
     organisationDAO.getOrganisation(authResponse.user_id,id)
       .flatMap{
         case Some(value) => Future.successful(Some(populateResponse(value)))
         case None =>  Future.successful(None)
       }
+    )
   }
 
   /*

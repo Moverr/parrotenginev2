@@ -74,11 +74,17 @@ def list(offset:Int,limit:Int) = Action.async{  implicit  request =>
     val authorization:String = request.headers.get("authorization").getOrElse("")
     val authResponse:AuthResponse = authService.validateToken(authorization)
     try {
-    orgService.get(authResponse,id)
-     .flatMap{
-      result =>
-        Future.successful(Ok(Json.toJson(result.get)))
-    }
+
+
+    val res = orgService.get(authResponse,id)
+
+      res match {
+        case Left(exception) => Future.successful(BadRequest(Json.toJson(exception.getMessage)))
+        case Right(result) =>  result.flatMap{
+            result =>
+                 Future.successful(Ok(Json.toJson(result.get)))
+      }
+      }
 
     }
     catch {
