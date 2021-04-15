@@ -14,9 +14,9 @@ import implicits.OrganizationResponseWrites._
 
 @Singleton
 class OrganizationController  @Inject()(
-                                        val orgservice: OrganizationService,
-                                        val authService:AuthService,
-                                        val cc: ControllerComponents
+                                         val orgService: OrganizationService,
+                                         val authService:AuthService,
+                                         val cc: ControllerComponents
 
                                        )
   extends AbstractController(cc){
@@ -33,7 +33,7 @@ class OrganizationController  @Inject()(
     val orgRequest =   OrganisationRequest(name,details)
 
     try{
-    orgservice.create(authResponse,orgRequest)
+    orgService.create(authResponse,orgRequest)
     match {
         case Left(exception) =>Future.successful(BadRequest(Json.toJson(exception.getMessage)))
         case Right(value) =>value.flatMap{
@@ -54,9 +54,12 @@ def list(offset:Int,limit:Int) = Action.async{  implicit  request =>
   val authorization:String = request.headers.get("authorization").getOrElse("")
   val authResponse:AuthResponse = authService.validateToken(authorization)
   try {
-   orgservice.list(authResponse, limit, offset)
-     .flatMap {
-      result => Future.successful(Ok(Json.toJson(result)))
+     orgService.list(authResponse, limit, offset)
+     match {
+      case Left(exception) => Future.successful(BadRequest(Json.toJson(exception.getMessage)))
+      case Right(result) => result flatMap {
+                            result => Future.successful(Ok(Json.toJson(result)))
+                            }
     }
 
   }
@@ -71,7 +74,7 @@ def list(offset:Int,limit:Int) = Action.async{  implicit  request =>
     val authorization:String = request.headers.get("authorization").getOrElse("")
     val authResponse:AuthResponse = authService.validateToken(authorization)
     try {
-    orgservice.get(authResponse,id)
+    orgService.get(authResponse,id)
      .flatMap{
       result =>
         Future.successful(Ok(Json.toJson(result.get)))
