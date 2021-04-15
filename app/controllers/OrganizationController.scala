@@ -76,9 +76,9 @@ def list(offset:Int,limit:Int) = Action.async{  implicit  request =>
     try {
 
 
-    val res = orgService.get(authResponse,id)
+    orgService.get(authResponse,id)
 
-      res match {
+        match {
         case Left(exception) => Future.successful(BadRequest(Json.toJson(exception.getMessage)))
         case Right(result) =>  result.flatMap{
             result =>
