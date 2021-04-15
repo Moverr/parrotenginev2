@@ -33,10 +33,13 @@ class OrganizationController  @Inject()(
     val orgRequest =   OrganisationRequest(name,details)
 
     try{
-      orgservice.create(authResponse,orgRequest)
-        .flatMap{
+    orgservice.create(authResponse,orgRequest)
+    match {
+        case Left(exception) =>Future.successful(BadRequest(Json.toJson(exception.getMessage)))
+        case Right(value) =>value.flatMap{
           result=>Future.successful(Ok(Json.toJson(result)))
         }
+      }
 
     }
     catch {

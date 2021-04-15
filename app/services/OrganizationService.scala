@@ -12,16 +12,15 @@ import scala.concurrent.{Await, Future}
 
 
 @Singleton
-class OrganizationService  @Inject()(organisationDAO: OrganisationDAO)  extends IOrganisationServiceTrait {
+class OrganizationService  @Inject()(organisationDAO: OrganisationDAO)  extends IOrganisationServiceTrait
+{
 
   //todo: create organisation
-  override def create(authResponse: AuthResponse,request:OrganisationRequest): Future[OrganisationResponse] ={
-    if(authResponse == null ) throw new Exception("Invalid Authentication")
+  override def create(authResponse: AuthResponse,request:OrganisationRequest): Either[java.lang.Throwable,Future[OrganisationResponse]]={
+    if(authResponse == null )   return  Left(new Exception("Invalid Authentication"))
 
-
-
-    organisationDAO.createOrganisation(request.name,request.details,authResponse.user_id)
-      .map(x=>populateResponse(x))
+       Right(organisationDAO.createOrganisation(request.name,request.details,authResponse.user_id)
+      .map(x=>populateResponse(x)))
   }
 
   //todo: list organinsations
