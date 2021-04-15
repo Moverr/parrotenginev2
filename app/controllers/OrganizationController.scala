@@ -47,11 +47,11 @@ class OrganizationController  @Inject()(
 
 
   //todo: list Organization
-def list(offset:Int,limit:Int) = Action.async{
+def list(offset:Int,limit:Int) = Action.async{  implicit  request =>
   val authorization:String = request.headers.get("authorization").getOrElse("")
   val authResponse:AuthResponse = authService.validateToken(authorization)
   try {
-    Future[Seq[OrganisationResponse]] = orgservice.list(authResponse, limit, offset)
+   orgservice.list(authResponse, limit, offset)
      .flatMap {
       result => Future.successful(Ok(Json.toJson(result)))
     }
@@ -64,13 +64,14 @@ def list(offset:Int,limit:Int) = Action.async{
 }
   //todo: Get Organization by Id
 
-  def get(id:Int) = Action.async{
+  def get(id:Int) = Action.async{  implicit  request =>
     val authorization:String = request.headers.get("authorization").getOrElse("")
     val authResponse:AuthResponse = authService.validateToken(authorization)
     try {
-    val result : Future[Option[OrganisationResponse]] = orgservice.get(AuthResponse,id)
-    result.flatMap{
-      result =>   Future.successful(Ok(Json.toJson(result.getOrElse("Record Doeos not Exist"))))
+    orgservice.get(authResponse,id)
+     .flatMap{
+      result =>
+        Future.successful(Ok(Json.toJson(result.get)))
     }
 
     }
