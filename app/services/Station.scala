@@ -35,6 +35,6 @@ class StationTable(tag: Tag) extends Table[Station](tag,"stations"){
   def author_id =  column[Long]("author_id")
   def updated_by =  column[Long]("updated_by")
 
-  def * = (id,name,details,location,date_created,author_id,date_updated,updated_by).mapTo[Station]
+  def * = (id,organization_id,name,details,location,date_created,author_id,date_updated,updated_by).mapTo[Station]
   //mapTo[Organization]
 }
