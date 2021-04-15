@@ -1,7 +1,7 @@
 package controllers
 
 import controllers.requests.OrganisationRequest
-import controllers.responses.AuthResponse
+import controllers.responses.{AuthResponse, OrganisationResponse}
 import controllers.traits.BController
 import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Json
@@ -47,16 +47,37 @@ class OrganizationController  @Inject()(
 
 
   //todo: list Organization
-def list(from:Int,limit:Int) = Action.async{
+def list(offset:Int,limit:Int) = Action.async{
+  val authorization:String = request.headers.get("authorization").getOrElse("")
+  val authResponse:AuthResponse = authService.validateToken(authorization)
+  try {
+    Future[Seq[OrganisationResponse]] = orgservice.list(authResponse, limit, offset)
+     .flatMap {
+      result => Future.successful(Ok(Json.toJson(result)))
+    }
 
-  //todo: get Oganiszaton off to the new list
-  Future.successful(Ok("Interestging"))
+  }
+  catch {
+    case e:Exception=>Future.successful(InternalServerError(e.getMessage))
+  }
+
 }
   //todo: Get Organization by Id
 
   def get(id:Int) = Action.async{
+    val authorization:String = request.headers.get("authorization").getOrElse("")
+    val authResponse:AuthResponse = authService.validateToken(authorization)
+    try {
+    val result : Future[Option[OrganisationResponse]] = orgservice.get(AuthResponse,id)
+    result.flatMap{
+      result =>   Future.successful(Ok(Json.toJson(result.getOrElse("Record Doeos not Exist"))))
+    }
 
-    Future.successful(Ok("Interestging"))
+    }
+    catch {
+      case e:Exception=>Future.successful(InternalServerError(e.getMessage))
+    }
+
   }
 }
 
