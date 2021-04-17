@@ -33,12 +33,17 @@ class AuthService @Inject()(userDao: UserDao )   {
   // Validate Token
   def validateToken(authorizationToken: String):  AuthResponse = {
     if(authorizationToken == "") throw  new Exception("You are not authorized to this item ")
-    val authResponse:Option[AuthResponse] = ( validate(decryptPairString(authorizationToken))
+
+    val stringpair = JwtUtility.retrievePasswordPair(authorizationToken)
+    val x = decryptPairString(stringpair)
+    throw  new Exception("You are not authorized to this item "+x.password)
+   /* val authResponse:Option[AuthResponse] = ( validate(decryptPairString(stringpair))
       .map(response=>response).value.get).get
     authResponse match {
       case Some(value) => value
-      case None =>   throw  new Exception("You are not authorized to this item ")
+      case None =>   throw  new Exception("You are not authorized to this item "+stringpair)
     }
+    */
 
   }
 
