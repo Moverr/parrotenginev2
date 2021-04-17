@@ -25,7 +25,7 @@ class AuthService @Inject()(userDao: UserDao )   {
 
     response.flatMap{
       case None => Future.successful(None)
-      case Some(value) => Future.successful(populateResponse(value))
+      case Some(value) => Future.successful(populateResponse(value,loginRequest))
     }
 
   }
@@ -57,10 +57,14 @@ class AuthService @Inject()(userDao: UserDao )   {
   }
 
 
-  def populateResponse(user: User): Option[AuthResponse]  =  Some(populateBasic(user))
+  def populateResponse(user: User,login:LoginRequest): Option[AuthResponse]  =  Some(populateBasic(user,login))
 
-  private def populateBasic(user: User): AuthResponse = {
-    val pairString:String = user.username+":"+user.password
+  //Populate Response and move
+  /*
+   Use the basic Passwrd just saw too hide the background
+   */
+  private def populateBasic(user: User,login:LoginRequest): AuthResponse = {
+    val pairString:String = login.username+":"+login.password
     AuthResponse(JwtUtility.generateKey(pairString), user.username,user.id)
   }
 
