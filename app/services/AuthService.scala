@@ -38,14 +38,7 @@ class AuthService @Inject()(userDao: UserDao )   {
 
 
   //validate Token Overloading
-  def validateTokenv2(authorizationToken: String): AuthResponse= {
-    val b1 = JwtUtility.retrievePasswordPair(authorizationToken)
-    val xt = decryptPairString(b1)
-   val response = validate(xt)
-     Await.result( response.map(x=>x.get),Duration.Inf)
-  }
-
-
+  def validateTokenv2(authorizationToken: String): AuthResponse=  Await.result( validate( decryptPairString(JwtUtility.retrievePasswordPair(authorizationToken))).map(x=>x.get),Duration.Inf)
 
   def register(registerRequest: RegisterRequest): Either[java.lang.Throwable,AuthResponse] ={
      val existingUser:Seq[User] =   Await.result( userDao.getUsersByUsername(registerRequest.email),Duration.Inf)
