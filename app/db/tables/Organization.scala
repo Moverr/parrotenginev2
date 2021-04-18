@@ -22,5 +22,5 @@ class OrganizationTable(tag: Tag) extends Table[Organization](tag,"organisations
   def updated_by =  column[Long]("updated_by")
 
   def * = (id,name,details,owner,date_created,author_id,date_updated,updated_by).mapTo[Organization]
-  //mapTo[Organization]
+
 }
