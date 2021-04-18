@@ -30,22 +30,16 @@ class AuthService @Inject()(userDao: UserDao )   {
 
   }
 
-  // Validate Token. from JWT
-  def validateToken(authorizationToken: String):  Either[java.lang.Throwable,Future[Option[AuthResponse]]] = {
-    if(authorizationToken == "") throw  new Exception("You are not authorized to this item ")
+  //validate token
+  def validateToken(authorizationToken: String):Either[java.lang.Throwable, Future[Option[AuthResponse]] ]= {
+    if(authorizationToken == "") return  Left( new Exception("You are not authorized to this item "))
 
-    
-    val loginRequest = decryptPairString(authorizationToken)
-    val authResponse =  userDao.getUserByUsernameAndPassword(loginRequest.username, loginRequest.password)
-
-    authResponse.flatMap{
-      case None =>  return  Left(new Exception("Invalid Authentication"))
-      case Some(value) => return   Right(Future.successful(populateResponse(value)))
-    }
-
+    validate(decryptPairString(authorizationToken))
+      .flatMap{
+        case None =>  return  Left(new Exception("Invalid Authentication"))
+        case Some(value) => return   Right(Future.successful(populateResponse(value)))
+      }
   }
-
-
 
 
   def register(registerRequest: RegisterRequest): AuthResponse ={
