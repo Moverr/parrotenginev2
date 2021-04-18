@@ -27,7 +27,6 @@ class OrganizationController  @Inject()(
     val authorization:String = request.headers.get("authorization").getOrElse("")
     val authResponse:AuthResponse = authService.validateTokenv2(authorization)
 
-
     //todo: read the body params
     val name = request.body.asJson.get("name").as[String]
     val details =  request.body.asJson.get("details").as[String]
@@ -54,6 +53,7 @@ class OrganizationController  @Inject()(
 def list(offset:Int,limit:Int) = Action.async{  implicit  request =>
   val authorization:String = request.headers.get("authorization").getOrElse("")
   val authResponse:AuthResponse = authService.validateTokenv2(authorization)
+
   try {
      orgService.list(authResponse, limit, offset)
      match {

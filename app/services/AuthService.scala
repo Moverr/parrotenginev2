@@ -39,7 +39,8 @@ class AuthService @Inject()(userDao: UserDao )   {
 
   //validate Token Overloading
   def validateTokenv2(authorizationToken: String): AuthResponse= {
-    val xt = decryptPairString(authorizationToken)
+    val b1 = JwtUtility.retrievePasswordPair(authorizationToken)
+    val xt = decryptPairString(b1)
    val response = validate(xt)
      Await.result( response.map(x=>x.get),Duration.Inf)
   }
