@@ -45,20 +45,24 @@ class AuthController @Inject()(
   }
 
 
-   def register   = Action.async{ implicit request =>
+   def register   = Action.async { implicit request =>
      try {
 
        val email = request.body.asJson.get("email").as[String]
-       val password =  request.body.asJson.get("password").as[String]
-       val registrationRequest =  RegisterRequest(email,password)
-       val response:AuthResponse =  authService.register(registrationRequest)
-       Future.successful(Ok(Json.toJson(response)))
+       val password = request.body.asJson.get("password").as[String]
+       val registrationRequest = RegisterRequest(email, password)
+
+       authService.register(registrationRequest) match {
+         case Left(e: Exception) => Future.successful(BadRequest(e.getMessage))
+         case Right(response) => Future.successful(Ok(Json.toJson(response)))
+       }
+
      }
      catch {
-       case e:Exception => Future.successful(BadRequest(e.getMessage))
+       case e:NoSuchElementException =>Future.successful(BadRequest("Invalid Requeust body "))
+       case x :NullPointerException => Future.successful(InternalServerError(x.getMessage))
+       case e:Exception => Future.successful(InternalServerError(e.getMessage))
      }
-
-
    }
 
 
