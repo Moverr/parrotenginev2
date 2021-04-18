@@ -33,12 +33,7 @@ class AuthService @Inject()(userDao: UserDao )   {
   //validate token
   def validateToken(authorizationToken: String):Either[java.lang.Throwable, Future[Option[AuthResponse]] ]= {
     if(authorizationToken == "")    Left( new Exception("You are not authorized to this item "))
-
-    validate(decryptPairString(authorizationToken))
-      .flatMap{
-        case None =>  return  Left(new Exception("Invalid Authentication"))
-        case Some(value) => return   Right(Future.successful(populateResponse(value)))
-      }
+    Right(validate(decryptPairString(authorizationToken)).map(x=>x))
   }
 
 
