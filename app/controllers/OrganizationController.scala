@@ -13,7 +13,7 @@ import scala.concurrent.Future
 import implicits.OrganizationResponseWrites._
 
 @Singleton
-class OrganisationController  @Inject()(
+class OrganizationController  @Inject()(
                                          val orgService: OrganizationService,
                                          val authService:AuthService,
                                          val cc: ControllerComponents

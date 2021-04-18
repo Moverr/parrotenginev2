@@ -1,6 +1,8 @@
 package controllers
 
+import controllers.responses.{AuthResponse, OrganisationResponse}
 import daos.{OrganisationDAO, UserDao}
+import helpers.Utilities
 import org.mockito.Mockito
 import org.scalatestplus.play.PlaySpec
 import play.api.Mode
@@ -13,6 +15,7 @@ import play.api.test.{FakeRequest, Helpers}
 import services.{AuthService, OrganizationService}
 import play.api.test.Helpers._
 
+import scala.concurrent.Future
 
 
 
@@ -21,7 +24,8 @@ import play.api.test.Helpers._
 
 
 
-class OrganisationControllerTest extends PlaySpec {
+
+class OrganizationControllerTest extends PlaySpec {
 
 
 
@@ -34,18 +38,25 @@ class OrganisationControllerTest extends PlaySpec {
   val orgDaO:OrganisationDAO =   new OrganisationDAO(dbConfProvider)
   val orgService = new OrganizationService(orgDaO)
 
-  val authService:AuthService = new AuthService(userDao)
+  val authService:AuthService =  Mockito.mock(classOf[AuthService])
+
+  val token:String = "token"
+
   "Organization Controller " should {
-    val controller   = new OrganisationController(orgService,authService,Helpers.stubControllerComponents())
+    val controller   = new OrganizationController(orgService,authService,Helpers.stubControllerComponents())
+    Mockito.when(authService.validateTokenv2("token")).thenReturn(new AuthResponse("token","mose",10))
+
+
     "list Stations" in  {
 
       val response = controller.list(0,6).apply(FakeRequest(Helpers.GET, "/v1/organisation/list").withHeaders(
-        "Authorization"->"eyJraWQiOiJzZWNyZXRLZXkiLCJhbGciOiJSUzI1NiJ9.a29sYUBnbWFpbC5jb206UEBzc3dvcmQ_MTIz.TisoaWUsGQJIAcAFzpHvaFglEEN0GsC09lOvdL9qWn4V0qhVwUd0NG9_0S2OkvZ9rpzsWUYGfl2q3fN55UxLiOi_Q_ClAfj4Q6Hu8M1B2XYE_F8wZXclychzR98SV7wZK8elrPHgNZC4TILM3q7USJDOubVsG9ghnCEdRGEiqVAnjkdArEt7uP_wx068WfikqoIoJ_XGaijbq8J2Sua2pQYOq3PpADGtJIyGY0AdoribBYJRzruoYiGjYbmbxE1wZujCMllSzl8g1vY9JS7t2Etwec61IzdxTW-qR2T7Pf8UgDAsz4danKo1nh433WqN4H7AEcLy9eFGB7C1tQGDqQ"
+        "authentication"->token
       ))
 
       val bodyText: String = contentAsString(response)
-      bodyText mustBe "ok"
+      val expectedResult:List[OrganisationResponse] = Utilities.fromJson[List[OrganisationResponse]](bodyText)
 
+      assert(expectedResult.length > 0 )
 
     }
     val jsonBody = Json.parse("{\"name\":\"name\", \"details\":\"details\" }")
@@ -55,11 +66,14 @@ class OrganisationControllerTest extends PlaySpec {
       val response = controller.create().apply(FakeRequest(Helpers.POST, "/v1/organisation/create")
           .withJsonBody(jsonBody)
           .withHeaders(
-        "Authorization"->"eyJraWQiOiJzZWNyZXRLZXkiLCJhbGciOiJSUzI1NiJ9.a29sYUBnbWFpbC5jb206UEBzc3dvcmQ_MTIz.TisoaWUsGQJIAcAFzpHvaFglEEN0GsC09lOvdL9qWn4V0qhVwUd0NG9_0S2OkvZ9rpzsWUYGfl2q3fN55UxLiOi_Q_ClAfj4Q6Hu8M1B2XYE_F8wZXclychzR98SV7wZK8elrPHgNZC4TILM3q7USJDOubVsG9ghnCEdRGEiqVAnjkdArEt7uP_wx068WfikqoIoJ_XGaijbq8J2Sua2pQYOq3PpADGtJIyGY0AdoribBYJRzruoYiGjYbmbxE1wZujCMllSzl8g1vY9JS7t2Etwec61IzdxTW-qR2T7Pf8UgDAsz4danKo1nh433WqN4H7AEcLy9eFGB7C1tQGDqQ"
+        "authentication"-> token
       ))
 
       val bodyText: String = contentAsString(response)
-      bodyText mustBe "ok"
+      val expectedResult:OrganisationResponse = Utilities.fromJson[OrganisationResponse](bodyText)
+      expectedResult.name mustBe  "name"
+
+
     }
   }
 }
