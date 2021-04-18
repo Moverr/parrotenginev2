@@ -32,7 +32,7 @@ class AuthService @Inject()(userDao: UserDao )   {
 
   //validate token
   def validateToken(authorizationToken: String):Either[java.lang.Throwable, Future[Option[AuthResponse]] ]= {
-    if(authorizationToken == "") return  Left( new Exception("You are not authorized to this item "))
+    if(authorizationToken == "")    Left( new Exception("You are not authorized to this item "))
 
     validate(decryptPairString(authorizationToken))
       .flatMap{
@@ -42,12 +42,12 @@ class AuthService @Inject()(userDao: UserDao )   {
   }
 
 
-  def register(registerRequest: RegisterRequest): AuthResponse ={
+  def register(registerRequest: RegisterRequest): Either[java.lang.Throwable,AuthResponse] ={
      val existingUser:Seq[User] =   Await.result( userDao.getUsersByUsername(registerRequest.email),Duration.Inf)
-     if(existingUser.length > 0 ) throw new Exception("User already exists in the system ")
+     if(existingUser.length > 0 ) Left (new Exception("User already exists in the system ")_
 
      val res =  Await.result(userDao.createUserAccount(registerRequest.email,Utilities.encrypt(registerRequest.password)),Duration.Inf)
-     populateBasic(res)
+    Right(populateBasic(res,registerRequest))
   }
 
 
@@ -59,6 +59,11 @@ class AuthService @Inject()(userDao: UserDao )   {
    */
   private def populateBasic(user: User,login:LoginRequest): AuthResponse = {
     val pairString:String = login.username+":"+login.password
+    AuthResponse(JwtUtility.generateKey(pairString), user.username,user.id)
+  }
+  //todo: populate basic based ono Registratin
+  private def populateBasic(user: User, register:RegisterRequest): AuthResponse = {
+    val pairString:String = register.email+":"+register.password
     AuthResponse(JwtUtility.generateKey(pairString), user.username,user.id)
   }
 
