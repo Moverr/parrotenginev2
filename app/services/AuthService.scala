@@ -34,8 +34,8 @@ class AuthService @Inject()(userDao: UserDao )   {
   def validateToken(authorizationToken: String):  Either[java.lang.Throwable,Future[Option[AuthResponse]]] = {
     if(authorizationToken == "") throw  new Exception("You are not authorized to this item ")
 
-    val stringpair = JwtUtility.retrievePasswordPair(authorizationToken)
-    val loginRequest = decryptPairString(stringpair)
+    
+    val loginRequest = decryptPairString(authorizationToken)
     val authResponse =  userDao.getUserByUsernameAndPassword(loginRequest.username, loginRequest.password)
 
     authResponse.flatMap{
