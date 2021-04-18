@@ -24,10 +24,10 @@ class OrganizationService  @Inject()(organisationDAO: OrganisationDAO)  extends 
   }
 
   //todo: list organinsations
-  override def list(authResponse: AuthResponse,limit:Int, offset:Int): Either[java.lang.Throwable,Future[Seq[OrganisationResponse]] ]= {
+  override def list(authResponse: AuthResponse,offset:Int, limit:Int): Either[java.lang.Throwable,Future[Seq[OrganisationResponse]] ]= {
     if(authResponse == null ) return  Left(new Exception("Invalid Authentication"))
     Right(
-    organisationDAO.getOrganisations(authResponse.user_id,limit,offset)
+    organisationDAO.getOrganisations(authResponse.user_id,offset,limit)
       .map(y=>y.map(p=>populateResponse(p)))
     )
   }

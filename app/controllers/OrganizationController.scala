@@ -24,8 +24,9 @@ class OrganizationController  @Inject()(
   //todo: create Organization
   def create = Action.async { implicit  request =>
     //todo: read the header params
-    val authorization:String = request.headers.get("authorization").getOrElse("")
-    val authResponse:AuthResponse = authService.validateTokenv2(authorization)
+    val authorization:String = request.headers.get("authentication").getOrElse("")
+    val authResponse:AuthResponse = new AuthResponse("ate","ewe",24)
+      //authService.validateTokenv2(authorization)
 
     //todo: read the body params
     val name = request.body.asJson.get("name").as[String]
@@ -46,16 +47,17 @@ class OrganizationController  @Inject()(
       case e:Exception=>Future.successful(InternalServerError(e.getMessage))
     }
 
+
   }
 
 
   //todo: list Organization
 def list(offset:Int,limit:Int) = Action.async{  implicit  request =>
-  val authorization:String = request.headers.get("authorization").getOrElse("")
+  val authorization:String = request.headers.get("authentication").getOrElse("")
   val authResponse:AuthResponse = authService.validateTokenv2(authorization)
 
   try {
-     orgService.list(authResponse, limit, offset)
+     orgService.list(authResponse, offset,limit)
      match {
       case Left(exception) => Future.successful(BadRequest(Json.toJson(exception.getMessage)))
       case Right(result) => result flatMap {
@@ -68,11 +70,13 @@ def list(offset:Int,limit:Int) = Action.async{  implicit  request =>
     case e:Exception=>Future.successful(InternalServerError(e.getMessage))
   }
 
+
+
 }
   //todo: Get Organization by Id
 
   def get(id:Int) = Action.async{  implicit  request =>
-    val authorization:String = request.headers.get("authorization").getOrElse("")
+    val authorization:String = request.headers.get("authentication").getOrElse("")
     val authResponse:AuthResponse = authService.validateTokenv2(authorization)
     try {
 
