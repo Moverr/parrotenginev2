@@ -25,7 +25,8 @@ class OrganizationController  @Inject()(
   def create = Action.async { implicit  request =>
     //todo: read the header params
     val authorization:String = request.headers.get("authorization").getOrElse("")
-    val authResponse:AuthResponse = authService.validateToken(authorization)
+    val authResponse:AuthResponse = authService.validateTokenv2(authorization)
+
 
     //todo: read the body params
     val name = request.body.asJson.get("name").as[String]
@@ -52,7 +53,7 @@ class OrganizationController  @Inject()(
   //todo: list Organization
 def list(offset:Int,limit:Int) = Action.async{  implicit  request =>
   val authorization:String = request.headers.get("authorization").getOrElse("")
-  val authResponse:AuthResponse = authService.validateToken(authorization)
+  val authResponse:AuthResponse = authService.validateTokenv2(authorization)
   try {
      orgService.list(authResponse, limit, offset)
      match {
@@ -72,7 +73,7 @@ def list(offset:Int,limit:Int) = Action.async{  implicit  request =>
 
   def get(id:Int) = Action.async{  implicit  request =>
     val authorization:String = request.headers.get("authorization").getOrElse("")
-    val authResponse:AuthResponse = authService.validateToken(authorization)
+    val authResponse:AuthResponse = authService.validateTokenv2(authorization)
     try {
 
 

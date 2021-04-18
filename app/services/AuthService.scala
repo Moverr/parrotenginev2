@@ -37,6 +37,13 @@ class AuthService @Inject()(userDao: UserDao )   {
   }
 
 
+  //validate Token Overloading
+  def validateTokenv2(authorizationToken: String): AuthResponse= {
+    Await.result( validate(decryptPairString(authorizationToken)).map(x=>x.get),Duration.Inf)
+  }
+
+
+
   def register(registerRequest: RegisterRequest): Either[java.lang.Throwable,AuthResponse] ={
      val existingUser:Seq[User] =   Await.result( userDao.getUsersByUsername(registerRequest.email),Duration.Inf)
      if(existingUser.length > 0 ) Left (new Exception("User already exists in the system "))
