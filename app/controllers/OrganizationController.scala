@@ -81,9 +81,7 @@ def list(offset:Int,limit:Int) = Action.async{  implicit  request =>
 
         match {
         case Left(exception) => Future.successful(BadRequest(Json.toJson(exception.getMessage)))
-        case Right(result) =>  result.flatMap{
-            result =>
-                 Future.successful(Ok(Json.toJson(result.get)))
+        case Right(result) =>  result.flatMap{  result =>  Future.successful(Ok(Json.toJson(result.get)))
       }
       }
 
