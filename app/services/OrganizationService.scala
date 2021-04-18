@@ -7,7 +7,7 @@ import db.tables.Organization
 import javax.inject.{Inject, Singleton}
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.{Await, Future}
+import scala.concurrent.{ Future}
 
 
 @Singleton
