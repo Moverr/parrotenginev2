@@ -69,8 +69,11 @@ class AuthController @Inject()(
   def validate   = Action.async{ implicit request =>
     try{
       val token = request.body.asJson.get("token").as[String]
-      val response:AuthResponse = authService.validateToken(token)
-      Future.successful(Ok(Json.toJson(response)))
+      authService.validateToken(token) match {
+        case Left(e: Exception) =>  Future.successful(BadRequest(e.getMessage))
+        case Right(response:Option[AuthResponse]) => Future.successful(Ok(Json.toJson(response.get)))
+      }
+
 
     }
     catch {
