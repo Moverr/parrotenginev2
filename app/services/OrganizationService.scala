@@ -7,7 +7,6 @@ import db.tables.Organization
 import javax.inject.{Inject, Singleton}
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
 
 
