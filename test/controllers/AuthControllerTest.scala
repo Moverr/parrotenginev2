@@ -21,7 +21,10 @@ class AuthControllerTest extends PlaySpec     {
   val user:User  = new User(1,"moverr@gmail.com","Password")
   val pairString:String = "moverr@gmail.com:Password"
   val request:LoginRequest = new LoginRequest(user.username,user.password)
-  val authResponse =   AuthResponse(JwtUtility.generateKey(pairString), user.username,0L)
+
+  val authResponse2:AuthResponse  =    AuthResponse(JwtUtility.generateKey(pairString), user.username,0L)
+  val authResponse: Either[java.lang.Throwable,AuthResponse]  =   Right(authResponse2)
+
   val jsonLoginRequest = Json.parse("{\"username\":\""+user.username+"\", \"password\":\""+user.password+"\" }")
   val jsonRegistrationRequest = Json.parse("{\"email\":\""+user.username+"\", \"password\":\""+user.password+"\" }")
 
@@ -32,7 +35,7 @@ class AuthControllerTest extends PlaySpec     {
     "Return positive regisiter "   in  {
 
 
-      Mockito.when(authService.validate(request)).thenReturn(Future.successful(Some(authResponse)))
+      Mockito.when(authService.validate(request)).thenReturn(Future.successful(Some(authResponse2)))
 
       val controller   = new AuthController(Helpers.stubControllerComponents(),authService)
       val response = controller.login().apply(FakeRequest(Helpers.POST, "/v1/auth/login").withJsonBody(jsonLoginRequest))

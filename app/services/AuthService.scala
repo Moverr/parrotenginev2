@@ -25,39 +25,47 @@ class AuthService @Inject()(userDao: UserDao )   {
 
     response.flatMap{
       case None => Future.successful(None)
-      case Some(value) => Future.successful(populateResponse(value))
+      case Some(value) => Future.successful(populateResponse(value,loginRequest))
     }
 
   }
 
-  // Validate Token
-  def validateToken(authorizationToken: String):  AuthResponse = {
-    if(authorizationToken == "") throw  new Exception("You are not authorized to this item ")
-    val authResponse:Option[AuthResponse] = ( validate(decryptPairString(authorizationToken))
-      .map(response=>response).value.get).get
-    authResponse match {
-      case Some(value) => value
-      case None =>   throw  new Exception("You are not authorized to this item ")
-    }
+  //validate token
+  def validateToken(authorizationToken: String):Either[java.lang.Throwable, Future[Option[AuthResponse]] ]= {
+    if(authorizationToken == "")    Left( new Exception("You are not authorized to this item "))
+    Right(validate(decryptPairString(authorizationToken)).map(x=>x))
+  }
 
+
+  //validate Token Overloading
+  def validateTokenv2(authorizationToken: String): AuthResponse= {
+    Await.result( validate(decryptPairString(authorizationToken)).map(x=>x.get),Duration.Inf)
   }
 
 
 
-
-  def register(registerRequest: RegisterRequest): AuthResponse ={
+  def register(registerRequest: RegisterRequest): Either[java.lang.Throwable,AuthResponse] ={
      val existingUser:Seq[User] =   Await.result( userDao.getUsersByUsername(registerRequest.email),Duration.Inf)
-     if(existingUser.length > 0 ) throw new Exception("User already exists in the system ")
+     if(existingUser.length > 0 ) Left (new Exception("User already exists in the system "))
 
      val res =  Await.result(userDao.createUserAccount(registerRequest.email,Utilities.encrypt(registerRequest.password)),Duration.Inf)
-     populateBasic(res)
+    Right(populateBasic(res,registerRequest))
   }
 
 
-  def populateResponse(user: User): Option[AuthResponse]  =  Some(populateBasic(user))
+  def populateResponse(user: User,login:LoginRequest): Option[AuthResponse]  =  Some(populateBasic(user,login))
 
-  private def populateBasic(user: User): AuthResponse = {
-    val pairString:String = user.username+":"+user.password
+  //Populate Response and move
+  /*
+   Use the basic Passwrd just saw too hide the background
+   */
+  private def populateBasic(user: User,login:LoginRequest): AuthResponse = {
+    val pairString:String = login.username+":"+login.password
+    AuthResponse(JwtUtility.generateKey(pairString), user.username,user.id)
+  }
+  //todo: populate basic based ono Registratin
+  private def populateBasic(user: User, register:RegisterRequest): AuthResponse = {
+    val pairString:String = register.email+":"+register.password
     AuthResponse(JwtUtility.generateKey(pairString), user.username,user.id)
   }
 
