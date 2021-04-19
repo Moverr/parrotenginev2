@@ -22,9 +22,9 @@ Installation
  
   <li>Organisation 
 <uL>
- <li>Create Organization<li>
- <li>List Organizations<li>
- <li>Archive Organization<li>
+ <li>Create Organization
+ <li>List Organizations
+ <li>Archive Organization
  
  </UL>
 </li>
