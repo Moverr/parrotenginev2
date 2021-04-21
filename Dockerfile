@@ -13,3 +13,4 @@ RUN apt-get update; apt-get install -y sbt
 
 #Run Sbt command
 CMD sbt run
+
