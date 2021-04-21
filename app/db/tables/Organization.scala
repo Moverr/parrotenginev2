@@ -7,7 +7,7 @@ import slick.sql.SqlProfile.ColumnOption.SqlType
 import slick.jdbc.PostgresProfile.api._
 import slick.lifted.TableQuery
 
-case class Organization(id:Long = 0L, name:String, details:String,owner:Long, date_created:Timestamp,author_id:Long, date_updated:Timestamp,updated_by:Long)
+case class Organization(id:Long = 0L, name:String, details:String,owner:Long,date_created:Timestamp,author_id:Long,date_updated:Timestamp,updated_by:Long)
 
 
 class OrganizationTable(tag: Tag) extends Table[Organization](tag,"organisations"){
@@ -22,5 +22,5 @@ class OrganizationTable(tag: Tag) extends Table[Organization](tag,"organisations
   def updated_by =  column[Long]("updated_by")
 
   def * = (id,name,details,owner,date_created,author_id,date_updated,updated_by).mapTo[Organization]
-  //mapTo[Organization]
+
 }

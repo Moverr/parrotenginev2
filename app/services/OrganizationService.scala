@@ -7,8 +7,7 @@ import db.tables.Organization
 import javax.inject.{Inject, Singleton}
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration.Duration
-import scala.concurrent.{Await, Future}
+import scala.concurrent.{ Future}
 
 
 @Singleton
@@ -19,15 +18,17 @@ class OrganizationService  @Inject()(organisationDAO: OrganisationDAO)  extends 
   override def create(authResponse: AuthResponse,request:OrganisationRequest): Either[java.lang.Throwable,Future[OrganisationResponse]]={
     if(authResponse == null )   return  Left(new Exception("Invalid Authentication"))
 
+      //todo: Get Account Details  ::
+
        Right(organisationDAO.createOrganisation(request.name,request.details,authResponse.user_id)
       .map(x=>populateResponse(x)))
   }
 
   //todo: list organinsations
-  override def list(authResponse: AuthResponse,limit:Int, offset:Int): Either[java.lang.Throwable,Future[Seq[OrganisationResponse]] ]= {
+  override def list(authResponse: AuthResponse,offset:Int, limit:Int): Either[java.lang.Throwable,Future[Seq[OrganisationResponse]] ]= {
     if(authResponse == null ) return  Left(new Exception("Invalid Authentication"))
     Right(
-    organisationDAO.getOrganisations(authResponse.user_id,limit,offset)
+    organisationDAO.getOrganisations(authResponse.user_id,offset,limit)
       .map(y=>y.map(p=>populateResponse(p)))
     )
   }
