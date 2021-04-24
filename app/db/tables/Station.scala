@@ -18,6 +18,6 @@ class StationTable(tag: Tag) extends Table[Station](tag,"stations"){
   def name = column[String]("name")
   def code = column[String]("code")
 
-  override def * = (id,organisation_id,name,code) <>(Station.tupled,Station.unapply)
+  override def * = (id,organisation_id,name,code) <> (Station.tupled,Station.unapply)
 }
 
