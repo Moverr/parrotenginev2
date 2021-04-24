@@ -8,6 +8,8 @@ import play.api.libs.json.{JsPath, Writes}
 object AuthResponseWrites {
 
 
+ 
+
   implicit  val authResponseWrites:JsonWriter[AuthResponse] =  new JsonWriter[AuthResponse] {
     override def write(value: AuthResponse): Json = {
     JsObject(Map {
