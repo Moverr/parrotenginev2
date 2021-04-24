@@ -19,4 +19,23 @@ object  JSonWriterInstance{
       override def write(value: String) =
         JsString(value)
     }
+
+
+  implicit  val stringWriter3:JSonWriter[Integer] =
+    new JSonWriter[Integer] {
+      override def write(value: Integer) = JsNumber[Integer](value)
+
+    }
+
+
+
+  implicit  val stringWriter4:JSonWriter[Float] =
+    (value: Float) => JsNumber(value)
+
+
+
+  implicit  val stringWriters:JSonWriter[String] =
+    (value: String) => JsString(value)
+
+
 }
