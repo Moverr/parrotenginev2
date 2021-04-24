@@ -1,3 +1,5 @@
+import scala.util.parsing.json.JSONObject
+
 // Define a very simple JSON AST
 sealed trait Json
 
@@ -8,6 +10,7 @@ final case object JsNull extends Json
 
 // the serializer to JSON beavieor is encoded in this trait
 trait JSonWriter[A]{
+
   def write(value: A) : Json
 }
 
@@ -37,5 +40,20 @@ object  JSonWriterInstance{
   implicit  val stringWriters:JSonWriter[String] =
     (value: String) => JsString(value)
 
+  implicit  val personWriter:JSonWriter[Person] = new JSonWriter[Person] {
+    override def write(value: Person) :Json = {
+      JsObject(
+        Map{
+          "name"->JsString(value.name)
+          "email"->JsString(value.email)
+        }
+      )
+    }
+
+  }
+
 
 }
+
+val x = new Person("Muyinda Rogers","moverr@gmail.com")
+  JSonWriterInstance.personWriter(x)

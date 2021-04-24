@@ -7,7 +7,18 @@ import play.api.libs.json.{JsPath, Writes}
 
 object AuthResponseWrites {
 
-  implicit val authResponseWrites: Writes[AuthResponse] = (
+
+  implicit  val authResponseWrites:JsonWriter[AuthResponse] = (value: AuthResponse) => {
+    JsObject(Map {
+      "access_token" -> JsString(value.access_token)
+      "username" -> JsString(value.username)
+      "user_id" -> JsString(value.user_id.toString)
+
+    })
+
+  }
+
+  implicit val authResponseWrites2: Writes[AuthResponse] = (
     (JsPath \ "access_token").write[String] and
       (JsPath \ "username").write[String] and
         (JsPath \ "user_id").write[Long]
