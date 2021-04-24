@@ -5,3 +5,18 @@ final case class JsObject(get: Map[String,Json]) extends Json
 final case class JsString(get:String) extends Json
 final case class JsNumber[T](get:T) extends Json
 final case object JsNull extends Json
+
+// the serializer to JSON beavieor is encoded in this trait
+trait JSonWriter[A]{
+  def write(value: A) : Json
+}
+
+final case class Person(name:String,email:String)
+
+object  JSonWriterInstance{
+  implicit  val stringWriter:JSonWriter[String] =
+    new JSonWriter[String] {
+      override def write(value: String) =
+        JsString(value)
+    }
+}
