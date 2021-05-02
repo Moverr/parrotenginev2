@@ -36,17 +36,9 @@ class StationDAO    @Inject()(dbConfigProvider: DatabaseConfigProvider) {
       .take(limit)
       .result)
 
-  //todo: list stations in an account
-  def createOrganisation(offset:Int,limit:Int):Seq[StationResponse]={
-    ???
-  }
-  //todo: update station
-  def createOrganisation(id:Int,station:StationRequest):StationResponse={
-    ???
-  }
+
+
   //todo: Archive Station
-  def Archive(id:Int):Unit={
-    ???
-  }
+
   //todo: Populate Response
 }
