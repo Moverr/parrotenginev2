@@ -4,7 +4,7 @@ import java.sql.Timestamp
 
 import controllers.requests.StationRequest
 import controllers.responses.StationResponse
-import db.tables.{Organization, OrganizationTable, StationTable, User, UserTable}
+import db.tables.{Organization, OrganizationTable, Station, StationTable, User, UserTable}
 
 import scala.concurrent.Future
 import javax.inject.{Inject, Singleton}
@@ -23,28 +23,25 @@ class StationDAO    @Inject()(dbConfigProvider: DatabaseConfigProvider) {
 
 
   //todo: create station
-  def createOrganisation(station:StationRequest): Either[Throwable,Future[StationResponse]] = {
-    //todo: Check that station does not Exist
-    //todo: Create
-   // db.run(orgTable.returning(orgTable) += Organization(0L,name,details,owner, new Timestamp(0L),0L,new Timestamp(0L),0L))
-    ???
-  }
+  def creata(organisation_id:Int, station:StationRequest): Future[StationResponse] =   db.run(stationTable.returning(stationTable) += Station(0L,organisation_id,station.name,station.code)
+
 
 
   //todo: list station in an organization
-  def createOrganisation(organization: Int,offset:Int,limit:Int):Either[Throwable,Seq[StationResponse]]={
+  def createOrganisation(organization: Int,offset:Int,limit:Int):Seq[StationResponse]={
+    //validate organization
     ???
   }
   //todo: list stations in an account
-  def createOrganisation(offset:Int,limit:Int):Either[Throwable,Seq[StationResponse]]={
+  def createOrganisation(offset:Int,limit:Int):Seq[StationResponse]={
     ???
   }
   //todo: update station
-  def createOrganisation(id:Int,station:StationRequest):Either[Throwable,StationResponse]={
+  def createOrganisation(id:Int,station:StationRequest):StationResponse={
     ???
   }
   //todo: Archive Station
-  def Archive(id:Int):Either[Throwable,Unit]={
+  def Archive(id:Int):Unit={
     ???
   }
   //todo: Populate Response
