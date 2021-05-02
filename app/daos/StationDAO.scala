@@ -19,6 +19,8 @@ class StationDAO    @Inject()(dbConfigProvider: DatabaseConfigProvider) {
 
   private  val dbConfig = dbConfigProvider.get[JdbcProfile]
   lazy  val stationTable = TableQuery[StationTable]
+  lazy  val organizationTable = TableQuery[OrganizationTable]
+
   import dbConfig._
 
 
@@ -39,6 +41,9 @@ class StationDAO    @Inject()(dbConfigProvider: DatabaseConfigProvider) {
 
 
   //todo: Archive Station
+  def archive(organization_id:Int,id:Int):Unit={
+  ???
+  }
 
   //todo: Populate Response
 }
