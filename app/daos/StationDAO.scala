@@ -25,7 +25,7 @@ class StationDAO    @Inject()(dbConfigProvider: DatabaseConfigProvider) {
 
 
   //todo: create station
-  def creata(organisation_id:Int, station:StationRequest): Future[Station] =
+  def create(organisation_id:Int, station:StationRequest): Future[Station] =
     db.run(stationTable.returning(stationTable) += Station(0L,organisation_id,station.name,station.code)
 
 
