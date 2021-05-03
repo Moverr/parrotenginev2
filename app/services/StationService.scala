@@ -54,3 +54,32 @@ class StationService   @Inject()(
     stationRespnse
   }
 }
+
+
+import java.math.BigInteger
+
+object Sol3 {
+  private val bigIntegerTwo = new BigInteger("2")
+
+  def main(args: Array[String]): Unit = {
+    val s = new Sol3
+    System.out.println(s.solution("011100"))
+    System.out.println(s.solution("111"))
+    System.out.println(s.solution("1111010101111"))
+    System.out.println(s.solution("1"))
+  }
+}
+
+class Sol3 {
+  def solution(S: String): Int = {
+    val input = new BigInteger(S, 2)
+    getSteps(input, 0)
+  }
+
+  private def getSteps(input: BigInteger, counter: Int): Int = {
+    if (input == BigInteger.ZERO) return counter
+    counter += 1
+    if (input.mod(Sol3.bigIntegerTwo) == BigInteger.ZERO) getSteps(input.divide(Sol3.bigIntegerTwo), counter)
+    else getSteps(input.subtract(BigInteger.ONE), counter)
+  }
+}
