@@ -18,6 +18,15 @@ class StationTable(tag: Tag) extends Table[Station](tag,"stations"){
   def name = column[String]("name")
   def code = column[String]("code")
 
+  def location = column[String]("location")
+
+  def date_created = column[Timestamp]("date_created", SqlType("timestamp not null default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP"))
+  def date_updated = column[Timestamp]("date_updated", SqlType("timestamp not null default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP"))
+  def author_id =  column[Long]("author_id")
+  def updated_by =  column[Long]("updated_by")
+
+
+
   override def * = (id,organisation_id,name,code) <> (Station.tupled,Station.unapply)
 }
 
