@@ -20,7 +20,14 @@ Installation
 
 </li>
  
-  <li>Organisation </li>
+  <li>Organisation 
+<uL>
+ <li>Create Organization
+ <li>List Organizations
+ <li>Archive Organization
+ 
+ </UL>
+</li>
   <li>Station </li>
   <li>Employee </li>
   <li>Visitor </li>
