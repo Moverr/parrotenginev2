@@ -572,3 +572,4 @@ file%3A%2F%2F%2FD%3A%2Fmover%2Fparrotenginev2%2Fapp%2Fservices%2FStationService.
 	at scala.meta.internal.semanticdb.scalac.TextDocumentOps$XtensionCompilationUnitDocument.toTextDocument(TextDocumentOps.scala:201)
 	at scala.meta.internal.pc.SemanticdbTextDocumentProvider.textDocument(SemanticdbTextDocumentProvider.scala:51)
 
+[0m2021.05.03 14:32:09 INFO  shutting down Metals[0m
