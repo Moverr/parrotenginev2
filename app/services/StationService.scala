@@ -3,12 +3,12 @@ package services
 import controllers.requests.{OrganisationRequest, StationRequest}
 import controllers.responses.{AuthResponse, OrganisationResponse, StationResponse}
 import daos.{OrganisationDAO, StationDAO}
+import db.tables.Station
 import javax.inject.Inject
 
 import scala.concurrent.Future
-
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.{ Future}
+import scala.concurrent.Future
 
 
 class StationService   @Inject()(
@@ -28,9 +28,12 @@ class StationService   @Inject()(
           y=>
             y match {
               case Some(value) => {
-                //todo: Organization
-                Right(organisationDAO.createOrganisation(request.name,request.details,authResponse.user_id)
-                  .map(x=>populateResponse(x)))
+
+                  stationDao.create(value.id,request)
+                  .map(x=>   return  Left(new Exception("Organization does not exist")))
+                    //return  Right(populateResponse(x) ))
+
+
               }
               case None =>  return  Left(new Exception("Organization does not exist"))
             }
@@ -45,8 +48,9 @@ class StationService   @Inject()(
 
   //todo: Archive
 
-  def populateResponse():StationResponse={
+  def populateResponse(station: Station):StationResponse={
 
-    ???
+    val stationRespnse = new StationResponse(station.id,station.name,station.code,null)
+    stationRespnse
   }
 }
