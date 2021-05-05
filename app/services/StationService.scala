@@ -26,6 +26,7 @@ class StationService   @Inject()(
                                 )  {
 
   //todo: Create
+  /*
     def create(authResponse: AuthResponse,organisation_id:Int,request:StationRequest): Either[null,Future[StationResponse]]={
   //  if(authResponse == null )   return  Left(new Exception("Invalid Authentication"))
 
@@ -42,7 +43,7 @@ class StationService   @Inject()(
 
 
   }
-
+*/
   //todo: list
 
   //todo: Archive
