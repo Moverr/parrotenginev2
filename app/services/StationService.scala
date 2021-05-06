@@ -39,9 +39,9 @@ class StationService   @Inject()(
   //todo: list Stations
   def list(authResponse: AuthResponse,organisation_id:Int,offset:Int, limit:Int): Either[java.lang.Throwable,Future[Seq[StationResponse]] ]= {
     if(authResponse == null ) return  Left(new Exception("Invalid Authentication"))
+
     Right(
-      stationDao.list(organisation_id.toLong,offset,limit)
-        .map(y=>y.map(record=>populateResponse(record)))
+      stationDao.list(organisation_id.toLong,offset,limit) .map(y=>y.map(record=>populateResponse(record)))
     )
   }
 
