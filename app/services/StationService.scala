@@ -27,28 +27,35 @@ class StationService   @Inject()(
       //todo: Get Account Details  ::
      val response:Option[Organization] = Await.result(organisationDAO.getOrganisation(organisation_id.toLong),Duration.Inf)
 
-      if(response.exists(p=>false))   return Left(new Exception("Invalid Authentication"))
+      if(response.exists(_ =>false))   return Left(new Exception("Invalid Authentication"))
 
-
-     val statioonResponse:Future[Station] =   stationDao.create(organisation_id, request)
-      Right(populateResponse(statioonResponse))
-
+     val stationResponse:Future[Station] =   stationDao.create(organisation_id, request)
+      Right(populateResponse(stationResponse))
 
     }
 
 
 
-
-
-  //todo: list
+  //todo: list Stations
+  def list(authResponse: AuthResponse,organisation_id:Int,offset:Int, limit:Int): Either[java.lang.Throwable,Future[Seq[StationResponse]] ]= {
+    if(authResponse == null ) return  Left(new Exception("Invalid Authentication"))
+    Right(
+      stationDao.list(organisation_id.toLong,offset,limit)
+        .map(y=>y.map(record=>populateResponse(record)))
+    )
+  }
 
   //todo: Archive
 
 
 
-  def populateResponse(station:Future[Station]):Future[StationResponse]=    station.flatMap{
-      x=> Future.successful(StationResponse(x.id,x.name,x.code,null))
+  def populateResponse(station:Future[Station]):Future[StationResponse]= station.flatMap{
+      x=> Future.successful(populateResponse(x))
     }
+
+  def populateResponse(station:Station) : StationResponse = StationResponse(station.id,station.name,station.code,null)
+
+
 
 
 }
