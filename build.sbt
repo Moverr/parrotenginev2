@@ -37,4 +37,9 @@ libraryDependencies ++= Seq(
 
 
 )
-
+enablePlugins(UniversalPlugin)
+enablePlugins(JavaAppPackaging)
+import com.typesafe.sbt.packager.docker.DockerChmodType
+import com.typesafe.sbt.packager.docker.DockerPermissionStrategy
+dockerChmodType := DockerChmodType.UserGroupWriteExecute
+dockerPermissionStrategy := DockerPermissionStrategy.CopyChown
