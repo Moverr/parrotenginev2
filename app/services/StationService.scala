@@ -30,7 +30,9 @@ class StationService   @Inject()(
       if(response.exists(_ =>false))   return Left(new Exception("Invalid Authentication"))
 
      val stationResponse:Future[Station] =   stationDao.create(organisation_id, request)
-      Right(populateResponse(stationResponse))
+      Right(stationResponse.flatMap(x=>Future.successful(populateResponse(x))))
+
+     // Right(populateResponse(stationResponse))
 
     }
 
