@@ -3,7 +3,7 @@ package services
 import controllers.requests.{OrganisationRequest, StationRequest}
 import controllers.responses.{AuthResponse, OrganisationResponse, StationResponse}
 import daos.{OrganisationDAO, StationDAO}
-import db.tables.Station
+import db.tables.{Organization, Station}
 import javax.inject.Inject
 
 import scala.concurrent.{Await, Future}
@@ -15,7 +15,7 @@ import scala.concurrent.duration.Duration
 
 class StationService   @Inject()(
                                   stationDao: StationDAO
-                                ,  organizationService: OrganizationService
+                                ,  organisationDAO: OrganisationDAO
 
                                 )  {
 
@@ -25,45 +25,15 @@ class StationService   @Inject()(
       if (authResponse == null) return Left(new Exception("Invalid Authentication"))
 
       //todo: Get Account Details  ::
-     val response =  organizationService.get(authResponse, organisation_id)
+     val response:Option[Organization] = Await.result(organisationDAO.getOrganisation(organisation_id.toLong),Duration.Inf)
+
+      if(response.exists(p=>false))   return Left(new Exception("Invalid Authentication"))
 
 
+     val statioonResponse:Future[Station] =   stationDao.create(organisation_id, request)
+      Right(populateResponse(statioonResponse))
 
-/*
-      match {
 
-        case Right(value) =>
-          val result = Await.result(value, Duration.Inf)
-          result match {
-            case Some(value) => {
-
-              stationDao.create(organisation_id, request).
-                flatMap {
-                  res =>   Right(Future.successful(populateResponse(res)))
-                }
-            }
-            case None => Left(new Exception("Invalid"))
-          }
-      }
-
-*/
-      /*
-          value.flatMap {
-          x =>
-            x match {
-              case Some(value) => {
-                stationDao.create(organisation_id, request).
-                  flatMap {
-                    res => return Right(Future.successful(populateResponse(res)))
-                  }
-
-              }
-              case None => return Left(new Exception("Invalid"))
-            }
-        } match {
-          case right: Right =>right
-        }
-       */
     }
 
 
@@ -75,9 +45,10 @@ class StationService   @Inject()(
   //todo: Archive
 
 
-  def populateResponse(station: Station):StationResponse={
 
-    val stationRespnse = new StationResponse(station.id,station.name,station.code,null)
-    stationRespnse
-  }
+  def populateResponse(station:Future[Station]):Future[StationResponse]=    station.flatMap{
+      x=> Future.successful(StationResponse(x.id,x.name,x.code,null))
+    }
+
+
 }
