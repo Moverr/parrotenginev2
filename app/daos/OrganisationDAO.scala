@@ -38,6 +38,9 @@ class OrganisationDAO  @Inject()(dbConfigProvider: DatabaseConfigProvider) exten
   def getOrganisation(owner:Long,orgId:Long): Future[Option[Organization]]  =
     db.run(orgTable.filter(_.owner === owner).filter(_.id === orgId).result.headOption)
 
+  def getOrganisation(orgId:Long): Future[Option[Organization]]  =
+    db.run(orgTable.filter(_.id === orgId).result.headOption)
+
 
   /*
   *

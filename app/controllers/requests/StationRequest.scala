@@ -1,3 +1,3 @@
 package controllers.requests
 
-case class StationRequest(name:String, code:String)
+case class StationRequest(organization_id:Int,name:String, code:String)

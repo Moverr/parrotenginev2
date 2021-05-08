@@ -6,6 +6,7 @@ target
 /.project
 /.settings
 /RUNNING_PID
+svc
 
 scala-2.13.4.deb
 scala-2.11.8.deb

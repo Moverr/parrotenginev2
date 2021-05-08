@@ -25,19 +25,19 @@ class StationDAO    @Inject()(dbConfigProvider: DatabaseConfigProvider) {
 
 
   //todo: create station
-  def create(organisation_id:Long, station:StationRequest): Future[Station] =
-    db.run(stationTable.returning(stationTable) += Station(0L,organisation_id,station.name,station.code)
-
+  def create(organisation_id:Long, station:StationRequest): Future[Station] = {
+    db.run(stationTable.returning(stationTable) += Station(0L,organisation_id,station.name,station.code))
+  }
 
 
   //todo: list station in an organization
-  def list(organization_id: Long,offset:Int,limit:Int):Future[Seq[Station]]=
+  def list(organization_id: Long,offset:Int,limit:Int):Future[Seq[Station]]= {
     db.run(stationTable
       .filter(_.organisation_id === organization_id)
       .drop(offset)
       .take(limit)
       .result)
-
+  }
 
 
   //todo: Archive Station
