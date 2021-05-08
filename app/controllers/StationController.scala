@@ -7,7 +7,9 @@ import play.api.mvc.{BaseController, ControllerComponents}
 class StationController @Inject()(val controllerComponents: ControllerComponents) extends BaseController  {
 
   //todo: Create
-
+def create(): Unit ={
+  ???
+}
   //todo: List
 
   //todo: Update
