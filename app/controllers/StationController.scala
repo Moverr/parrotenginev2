@@ -19,6 +19,12 @@ class StationController @Inject()(
     val authorization:String = request.headers.get("authentication").getOrElse("")
     val authResponse:AuthResponse = authService.validateTokenv2(authorization)
 
+    //todo: read the body params
+    val organization_id = request.body.asJson.get("organization_id").as[String]
+    val name =  request.body.asJson.get("name").as[String]
+    val code =  request.body.asJson.get("code").as[String]
+
+
 
     Future.successful(Ok)
   }
