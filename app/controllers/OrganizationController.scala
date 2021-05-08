@@ -68,7 +68,6 @@ class OrganizationController @Inject()(
       case e: Exception => Future.successful(InternalServerError(e.getMessage))
     }
 
-
   }
 
   //todo: Get Organization by Id

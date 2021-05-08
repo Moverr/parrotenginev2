@@ -44,7 +44,12 @@ class StationController @Inject()(
   }
 
   //todo: List
-  def list(offset: Int, limit: Int)  = Action.async{
+  def list(organisation_id:Int,offset: Int, limit: Int)  = Action.async{ implicit request =>
+    val authorization: String = request.headers.get("authentication").getOrElse("")
+    val authResponse: AuthResponse = authService.validateTokenv2(authorization)
+
+    stationService.list(authResponse,organisation_id,offset,limit)
+
 
     Future.successful(Ok)
   }
