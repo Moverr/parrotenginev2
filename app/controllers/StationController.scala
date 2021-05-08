@@ -1,9 +1,10 @@
 package controllers
 
+import controllers.requests.{OrganisationRequest, StationRequest}
 import controllers.responses.AuthResponse
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{BaseController, ControllerComponents}
-import services.AuthService
+import services.{AuthService, StationService}
 
 import scala.concurrent.Future
 
@@ -12,6 +13,7 @@ import scala.concurrent.Future
 class StationController @Inject()(
                                    val controllerComponents: ControllerComponents
                                    ,val authService:AuthService
+                                  ,val stationService: StationService
                                  ) extends BaseController  {
 
   //todo: Create
@@ -20,11 +22,13 @@ class StationController @Inject()(
     val authResponse:AuthResponse = authService.validateTokenv2(authorization)
 
     //todo: read the body params
-    val organization_id = request.body.asJson.get("organization_id").as[String]
+    val organization_id = request.body.asJson.get("organization_id").as[Int]
     val name =  request.body.asJson.get("name").as[String]
     val code =  request.body.asJson.get("code").as[String]
+    val stationRequest:StationRequest =   StationRequest(organization_id,name,code)
 
 
+    stationService.create(authResponse,organization_id,stationRequest)
 
     Future.successful(Ok)
   }

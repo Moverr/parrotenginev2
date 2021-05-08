@@ -21,15 +21,15 @@ class StationService   @Inject()(
 
   //todo: Create
 
-    def create(authResponse: AuthResponse,organisation_id:Int,request:StationRequest): Either[java.lang.Throwable,Future[StationResponse]]= {
+    def create(authResponse: AuthResponse,request:StationRequest): Either[java.lang.Throwable,Future[StationResponse]]= {
       if (authResponse == null) return Left(new Exception("Invalid Authentication"))
 
       //todo: Get Account Details  ::
-     val response:Option[Organization] = Await.result(organisationDAO.getOrganisation(organisation_id.toLong),Duration.Inf)
+     val response:Option[Organization] = Await.result(organisationDAO.getOrganisation(request.organization_id.toLong),Duration.Inf)
 
       if(response.exists(_ =>false))   return Left(new Exception("Invalid Authentication"))
 
-     val stationResponse:Future[Station] =   stationDao.create(organisation_id, request)
+     val stationResponse:Future[Station] =   stationDao.create(request.organization_id, request)
       Right(stationResponse.flatMap(x=>Future.successful(populateResponse(x))))
 
      // Right(populateResponse(stationResponse))
