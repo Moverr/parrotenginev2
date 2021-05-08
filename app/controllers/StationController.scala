@@ -44,23 +44,26 @@ class StationController @Inject()(
   }
 
   //todo: List
-  def list(organisation_id:Int,offset: Int, limit: Int)  = Action.async{ implicit request =>
+  def list(organisation_id:Int,offset: Int, limit: Int)   = Action.async { implicit request =>
+
     val authorization: String = request.headers.get("authentication").getOrElse("")
     val authResponse: AuthResponse = authService.validateTokenv2(authorization)
 
     stationService.list(authResponse,organisation_id,offset,limit)
+      match {
+      case Left(exception) => Future.successful(BadRequest(Json.toJson(exception.getMessage)))
+      case Right(result) =>   Future.successful(Ok(Json.toJson(result)))
+    }
 
-
-    Future.successful(Ok)
   }
 
   //todo: Update
   def update(): Unit = {
-
+    ???
   }
 
   //todo: Archive
   def archive(): Unit = {
-
+    ???
   }
 }
