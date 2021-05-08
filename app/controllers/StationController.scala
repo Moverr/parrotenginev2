@@ -4,7 +4,7 @@ import controllers.requests.StationRequest
 import controllers.responses.{AuthResponse, StationResponse}
 import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Json
-import play.api.mvc.{BaseController, ControllerComponents}
+import play.api.mvc.{AnyContent, BaseController, ControllerComponents}
 import services.{AuthService, StationService}
 
 import scala.concurrent.Future
@@ -44,8 +44,9 @@ class StationController @Inject()(
   }
 
   //todo: List
-  def list(): Unit = {
+  def list(offset: Int, limit: Int)  = Action.async{
 
+    Future.successful(Ok)
   }
 
   //todo: Update
