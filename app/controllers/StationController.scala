@@ -4,7 +4,7 @@ import controllers.requests.StationRequest
 import controllers.responses.{AuthResponse, StationResponse}
 import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Json
-import play.api.mvc.{AnyContent, BaseController, ControllerComponents}
+import play.api.mvc.{BaseController, ControllerComponents}
 import services.{AuthService, StationService}
 
 import scala.concurrent.Future
@@ -12,7 +12,7 @@ import scala.concurrent.Future
 
 @Singleton
 class StationController @Inject()(
-                                   val controllerComponents: ControllerComponents
+                                     val controllerComponents: ControllerComponents
                                    , val authService: AuthService
                                    , val stationService: StationService
                                  ) extends BaseController {
@@ -44,15 +44,15 @@ class StationController @Inject()(
   }
 
   //todo: List
-  def list(organisation_id:Int,offset: Int, limit: Int)   = Action.async { implicit request =>
+  def list(organisation_id: Int, offset: Int, limit: Int) = Action.async { implicit request =>
 
     val authorization: String = request.headers.get("authentication").getOrElse("")
     val authResponse: AuthResponse = authService.validateTokenv2(authorization)
 
-    stationService.list(authResponse,organisation_id,offset,limit)
-      match {
+    stationService.list(authResponse, organisation_id, offset, limit)
+    match {
       case Left(exception) => Future.successful(BadRequest(Json.toJson(exception.getMessage)))
-      case Right(result) =>   Future.successful(Ok(Json.toJson(result)))
+      case Right(result) => Future.successful(Ok(Json.toJson(result)))
     }
 
   }
