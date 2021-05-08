@@ -7,13 +7,20 @@ import play.api.mvc.{BaseController, ControllerComponents}
 class StationController @Inject()(val controllerComponents: ControllerComponents) extends BaseController  {
 
   //todo: Create
-def create(): Unit ={
-  ???
-}
+  def create(): Unit ={
+    ???
+  }
   //todo: List
+  def list(): Unit = {
+
+  }
 
   //todo: Update
+  def update():Unit={
 
-  //todo: Archive
+  }
+    //todo: Archive
+  def archive():Unit={
 
+  }
 }
