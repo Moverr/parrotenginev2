@@ -3,7 +3,6 @@ import com.nimbusds.jose.crypto._
 import com.nimbusds.jose.jwk._
 import com.nimbusds.jose.jwk.gen._
 
-
 def summation[A](value1:A,valueb:A): A = {
   value1
 }

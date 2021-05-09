@@ -5,7 +5,7 @@ import controllers.responses.{OrganisationResponse, StationResponse}
 import controllers.responses.{ OrganisationResponse}
 import play.api.libs.functional.syntax.{unlift, _}
 import play.api.libs.json.{JsPath, Writes}
-
+import  implicits.OrganizationResponseWrites._
 
 
 object StationResponseWrites {

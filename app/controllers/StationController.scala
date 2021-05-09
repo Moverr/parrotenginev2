@@ -7,12 +7,13 @@ import play.api.libs.json.Json
 import play.api.mvc.{BaseController, ControllerComponents}
 import services.{AuthService, StationService}
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-
+import implicits.StationResponseWrites._
 
 @Singleton
 class StationController @Inject()(
-                                     val controllerComponents: ControllerComponents
+                                   val controllerComponents: ControllerComponents
                                    , val authService: AuthService
                                    , val stationService: StationService
                                  ) extends BaseController {
@@ -33,7 +34,9 @@ class StationController @Inject()(
     try {
       response match {
         case Left(exception) => Future.successful(BadRequest(Json.toJson(exception.getMessage)))
-        case Right(value) => Future.successful(Ok(Json.toJson(value)))
+        case Right(value) =>  value.flatMap(x=> Future.successful(Ok(Json.toJson(x))) )
+
+
       }
     }
     catch {
@@ -52,7 +55,7 @@ class StationController @Inject()(
     stationService.list(authResponse, organisation_id, offset, limit)
     match {
       case Left(exception) => Future.successful(BadRequest(Json.toJson(exception.getMessage)))
-      case Right(result) => Future.successful(Ok(Json.toJson(result)))
+      case Right(result) => result.flatMap(x => Future.successful(Ok(Json.toJson(x))))
     }
 
   }
