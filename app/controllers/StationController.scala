@@ -34,7 +34,7 @@ class StationController @Inject()(
     try {
       response match {
         case Left(exception) => Future.successful(BadRequest(Json.toJson(exception.getMessage)))
-        case Right(value) =>  value.flatMap(x=> Future.successful(Ok(Json.toJson(x))) )
+        case Right(value) =>  value.flatMap(response=> Future.successful(Ok(Json.toJson(response))) )
 
 
       }
