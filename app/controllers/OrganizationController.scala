@@ -36,7 +36,7 @@ class OrganizationController @Inject()(
       orgService.create(authResponse, orgRequest)
       match {
         case Left(exception) => Future.successful(BadRequest(Json.toJson(exception.getMessage)))
-        case Right(value) => Future.successful(Ok(Json.toJson(value)))
+        case Right(value) =>  value.flatMap(x=> Future.successful(Ok(Json.toJson(x))))
 
       }
 
