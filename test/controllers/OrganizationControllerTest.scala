@@ -67,6 +67,7 @@ class OrganizationControllerTest extends PlaySpec {
       assert(expectedResult.length > 0 )
 
     }
+
     val jsonBody = Json.parse("{\"name\":\"name\", \"details\":\"details\" }")
 
 
