@@ -24,10 +24,10 @@ class StationController @Inject()(
     val authResponse: AuthResponse = authService.validateTokenv2(authorization)
 
     //todo: read the body params
-    val organization_id = request.body.asJson.get("organization_id").as[Int]
+    val organization_id = request.body.asJson.get("organization_id").as[String]
     val name = request.body.asJson.get("name").as[String]
     val code = request.body.asJson.get("code").as[String]
-    val stationRequest: StationRequest = StationRequest(organization_id, name, code)
+    val stationRequest: StationRequest = StationRequest(organization_id.toInt, name, code)
 
 
     val response: Either[java.lang.Throwable, Future[StationResponse]] = stationService.create(authResponse, stationRequest)
