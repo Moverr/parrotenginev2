@@ -37,7 +37,7 @@ class StationControllerTest extends PlaySpec {
 
   "Station Controller " should  {
     "list Organizations " in {
-      val response = controller.list(0,6).apply(FakeRequest(Helpers.GET, "/v1/organisation/list").withHeaders(
+      val response = controller.list(1,0,6).apply(FakeRequest(Helpers.GET, "/v1/organisation/list").withHeaders(
         "authentication"->token
       ))
 
