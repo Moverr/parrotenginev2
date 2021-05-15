@@ -55,7 +55,7 @@ class StationService   @Inject()(
       x=> Future.successful(populateResponse(x))
     }
 
-  def populateResponse(station:Station) : StationResponse = StationResponse(station.id,station.name,station.code,null)
+  def populateResponse(station:Station) : StationResponse = StationResponse(station.id,station.name,station.code,None )
 
 
 
