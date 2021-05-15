@@ -39,8 +39,7 @@ class OrganizationControllerTest extends PlaySpec {
 
   val userDao:UserDao =  new UserDao(dbConfProvider)
   val orgDaO:OrganisationDAO =   new OrganisationDAO(dbConfProvider)
-  val orgService =  Mockito.mock(classOf[OrganizationService])
-  //new OrganizationService(orgDaO)
+  val orgService =  new OrganizationService(orgDaO)
 
   val authService:AuthService =  Mockito.mock(classOf[AuthService])
 
@@ -50,22 +49,13 @@ class OrganizationControllerTest extends PlaySpec {
 
   "Organization Controller " should {
 
-    val org = new Organization(1L, "name","details",1L,null,1L,null,1L)
-    val resta:Seq[Organization] = Seq(org)
 
-//    Either[java.lang.Throwable,Future[Option[OrganisationResponse]]]
-    Mockito.when(orgService.list(AuthResponse("token","mose",10),0,6))
-
-     // .thenReturn(Left(Future.successful(resta)))
-
-    Mockito.when(orgDao.createOrganisation("name","details",10L))
-      .thenReturn(Future.successful(org))
 
     val controller   = new OrganizationController(orgService,authService,Helpers.stubControllerComponents())
     Mockito.when(authService.validateTokenv2("token")).thenReturn(  AuthResponse("token","mose",10))
 
 
-    "list Stations" in  {
+    "list Organizations " in  {
 
       val response = controller.list(0,6).apply(FakeRequest(Helpers.GET, "/v1/organisation/list").withHeaders(
         "authentication"->token
@@ -80,7 +70,7 @@ class OrganizationControllerTest extends PlaySpec {
     val jsonBody = Json.parse("{\"name\":\"name\", \"details\":\"details\" }")
 
 
-    "Create  Station " in {
+    "Create  Organization " in {
       val response = controller.create().apply(FakeRequest(Helpers.POST, "/v1/organisation/create")
           .withJsonBody(jsonBody)
           .withHeaders(
