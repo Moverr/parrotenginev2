@@ -1,16 +1,21 @@
 package controllers
 
-import controllers.responses.AuthResponse
+
+import controllers.responses.{AuthResponse, OrganisationResponse}
 import daos.{OrganisationDAO, UserDao}
+import helpers.Utilities
 import org.mockito.Mockito
-import org.scalatest.FunSuite
 import org.scalatestplus.play.PlaySpec
 import play.api.Mode
 import play.api.db.slick.DatabaseConfigProvider
 import play.api.inject.Injector
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.test.Helpers.contentAsString
 import play.api.test.{FakeRequest, Helpers}
 import services.{AuthService, OrganizationService, StationService}
+
+import play.api.test.Helpers._
+
 
 class StationControllerTest extends PlaySpec {
 
@@ -36,10 +41,16 @@ class StationControllerTest extends PlaySpec {
 
 
   "Station Controller " should  {
-    "list Organizations " in {
-      val response = controller.list(1,0,6).apply(FakeRequest(Helpers.GET, "/v1/organisation/list").withHeaders(
+    "list Stations " in {
+      val response = controller.list(1,0,6).apply(FakeRequest(Helpers.GET, "/v1/station/list").withHeaders(
         "authentication"->token
       ))
+
+      val bodyText: String = contentAsString(response)
+      val expectedResult:List[OrganisationResponse] = Utilities.fromJson[List[OrganisationResponse]](bodyText)
+
+      assert(expectedResult.length > 0 )
+
 
     }
   }

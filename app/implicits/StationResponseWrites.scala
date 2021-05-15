@@ -13,6 +13,6 @@ object StationResponseWrites {
     (JsPath \ "id").write[Long] and
       (JsPath \ "name").write[String] and
       (JsPath \ "code").write[String] and
-      (JsPath \ "organization").write[OrganisationResponse]
+      (JsPath \ "organization").write[Option[OrganisationResponse]]
     )(unlift(StationResponse.unapply))
 }
