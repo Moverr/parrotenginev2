@@ -32,7 +32,6 @@ class StationService   @Inject()(
      val stationResponse:Future[Station] =   stationDao.create(request.organization_id, request)
       Right(stationResponse.flatMap(x=>Future.successful(populateResponse(x))))
 
-     // Right(populateResponse(stationResponse))
 
     }
 
