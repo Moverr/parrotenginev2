@@ -5,6 +5,7 @@ target
 /.classpath
 /.project
 /.settings
+.bloop
 /RUNNING_PID
 svc
 
