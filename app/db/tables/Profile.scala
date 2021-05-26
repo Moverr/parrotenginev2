@@ -22,7 +22,6 @@ class ProfileTable(tag: Tag) extends Table[Profile](tag,"profile"){
   def gender = column[String]("gender")
   def profile_type = column[String]("profile_type")
   def author_id = column[Long]("author_id")
-
   def created_on = column[Timestamp]("created_on",SqlType("timestamp not null default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP"))
   def updated_by = column[Long]("updated_by")
   def date_updated = column[Timestamp]("date_updated",SqlType("timestamp not null default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP"))
