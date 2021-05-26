@@ -1,12 +1,9 @@
 package controllers.requests
 
-import java.util.Date
+import controllers.requests.ProfileType.ProfileType
 
 
-sealed trait ProfileRequest
-
-case class ResidentProfileRequest(surname:String,otherName:String,gender:String,date_of_birth:Date) extends ProfileRequest
-case class GuestProfileRequest(surname:String,otherName:String,gender:String,age:Int) extends ProfileRequest
+case class ProfileRequest(surname:String,otherName:String,profileType: ProfileType,gender:String)
 
 
 

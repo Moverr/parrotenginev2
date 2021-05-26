@@ -1,28 +1,35 @@
 package daos
 
-import controllers.requests.{ProfileRequest, StationRequest}
-import db.tables.{OrganizationTable, ProfileTable, Station, StationTable}
+import java.sql.Timestamp
+
+import controllers.requests.{ProfileRequest}
+import db.tables.{ Profile, ProfileTable}
+import db.tables.{ OrganizationTable    }
+
+import scala.concurrent.Future
 import javax.inject.{Inject, Singleton}
 import play.api.db.slick.DatabaseConfigProvider
 import slick.jdbc.JdbcProfile
+import slick.jdbc.PostgresProfile.api._
 import slick.lifted.TableQuery
 
-import scala.concurrent.Future
+
 
 @Singleton
 class ProfileDAO   @Inject()(dbConfigProvider: DatabaseConfigProvider) {
 
 
   private  val dbConfig = dbConfigProvider.get[JdbcProfile]
-  lazy  val stationTable = TableQuery[ProfileTable]
+  lazy  val profileTable = TableQuery[ProfileTable]
   lazy  val organizationTable = TableQuery[OrganizationTable]
 
   import dbConfig._
 
   //todo: Create Profile ..
   //todo: create station
-  def create(organisation_id:Long, profile:ProfileRequest): Future[Station] = {
-    db.run(stationTable.returning(stationTable) += Station(0L,organisation_id,station.name,station.code))
+  def create( profile:ProfileRequest): Future[Profile] = {
+    db.run(profileTable.returning(profileTable) +=  Profile(0L,1,"","","","",1,null,1,null)
+    )
   }
 
 
