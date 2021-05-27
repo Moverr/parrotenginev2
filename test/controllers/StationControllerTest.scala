@@ -1,8 +1,9 @@
 package controllers
 
 
-import controllers.responses.{AuthResponse, OrganisationResponse}
+import controllers.responses.{AuthResponse, OrganisationResponse, StationResponse}
 import daos.{OrganisationDAO, StationDAO, UserDao}
+import db.tables.Station
 import helpers.Utilities
 import org.mockito.Mockito
 import org.scalatestplus.play.PlaySpec
@@ -15,6 +16,8 @@ import play.api.test.{FakeRequest, Helpers}
 import services.{AuthService, OrganizationService, StationService}
 import play.api.test.Helpers._
 
+import scala.concurrent.Future
+
 
 class StationControllerTest extends PlaySpec {
 
@@ -26,8 +29,16 @@ class StationControllerTest extends PlaySpec {
   val userDao:UserDao =  new UserDao(dbConfProvider)
   val orgDaO:OrganisationDAO =   new OrganisationDAO(dbConfProvider)
   val orgService =  new OrganizationService(orgDaO)
-  val stationDao =  new StationDAO(dbConfProvider)
+  val stationDao =  Mockito.mock(classOf[StationDAO])
+
+//    new StationDAO(dbConfProvider)
   val authService:AuthService =  Mockito.mock(classOf[AuthService])
+
+
+  var stations:Seq[Station] = Seq[Station]()
+  stations = stations  :+  Station(0L,0L,"tetst","test")
+
+
 
   val stationService:StationService =  new StationService(stationDao,orgDaO)
     //Mockito.mock(classOf[StationService])
@@ -40,6 +51,7 @@ class StationControllerTest extends PlaySpec {
   val controller   = new StationController(Helpers.stubControllerComponents(),authService,stationService)
   Mockito.when(authService.validateTokenv2("token")).thenReturn(  AuthResponse("token","mose",10))
 
+  Mockito.when(stationDao list(1,0,6)) thenReturn(Future.successful(stations))
 
   "Station Controller " should  {
     "list Stations " in {
@@ -48,7 +60,7 @@ class StationControllerTest extends PlaySpec {
       ))
 
       val bodyText: String = contentAsString(response)
-      val expectedResult:List[OrganisationResponse] = Utilities.fromJson[List[OrganisationResponse]](bodyText)
+      val expectedResult:List[StationResponse] = Utilities.fromJson[List[StationResponse]](bodyText)
 
       status(response) mustBe  OK
   //    assert(expectedResult.length > 0 )
