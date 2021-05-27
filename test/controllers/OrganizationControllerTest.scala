@@ -32,18 +32,19 @@ class OrganizationControllerTest extends PlaySpec {
 
 
   val userDao:UserDao =  new UserDao(dbConfProvider)
-  val orgDaO:OrganisationDAO =   new OrganisationDAO(dbConfProvider)
+  val orgDaO:OrganisationDAO = Mockito.mock(classOf[OrganisationDAO])
+    //Mockito.mock(classOf[OrganisationDAO])
   val orgService =  new OrganizationService(orgDaO)
 
   val authService:AuthService =  Mockito.mock(classOf[AuthService])
 
-  val orgDao:OrganisationDAO = Mockito.mock(classOf[OrganisationDAO])
+
 
   val token:String = "token"
 
-  var  org =  Organization( 0L, "name", "details", 0L,null,0L,null,0l);
+  var  org =  Organization( 0L, "name", "details", 10,new Timestamp(0L),0L,new Timestamp(0L),0L);
   var organizations:Seq[Organization] = Seq[Organization]()
-  organizations = organizations  :+  org
+  organizations = organizations  :+   Organization( 1, "name", "details", 10,new Timestamp(0L),0,new Timestamp(0L),0)
 
 
 
@@ -53,11 +54,12 @@ class OrganizationControllerTest extends PlaySpec {
 
     val controller   = new OrganizationController(orgService,authService,Helpers.stubControllerComponents())
    //todo: Mock Auth Service
-    Mockito.when(authService.validateTokenv2("token")).thenReturn(  AuthResponse("token","mose",10))
-  //todo: Mock Organization DAO
-    Mockito.when(orgDao getOrganisations(10,0,6)) thenReturn(Future.successful(organizations))
-    Mockito.when(orgDaO createOrganisation("name","details",10L)).thenReturn(Future.successful(org))
+
     "list Organizations " in  {
+
+      Mockito.when(authService.validateTokenv2("token")).thenReturn(  AuthResponse("token","mose",10))
+
+      Mockito.when(orgDaO.getOrganisations(10,0,6)).thenReturn(Future.successful(organizations))
 
       val response = controller.list(0,6).apply(FakeRequest(Helpers.GET, "/v1/organisation/list").withHeaders(
         "authentication"->token
@@ -70,10 +72,16 @@ class OrganizationControllerTest extends PlaySpec {
 
     }
 
-    val jsonBody = Json.parse("{\"name\":\"name\", \"details\":\"details\" }")
 
 
     "Create  Organization " in {
+      val jsonBody = Json.parse("{\"name\":\"name\", \"details\":\"details\" }")
+
+      Mockito.when(authService.validateTokenv2("token")).thenReturn(  AuthResponse("token","mose",10))
+
+
+      Mockito.when(orgDaO.createOrganisation("name","details",10)).thenReturn(Future.successful(org))
+
       val response = controller.create().apply(FakeRequest(Helpers.POST, "/v1/organisation/create")
           .withJsonBody(jsonBody)
           .withHeaders(
@@ -86,5 +94,7 @@ class OrganizationControllerTest extends PlaySpec {
 
 
     }
+
+
   }
 }

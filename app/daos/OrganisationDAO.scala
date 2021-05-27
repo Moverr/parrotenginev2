@@ -25,7 +25,7 @@ class OrganisationDAO  @Inject()(dbConfigProvider: DatabaseConfigProvider) exten
   *
   * Get Organisation by owner
    */
-    def getOrganisations(owner:Long,offset:Int,limit:Int): Future[Seq[Organization]]  =      db.run(orgTable
+    def getOrganisations(owner:Long,offset:Int,limit:Int): Future[Seq[Organization]]  =     db.run(orgTable
         .filter(_.owner === owner)
         .drop(offset)
         .take(limit)
