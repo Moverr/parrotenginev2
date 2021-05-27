@@ -52,8 +52,9 @@ class StationController @Inject()(
     val authorization: String = request.headers.get("authentication").getOrElse("")
     val authResponse: AuthResponse = authService.validateTokenv2(authorization)
 
-    stationService.list(authResponse, organisation_id, offset, limit)
-    match {
+    var result = stationService.list(authResponse, organisation_id, offset, limit)
+
+    result match {
       case Left(exception) => Future.successful(BadRequest(Json.toJson(exception.getMessage)))
       case Right(result) => result flatMap {
         result => Future.successful(Ok(Json.toJson(result)))

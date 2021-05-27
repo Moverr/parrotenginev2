@@ -2,9 +2,10 @@ package daos
 
 import java.sql.Timestamp
 
-import controllers.requests.{ProfileRequest}
-import db.tables.{ Profile, ProfileTable}
-import db.tables.{ OrganizationTable    }
+import controllers.requests.ProfileRequest
+import controllers.responses.AuthResponse
+import db.tables.{Profile, ProfileTable}
+import db.tables.OrganizationTable
 
 import scala.concurrent.Future
 import javax.inject.{Inject, Singleton}
@@ -27,8 +28,8 @@ class ProfileDAO   @Inject()(dbConfigProvider: DatabaseConfigProvider) {
 
   //todo: Create Profile ..
   //todo: create station
-  def create( profile:ProfileRequest): Future[Profile] = {
-    db.run(profileTable.returning(profileTable) +=  Profile(0L,1,"","","","",1,null,1,null)
+  def create( authResponse: AuthResponse,profileRequest: ProfileRequest): Future[Profile] = {
+    db.run(profileTable.returning(profileTable) +=  Profile(0L,profileRequest.user_id,"","","","",1,null,1,null)
     )
   }
 

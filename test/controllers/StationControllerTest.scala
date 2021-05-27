@@ -2,7 +2,7 @@ package controllers
 
 
 import controllers.responses.{AuthResponse, OrganisationResponse}
-import daos.{OrganisationDAO, UserDao}
+import daos.{OrganisationDAO, StationDAO, UserDao}
 import helpers.Utilities
 import org.mockito.Mockito
 import org.scalatestplus.play.PlaySpec
@@ -13,7 +13,6 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Helpers.contentAsString
 import play.api.test.{FakeRequest, Helpers}
 import services.{AuthService, OrganizationService, StationService}
-
 import play.api.test.Helpers._
 
 
@@ -27,9 +26,11 @@ class StationControllerTest extends PlaySpec {
   val userDao:UserDao =  new UserDao(dbConfProvider)
   val orgDaO:OrganisationDAO =   new OrganisationDAO(dbConfProvider)
   val orgService =  new OrganizationService(orgDaO)
-
+  val stationDao =  new StationDAO(dbConfProvider)
   val authService:AuthService =  Mockito.mock(classOf[AuthService])
-  val stationService:StationService =  Mockito.mock(classOf[StationService])
+  
+  val stationService:StationService =  new StationService(stationDao)
+    //Mockito.mock(classOf[StationService])
 
 
   val orgDao:OrganisationDAO = Mockito.mock(classOf[OrganisationDAO])
