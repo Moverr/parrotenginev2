@@ -55,8 +55,8 @@ class OrganizationController @Inject()(
     val authResponse: AuthResponse = authService.validateTokenv2(authorization)
 
     try {
-      orgService.list(authResponse, offset, limit)
-      match {
+     val result =  orgService.list(authResponse, offset, limit)
+      result match {
         case Left(exception) => Future.successful(BadRequest(Json.toJson(exception.getMessage)))
         case Right(result) => result flatMap {
           result => Future.successful(Ok(Json.toJson(result)))
