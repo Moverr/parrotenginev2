@@ -4,7 +4,7 @@ import java.sql.Timestamp
 
 import controllers.responses.{AuthResponse, OrganisationResponse}
 import daos.{OrganisationDAO, UserDao}
-import db.tables.Organization
+import db.tables.{Organization, Station}
 import helpers.Utilities
 import org.mockito.Mockito
 import org.scalatestplus.play.PlaySpec
@@ -19,12 +19,6 @@ import services.{AuthService, OrganizationService}
 import play.api.test.Helpers._
 
 import scala.concurrent.Future
-
-
-
-
-
-
 import scala.concurrent.{ExecutionContext, Future}
 
 
@@ -47,14 +41,22 @@ class OrganizationControllerTest extends PlaySpec {
 
   val token:String = "token"
 
+  var  org =  Organization( 0L, "name", "details", 0L,null,0L,null,0l);
+  var organizations:Seq[Organization] = Seq[Organization]()
+  organizations = organizations  :+  org
+
+
+
   "Organization Controller " should {
 
 
 
     val controller   = new OrganizationController(orgService,authService,Helpers.stubControllerComponents())
+   //todo: Mock Auth Service
     Mockito.when(authService.validateTokenv2("token")).thenReturn(  AuthResponse("token","mose",10))
-
-
+  //todo: Mock Organization DAO
+    Mockito.when(orgDao getOrganisations(10,0,6)) thenReturn(Future.successful(organizations))
+    Mockito.when(orgDaO createOrganisation("name","details",10L)).thenReturn(Future.successful(org))
     "list Organizations " in  {
 
       val response = controller.list(0,6).apply(FakeRequest(Helpers.GET, "/v1/organisation/list").withHeaders(
