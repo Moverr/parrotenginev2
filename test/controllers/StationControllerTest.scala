@@ -41,7 +41,6 @@ class StationControllerTest extends PlaySpec {
 
 
   val stationService:StationService =  new StationService(stationDao,orgDaO)
-    //Mockito.mock(classOf[StationService])
 
 
   val orgDao:OrganisationDAO = Mockito.mock(classOf[OrganisationDAO])
@@ -49,9 +48,12 @@ class StationControllerTest extends PlaySpec {
   val token:String = "token"
 
   val controller   = new StationController(Helpers.stubControllerComponents(),authService,stationService)
-  Mockito.when(authService.validateTokenv2("token")).thenReturn(  AuthResponse("token","mose",10))
 
+  //todo: mock the auth service
+  Mockito.when(authService.validateTokenv2("token")).thenReturn(  AuthResponse("token","mose",10))
+//  todo: Mock the Station Dao
   Mockito.when(stationDao list(1,0,6)) thenReturn(Future.successful(stations))
+// todo: Mock the Organization DAO
 
   "Station Controller " should  {
     "list Stations " in {
@@ -63,9 +65,7 @@ class StationControllerTest extends PlaySpec {
       val expectedResult:List[StationResponse] = Utilities.fromJson[List[StationResponse]](bodyText)
 
       status(response) mustBe  OK
-  //    assert(expectedResult.length > 0 )
-
-
+      assert(expectedResult.length > 0 ) 
     }
   }
 
