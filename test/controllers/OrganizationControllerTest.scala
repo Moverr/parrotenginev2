@@ -72,8 +72,6 @@ class OrganizationControllerTest extends PlaySpec {
 
     }
 
-
-
     "Create  Organization " in {
       val jsonBody = Json.parse("{\"name\":\"name\", \"details\":\"details\" }")
 
