@@ -22,13 +22,15 @@ def f(num:Int,arr:List[Int]):List[Int]={
 }
 
 
-def fa(delim:Int,arr:List[Int]):List[Int] = {
-  arr.filter{
-    x=> x < delim
-  }
+def fa(delim:Int,arr:List[Int]):Int= {
+  var ff = new ListBuffer[Int]()
+
+ arr.filter{
+   x=>  x%2 == 1
+ }.sum
 
 }
 
 
-val response = fa(3,List(1,2,3,5,5,6,7))
+val response = fa(3,List(11,25,18,-1,26,-20,-19,23,-24,-8))
 println(response)
