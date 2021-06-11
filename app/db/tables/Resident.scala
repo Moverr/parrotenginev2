@@ -17,5 +17,7 @@ class ResidentTable(tag: Tag) extends Table[Resident](tag,"residents"){
   def updated_by = column[Long]("updated_by")
   def date_updated = column[Timestamp]("date_updated",SqlType("timestamp not null default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP"))
 
+  //todo: map a relation ship with profile to get the profile.
+
   override def * = (id,profile_id,author_id,created_on,updated_by,date_updated).mapTo[Resident]
 }
