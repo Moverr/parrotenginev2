@@ -15,5 +15,10 @@
    else s"$count\n" + forlooper(count+1)
  }
 
- //when u need loops use recursion :: 
+ //when u need loops use recursion ::
  forlooper(0)
+
+ def greeting(name:String,age:Int):String= s"Hi,my name is $name and I am $age years old"
+
+ greeting("Muyinda Rogers",33)
+ 
