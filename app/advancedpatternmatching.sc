@@ -15,6 +15,7 @@ for{
   x <- Seq(1,2,3,4,3.4,"One","Two")
 }{
   val str = x match {
+    case Seq(1,2,3)=> "Interesting Scenario"
     case 1 => "Int One"
     case _:Int|_:Double =>"Other fgf  : "+x
     case set:Double => "Un expected value : "+set
