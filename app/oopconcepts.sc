@@ -21,4 +21,12 @@
  def greeting(name:String,age:Int):String= s"Hi,my name is $name and I am $age years old"
 
  greeting("Muyinda Rogers",33)
- 
+
+ val myMap = Map("MI" -> "Michigan", "OH" -> "Ohio", "WI" -> "Wisconsin", "MI" -> "Michigan") withDefaultValue "Iit"
+ myMap.size
+ myMap.head
+ myMap("ew")
+
+ val anewMap = myMap + ("MaI"->"Blo der")
+
+ val anno = anewMap -- List("yuio")
