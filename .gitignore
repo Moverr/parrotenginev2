@@ -11,3 +11,7 @@ svc
 
 scala-2.13.4.deb
 scala-2.11.8.deb
+
+.metals
+project
+scalavista-vscode.log
