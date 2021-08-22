@@ -92,5 +92,7 @@ class OrganizationController @Inject()(
     }
 
   }
+
+  //todo: update the organization name etc.
 }
 
