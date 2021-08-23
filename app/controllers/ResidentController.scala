@@ -1,11 +1,14 @@
 package controllers
 
-import controllers.requests.OrganisationRequest
+import org.joda.time.DateTime
+import controllers.requests.{GuestProfileRequest, OrganisationRequest, ProfileType}
 import controllers.responses.AuthResponse
 import play.api.mvc.AbstractController
 import javax.inject.{Inject, Singleton}
 import play.api.mvc._
 import services.AuthService
+
+import helpers.Utilities.convertLongToDateTime
 
 @Singleton
 class ResidentController  @Inject()(
@@ -26,8 +29,15 @@ class ResidentController  @Inject()(
     val profiletype = request.body.asJson.get("profiletype").as[String]
     val gender = request.body.asJson.get("gender").as[String]
 
+    //get a long register date
+    val registerDate =  request.body.asJson.get("registerdate").as[Long]
 
-    val orgRequest = OrganisationRequest(name, details)
+    val regDate:DateTime =  convertLongToDateTime(registerDate)
+
+
+    val profileRequest = GuestProfileRequest(surname,otherName,ProfileType.withName(profiletype),gender)
+
+    //todo: send this to the middleware and move on
 
 
     ???

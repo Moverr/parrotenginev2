@@ -20,10 +20,6 @@ case class ResidentProfileRequest(surname:String,othername:String,profiletype: P
 }
 //Guest
 //,user_id:Option[Long]
-case class GuestProfileRequest(surname:String,othername:String,profiletype: ProfileType,gender:String) extends  ProfileRequest{
-  val  registerDate:DateTime = DateTime.now()
-
-}
-
+case class GuestProfileRequest(surname:String,othername:String,profiletype: ProfileType,gender:String,registerDate:DateTime= DateTime.now()) extends  ProfileRequest
 
 
