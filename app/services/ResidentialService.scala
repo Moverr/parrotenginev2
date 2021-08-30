@@ -20,7 +20,7 @@ class ResidentialService  @Inject()(
 
     if (authResponse == null) return Left(new Exception("Invalid Authentication"))
 
-    stationDAO.ge
+    stationDAO.get(request.station_id)
     //todo: Get Account Details  ::
     val response:Option[Organization] = Await.result(organisationDAO.getOrganisation(request.organization_id.toLong),Duration.Inf)
 
