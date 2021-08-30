@@ -29,7 +29,8 @@ class ResidentialService  @Inject()(
           case Some(value) =>  Left(new Exception("Invalid Authentication"))
           case None =>  {
             //todo: save the day
-          //  residentDAO.crea
+           //  residentDAO.crea
+
           }
         })
       }
