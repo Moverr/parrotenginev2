@@ -12,7 +12,7 @@ import scala.concurrent.duration.Duration
 @Singleton
 class ResidentialService  @Inject()(
                                      residentDAO: ResidentProfileDAO
-                                   ,stationDAO: StationDAO
+                                   ,stationService: StationService
 
                                    ) {
 
@@ -20,7 +20,18 @@ class ResidentialService  @Inject()(
 
     if (authResponse == null) return Left(new Exception("Invalid Authentication"))
 
-    stationDAO.get(request.station_id)
+    /*
+    stationService.get(request.stationid)
+      .map{
+        x=>
+          x match {
+            case Some(value) => ???
+            case None => Left(new Exception("Station does not exist "))
+          }
+      }
+
+    */
+
     //todo: Get Account Details  ::
     val response:Option[Organization] = Await.result(organisationDAO.getOrganisation(request.organization_id.toLong),Duration.Inf)
 

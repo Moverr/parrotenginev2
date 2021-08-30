@@ -8,7 +8,6 @@ abstract class ProfileRequest{
   def  othername:String
   def  profiletype:ProfileType
   def  gender:String
-
 }
 //,user_id:Option[Long]
 case class BasicProfileRequest(surname:String,othername:String,profiletype: ProfileType,gender:String  ) extends  ProfileRequest

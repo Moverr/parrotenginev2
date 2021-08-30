@@ -46,6 +46,12 @@ class StationService   @Inject()(
     )
   }
 
+  //todo: get item by id
+  def list(authResponse: AuthResponse, station_id:Int):Either[java.lang.Throwable,Future[Option[StationResponse]]]={
+    if(authResponse == null ) return  Left(new Exception("Invalid Authentication"))
+    Right( stationDao.get(station_id).map(record=>populateResponse(record)))
+  }
+
   //todo: Archive
 
 
@@ -55,6 +61,15 @@ class StationService   @Inject()(
     }
 
   def populateResponse(station:Station) : StationResponse = StationResponse(station.id,station.name,station.code,None )
+
+
+  def populateResponse(station:Option[Station]) : Option[StationResponse] =
+    station match {
+      case Some(value) => Some(populateResponse(value))
+      case None =>None
+    }
+
+  //StationResponse(station.id,station.name,station.code,None )
 
 
 
