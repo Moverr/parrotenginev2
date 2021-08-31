@@ -14,8 +14,9 @@ import play.api.db.slick.DatabaseConfigProvider
 import slick.jdbc.JdbcProfile
 import slick.jdbc.PostgresProfile.api._
 import slick.lifted.TableQuery
+import java.sql.Timestamp
 
-
+import helpers.Utilities.getCurrentTimeStamp
 
 @Singleton
 class ResidentProfileDAO    @Inject()(dbConfigProvider: DatabaseConfigProvider) extends ProfileDAO (dbConfigProvider){
@@ -28,8 +29,8 @@ import dbConfig._
 
 
   //todo: create item
-  def create( authResponse: AuthResponse,profileRequest: ResidentProfileRequest): Future[Profile] = {
-    db.run(profileTable.returning(profileTable) +=  Profile(0L,None,"","","","",0L, null,0L, null) )
+  def create(authResponse: AuthResponse, request: ResidentProfileRequest): Future[Profile] = {
+    db.run(profileTable.returning(profileTable) +=  Profile(0L,None,request.surname,request.othername,request.gender,"RESIDENT",authResponse.user_id,getCurrentTimeStamp,authResponse.user_id,  getCurrentTimeStamp ) )
   }
 
   //todo: get tiems and move on

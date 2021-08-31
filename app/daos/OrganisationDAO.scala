@@ -3,6 +3,7 @@ package daos
 import java.sql.Timestamp
 
 import db.tables.{Organization, OrganizationTable, User, UserTable}
+import helpers.Utilities.getCurrentTimeStamp
 
 import scala.concurrent.Future
 import javax.inject.{Inject, Singleton}
@@ -48,7 +49,7 @@ class OrganisationDAO  @Inject()(@NamedDatabase("default") dbConfigProvider: Dat
   * Create Organisation
  */
     def createOrganisation(name:String,details:String,owner:Long): Future[Organization] =
-    db.run(orgTable.returning(orgTable) += Organization(0L,name,details,owner, new Timestamp(0L),0L,new Timestamp(0L),0L))
+    db.run(orgTable.returning(orgTable) += Organization(0L,name,details,owner, getCurrentTimeStamp,0L,getCurrentTimeStamp,0L))
 
 
 }

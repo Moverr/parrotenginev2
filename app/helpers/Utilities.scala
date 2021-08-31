@@ -1,6 +1,7 @@
 package helpers
 
 import java.security.MessageDigest
+import java.sql.Timestamp
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.scala.{DefaultScalaModule, ScalaObjectMapper}
@@ -45,5 +46,7 @@ object Utilities {
 
 
   def convertLongToDateTime(time: Long): DateTime =  new  DateTime( time)
+
+  def getCurrentTimeStamp =   new Timestamp( new DateTime().getMillis)
 
 }
