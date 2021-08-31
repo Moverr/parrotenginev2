@@ -27,7 +27,7 @@ class StationService   @Inject()(
       if (authResponse == null) return Left(new Exception("Invalid Authentication"))
 
       //todo: Get Account Details  ::
-     val response:Option[Organization] = Await.result(organisationDAO.getOrganisation(request.organization_id.toLong),Duration.Inf)
+     val response:Option[Organization] = Await.result(organisationDAO.get(request.organization_id.toLong),Duration.Inf)
 
       if(response.exists(_ =>false))   return Left(new Exception("Invalid Authentication"))
 

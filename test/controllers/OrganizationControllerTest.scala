@@ -59,7 +59,7 @@ class OrganizationControllerTest extends PlaySpec {
 
       Mockito.when(authService.validateTokenv2("token")).thenReturn(  AuthResponse("token","mose",10))
 
-      Mockito.when(orgDaO.getOrganisations(10,0,6)).thenReturn(Future.successful(organizations))
+      Mockito.when(orgDaO.list(10,0,6)).thenReturn(Future.successful(organizations))
 
       val response = controller.list(0,6).apply(FakeRequest(Helpers.GET, "/v1/organisation/list").withHeaders(
         "authentication"->token
@@ -78,7 +78,7 @@ class OrganizationControllerTest extends PlaySpec {
       Mockito.when(authService.validateTokenv2("token")).thenReturn(  AuthResponse("token","mose",10))
 
 
-      Mockito.when(orgDaO.createOrganisation("name","details",10)).thenReturn(Future.successful(org))
+      Mockito.when(orgDaO.create("name","details",10)).thenReturn(Future.successful(org))
 
       val response = controller.create().apply(FakeRequest(Helpers.POST, "/v1/organisation/create")
           .withJsonBody(jsonBody)

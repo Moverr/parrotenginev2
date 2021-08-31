@@ -13,11 +13,11 @@ trait IOrganisatioonDAO {
  * Get Organisation by owner
 
   */
-  def getOrganisations(owner: Long, offset: Int, limit: Int): Future[Seq[Organization]]
+  def list(owner: Long, offset: Int, limit: Int): Future[Seq[Organization]]
 
   /*
   *
   * Create Organisation
  */
-  def createOrganisation(name: String, details: String, owner: Long): Future[Organization]
+  def create(name: String, details: String, owner: Long): Future[Organization]
 }

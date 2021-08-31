@@ -27,7 +27,7 @@ class OrganisationDAO  @Inject()(@NamedDatabase("default") dbConfigProvider: Dat
   *
   * Get Organisation by owner
    */
-    def getOrganisations(owner:Long,offset:Int,limit:Int): Future[Seq[Organization]]  =     db.run(orgTable
+    def list(owner:Long, offset:Int, limit:Int): Future[Seq[Organization]]  =     db.run(orgTable
         .filter(_.owner === owner)
         .drop(offset)
         .take(limit)
@@ -37,10 +37,10 @@ class OrganisationDAO  @Inject()(@NamedDatabase("default") dbConfigProvider: Dat
   /*
      Get  Organisation by Id
    */
-  def getOrganisation(owner:Long,orgId:Long): Future[Option[Organization]]  =
+  def get(owner:Long, orgId:Long): Future[Option[Organization]]  =
     db.run(orgTable.filter(_.owner === owner).filter(_.id === orgId).result.headOption)
 
-  def getOrganisation(orgId:Long): Future[Option[Organization]]  =
+  def get(orgId:Long): Future[Option[Organization]]  =
     db.run(orgTable.filter(_.id === orgId).result.headOption)
 
 
@@ -48,7 +48,7 @@ class OrganisationDAO  @Inject()(@NamedDatabase("default") dbConfigProvider: Dat
   *
   * Create Organisation
  */
-    def createOrganisation(name:String,details:String,owner:Long): Future[Organization] =
+    def create(name:String, details:String, owner:Long): Future[Organization] =
     db.run(orgTable.returning(orgTable) += Organization(0L,name,details,owner, getCurrentTimeStamp,0L,getCurrentTimeStamp,0L))
 
 
