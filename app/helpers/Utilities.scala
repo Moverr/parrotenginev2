@@ -5,6 +5,12 @@ import java.security.MessageDigest
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.scala.{DefaultScalaModule, ScalaObjectMapper}
 import java.util.regex.Pattern
+import java.text.Format
+import java.text.SimpleDateFormat
+
+import org.joda.time.DateTime
+
+
 
 object Utilities {
 
@@ -37,5 +43,7 @@ object Utilities {
 
   def validateRegexString(matchString: String, matchType:String):Boolean= Pattern.compile(matchRegex(matchType)).matcher(matchString).matches()
 
+
+  def convertLongToDateTime(time: Long): DateTime =  new  DateTime( time)
 
 }

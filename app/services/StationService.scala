@@ -19,6 +19,8 @@ class StationService   @Inject()(
 
                                 )  {
 
+
+
   //todo: Create
 
     def create(authResponse: AuthResponse,request:StationRequest): Either[java.lang.Throwable,Future[StationResponse]]= {
@@ -46,16 +48,30 @@ class StationService   @Inject()(
     )
   }
 
+  //todo: get item by id
+  def get(authResponse: AuthResponse, station_id:Int):Either[java.lang.Throwable,Future[Option[StationResponse]]]={
+    if(authResponse == null ) return  Left(new Exception("Invalid Authentication"))
+    Right( stationDao.get(station_id).map(record=>populateResponse(record)))
+  }
+
   //todo: Archive
 
 
 
   def populateResponse(station:Future[Station]):Future[StationResponse]= station.flatMap{
-      x=> Future.successful(populateResponse(x))
+    record=> Future.successful(populateResponse(record))
     }
 
   def populateResponse(station:Station) : StationResponse = StationResponse(station.id,station.name,station.code,None )
 
+
+  def populateResponse(station:Option[Station]) : Option[StationResponse] =
+    station match {
+      case Some(value) => Some(populateResponse(value))
+      case None =>None
+    }
+
+  //StationResponse(station.id,station.name,station.code,None )
 
 
 

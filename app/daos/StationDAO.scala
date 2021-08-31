@@ -41,9 +41,15 @@ class StationDAO    @Inject()(dbConfigProvider: DatabaseConfigProvider) {
 
 
   //todo: Archive Station
-  def archive(organization_id:Int,id:Int):Unit={
+  def archive(organization_id:Int,id:Int):Unit ={
   ???
   }
 
+  def get(id:Long):Future[Option[Station]]={
+    db.run(stationTable
+      .filter(_.id === id)
+      .take(1)
+      .result.headOption)
+  }
   //todo: Populate Response
 }

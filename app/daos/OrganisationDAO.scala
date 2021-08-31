@@ -8,12 +8,13 @@ import scala.concurrent.Future
 import javax.inject.{Inject, Singleton}
 import org.joda.time.{DateTime, DateTimeZone, LocalDateTime}
 import play.api.db.slick.DatabaseConfigProvider
+import play.db.NamedDatabase
 import slick.jdbc.JdbcProfile
 import slick.jdbc.PostgresProfile.api._
 import slick.lifted.TableQuery
 
 @Singleton
-class OrganisationDAO  @Inject()(dbConfigProvider: DatabaseConfigProvider) extends IOrganisatioonDAO {
+class OrganisationDAO  @Inject()(@NamedDatabase("default") dbConfigProvider: DatabaseConfigProvider) extends IOrganisatioonDAO {
 
 
   private  val dbConfig = dbConfigProvider.get[JdbcProfile]
