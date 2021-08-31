@@ -29,7 +29,7 @@ import dbConfig._
 
   //todo: create item
   def create( authResponse: AuthResponse,profileRequest: ResidentProfileRequest): Future[Profile] = {
-    db.run(profileTable.returning(profileTable) +=  Profile(0L,0l,"","","","",0L, null,0L, null) )
+    db.run(profileTable.returning(profileTable) +=  Profile(0L,None,"","","","",0L, null,0L, null) )
   }
 
   //todo: get tiems and move on
