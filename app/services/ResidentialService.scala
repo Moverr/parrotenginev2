@@ -3,12 +3,13 @@ package services
 import controllers.requests.{ResidentProfileRequest, StationRequest}
 import controllers.responses.{AuthResponse, StationResponse}
 import daos._
-import db.tables.{Organization, Station}
+import db.tables.{Organization, Profile, Station}
 import javax.inject.{Inject, Singleton}
 
 import scala.concurrent.{Await, Future}
 import scala.concurrent.duration.Duration
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.util.Try
 
 @Singleton
 class ResidentialService  @Inject()(
@@ -17,7 +18,9 @@ class ResidentialService  @Inject()(
 
                                    ) {
 
-  def create(authResponse: AuthResponse,request:ResidentProfileRequest): Either[java.lang.Throwable,Future[StationResponse]]= {
+  def inviteUser(): PartialFunction[Try[Profile], U_] = ???
+
+  def create(authResponse: AuthResponse, request:ResidentProfileRequest): Either[java.lang.Throwable,Future[StationResponse]]= {
 
     if (authResponse == null) return Left(new Exception("Invalid Authentication"))
     val resp:Either[java.lang.Throwable,Future[Option[StationResponse]]] = stationService.get(authResponse,request.stationid)
@@ -26,12 +29,13 @@ class ResidentialService  @Inject()(
       case Left(value) => Left(value)
       case Right(value) => {
         value.map(x=> x match {
-          case Some(value) =>  Left(new Exception("Invalid Authentication"))
-          case None =>  {
-            //todo: save the day
-           //  residentDAO.crea
-
+          case Some(value) =>  {
+            //todo: create profile
+            residentDAO.create(authResponse,request).andThen{
+              inviteUser()
+            }
           }
+          case None =>   Left(new Exception("Invalid Authentication"))
         })
       }
     }
