@@ -9,7 +9,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{Await, Future}
 import scala.concurrent.duration.Duration
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.util.Try
+import scala.util.{Failure, Success, Try}
 
 @Singleton
 class ResidentialService  @Inject()(
@@ -18,46 +18,40 @@ class ResidentialService  @Inject()(
 
                                    ) {
 
-  def inviteUser(): PartialFunction[Try[Profile], U_] = ???
+//  def inviteUser(): PartialFunction[Try[Profile],] = ???
 
   def create(authResponse: AuthResponse, request:ResidentProfileRequest): Either[java.lang.Throwable,Future[StationResponse]]= {
 
     if (authResponse == null) return Left(new Exception("Invalid Authentication"))
-    val resp:Either[java.lang.Throwable,Future[Option[StationResponse]]] = stationService.get(authResponse,request.stationid)
+    val resp:Either[java.lang.Throwable,Future[Option[StationResponse]]] =  stationService.get(authResponse,request.stationid)
+//    val resp   = Await.result( stationService.get(authResponse,request.stationid))
+
 
     resp match {
-      case Left(value) => Left(value)
+      case Left(value) =>     Left(new Exception("Station does not exists"))
       case Right(value) => {
+        var res:Option[StationResponse] = Await.result(value,Duration.Zero)
+
+
+        /*
         value.map(x=> x match {
           case Some(value) =>  {
             //todo: create profile
-            residentDAO.create(authResponse,request).andThen{
-              inviteUser()
-            }
+            val station:Future[Profile] = residentDAO.create(authResponse,request)
+            Right(Future.successful(station.map(populateResponse)))
           }
           case None =>   Left(new Exception("Invalid Authentication"))
         })
+        */
+       Right(Future.successful(populateResponse()))
       }
     }
-    /*
-    stationService.get(request.stationid)
-      .map{
-        x=>
-          x match {
-            case Some(value) => ???
-            case None => Left(new Exception("Station does not exist "))
-          }
-      }
 
-    */
 
-    //todo: Get Account Details  ::
-    val response:Option[Organization] = Await.result(organisationDAO.getOrganisation(request.organization_id.toLong),Duration.Inf)
+  }
 
-    if(resp.exists(_ =>false))   return Left(new Exception("Invalid Authentication"))
-
-    val stationResponse:Future[Station] =   stationDao.create(request.organization_id, request)
-    Right(stationResponse.flatMap(x=>Future.successful(populateResponse(x))))
+  def populateResponse(): StationResponse ={
+    ???
   }
 
 
