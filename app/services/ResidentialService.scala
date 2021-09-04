@@ -1,14 +1,16 @@
 package services
 
 import controllers.requests.{ResidentProfileRequest, StationRequest}
-import controllers.responses.{AuthResponse, StationResponse}
+import controllers.responses.{AuthResponse, ResidentProfileResponse, StationResponse}
 import daos._
-import db.tables.{Organization, Station}
+import db.tables.{Organization, Profile, Station}
 import javax.inject.{Inject, Singleton}
 
 import scala.concurrent.{Await, Future}
 import scala.concurrent.duration.Duration
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.util.{Failure, Success, Try}
+import java.time.Instant
 
 @Singleton
 class ResidentialService  @Inject()(
@@ -17,44 +19,49 @@ class ResidentialService  @Inject()(
 
                                    ) {
 
-  def create(authResponse: AuthResponse,request:ResidentProfileRequest): Either[java.lang.Throwable,Future[StationResponse]]= {
+//  def inviteUser(): PartialFunction[Try[Profile],] = ???
+
+  def create(authResponse: AuthResponse, request:ResidentProfileRequest): Either[java.lang.Throwable,Future[ResidentProfileResponse]]= {
 
     if (authResponse == null) return Left(new Exception("Invalid Authentication"))
-    val resp:Either[java.lang.Throwable,Future[Option[StationResponse]]] = stationService.get(authResponse,request.stationid)
+    val resp:Either[java.lang.Throwable,Future[Option[StationResponse]]] =  stationService.get(authResponse,request.stationid)
+//    val resp   = Await.result( stationService.get(authResponse,request.stationid))
+
 
     resp match {
-      case Left(value) => Left(value)
+      case Left(value) =>     Left(new Exception("Station does not exists"))
       case Right(value) => {
-        value.map(x=> x match {
-          case Some(value) =>  Left(new Exception("Invalid Authentication"))
-          case None =>  {
-            //todo: save the day
-           //  residentDAO.crea
+        var res:Option[StationResponse] = Await.result(value,Duration.Zero)
 
-          }
-        })
+
+        //todo: create residential profile.. then create profile
+        //todo: create profile
+        //todo: then create other residential
+     val result =    residentDAO.create(authResponse,request)
+           // .map(x=>Future.successful(populateResponse))
+
+      Right(Future.successful( result.map(populateResponse)))
+
+
       }
     }
-    /*
-    stationService.get(request.stationid)
-      .map{
-        x=>
-          x match {
-            case Some(value) => ???
-            case None => Left(new Exception("Station does not exist "))
-          }
-      }
 
-    */
 
-    //todo: Get Account Details  ::
-    val response:Option[Organization] = Await.result(organisationDAO.getOrganisation(request.organization_id.toLong),Duration.Inf)
-
-    if(resp.exists(_ =>false))   return Left(new Exception("Invalid Authentication"))
-
-    val stationResponse:Future[Station] =   stationDao.create(request.organization_id, request)
-    Right(stationResponse.flatMap(x=>Future.successful(populateResponse(x))))
   }
+
+  def populateResponse(  entity:Profile): ResidentProfileResponse =
+   new ResidentProfileResponse(
+      entity.surname
+      ,entity.other_names
+      ,entity.profile_type
+      ,entity.gender
+      ,null
+      ,null
+      ,0l
+      ,null
+
+    )
+
 
 
   // todo : create  resident profile

@@ -20,14 +20,14 @@ class OrganizationService  @Inject()(organisationDAO: OrganisationDAO)  extends 
 
       //todo: Get Account Details  ::
 
-       Right(organisationDAO.createOrganisation(request.name,request.details,authResponse.user_id)
+       Right(organisationDAO.create(request.name,request.details,authResponse.user_id)
       .map(x=>populateResponse(x)))
   }
 
   //todo: list organinsations
   override def list(authResponse: AuthResponse,offset:Int, limit:Int): Either[java.lang.Throwable,Future[Seq[OrganisationResponse]] ]= {
     if(authResponse == null ) return  Left(new Exception("Invalid Authentication"))
-    val result : Future[Seq[Organization]] =  organisationDAO.getOrganisations(authResponse.user_id,offset,limit)
+    val result : Future[Seq[Organization]] =  organisationDAO.list(authResponse.user_id,offset,limit)
 
 
     Right{
@@ -44,7 +44,7 @@ class OrganizationService  @Inject()(organisationDAO: OrganisationDAO)  extends 
     if(authResponse == null )  return  Left(new Exception("Invalid Authentication"))
 
     Right(
-    organisationDAO.getOrganisation(authResponse.user_id,id)
+    organisationDAO.get(authResponse.user_id,id)
       .flatMap{
         case Some(value) => Future.successful(Some(populateResponse(value)))
         case None =>  Future.successful(None)

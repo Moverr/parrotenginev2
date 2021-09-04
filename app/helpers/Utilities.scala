@@ -1,12 +1,14 @@
 package helpers
 
 import java.security.MessageDigest
+import java.sql.Timestamp
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.scala.{DefaultScalaModule, ScalaObjectMapper}
 import java.util.regex.Pattern
 import java.text.Format
 import java.text.SimpleDateFormat
+import java.time.Instant
 
 import org.joda.time.DateTime
 
@@ -45,5 +47,9 @@ object Utilities {
 
 
   def convertLongToDateTime(time: Long): DateTime =  new  DateTime( time)
+
+  def getCurrentTimeStamp =   new Timestamp( new DateTime().getMillis)
+  def getCurrentTimeStampLong =   Instant.now().getEpochSecond
+
 
 }
