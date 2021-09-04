@@ -1,7 +1,7 @@
 package services
 
 import controllers.requests.{ResidentProfileRequest, StationRequest}
-import controllers.responses.{AuthResponse, StationResponse}
+import controllers.responses.{AuthResponse, ResidentProfileResponse, StationResponse}
 import daos._
 import db.tables.{Organization, Profile, Station}
 import javax.inject.{Inject, Singleton}
@@ -10,6 +10,7 @@ import scala.concurrent.{Await, Future}
 import scala.concurrent.duration.Duration
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success, Try}
+import java.time.Instant
 
 @Singleton
 class ResidentialService  @Inject()(
@@ -20,7 +21,7 @@ class ResidentialService  @Inject()(
 
 //  def inviteUser(): PartialFunction[Try[Profile],] = ???
 
-  def create(authResponse: AuthResponse, request:ResidentProfileRequest): Either[java.lang.Throwable,Future[StationResponse]]= {
+  def create(authResponse: AuthResponse, request:ResidentProfileRequest): Either[java.lang.Throwable,Future[ResidentProfileResponse]]= {
 
     if (authResponse == null) return Left(new Exception("Invalid Authentication"))
     val resp:Either[java.lang.Throwable,Future[Option[StationResponse]]] =  stationService.get(authResponse,request.stationid)
@@ -33,26 +34,34 @@ class ResidentialService  @Inject()(
         var res:Option[StationResponse] = Await.result(value,Duration.Zero)
 
 
-        /*
-        value.map(x=> x match {
-          case Some(value) =>  {
-            //todo: create profile
-            val station:Future[Profile] = residentDAO.create(authResponse,request)
-            Right(Future.successful(station.map(populateResponse)))
-          }
-          case None =>   Left(new Exception("Invalid Authentication"))
-        })
-        */
-       Right(Future.successful(populateResponse()))
+        //todo: create residential profile.. then create profile
+        //todo: create profile
+        //todo: then create other residential
+     val result =    residentDAO.create(authResponse,request)
+           // .map(x=>Future.successful(populateResponse))
+
+      Right(Future.successful( result.map(populateResponse)))
+
+
       }
     }
 
 
   }
 
-  def populateResponse(): StationResponse ={
-    ???
-  }
+  def populateResponse(  entity:Profile): ResidentProfileResponse =
+   new ResidentProfileResponse(
+      entity.surname
+      ,entity.other_names
+      ,entity.profile_type
+      ,entity.gender
+      ,null
+      ,null
+      ,0l
+      ,null
+
+    )
+
 
 
   // todo : create  resident profile
