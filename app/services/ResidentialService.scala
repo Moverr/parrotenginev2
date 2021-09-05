@@ -26,13 +26,14 @@ class ResidentialService  @Inject()(
     val resp:Either[java.lang.Throwable,Future[Option[StationResponse]]] =  stationService.get(authResponse,request.stationid)
 
 
-
     resp match {
       case Left(value) =>     Left(new Exception("Station does not exists"))
       case Right(value) => {
-        var res:Option[StationResponse] = Await.result(value,Duration.Zero)
+        val  res:Option[StationResponse] = Await.result(value,Duration.Zero)
+
        val result: Profile =    Await.result(residentDAO.create(authResponse,request) ,Duration.Zero)
 
+        //todo: work upon adding the resident in there table
       Right(Future.successful( result.map(populateResponse)))
 
 

@@ -30,10 +30,14 @@ import dbConfig._
 
   //todo: create item
   def create(authResponse: AuthResponse, request: ResidentProfileRequest): Future[Profile] = {
-    db.run(profileTable.returning(profileTable) +=  Profile(0L,None,request.surname,request.othername,request.gender,"RESIDENT",authResponse.user_id,getCurrentTimeStamp,authResponse.user_id,  getCurrentTimeStamp ) )
+    val profile:Future[Profile] = db.run(profileTable.returning(profileTable) +=  Profile(0L,None,request.surname,request.othername,request.gender,"RESIDENT",authResponse.user_id,getCurrentTimeStamp,authResponse.user_id,  getCurrentTimeStamp ) )
+    profile
   }
 
-  //todo: get tiems and move on
+  def createResident(authResponse: AuthResponse, request: ResidentProfileRequest): Unit ={
+???
+  }
+
 
 
 }
