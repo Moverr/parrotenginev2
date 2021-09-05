@@ -31,14 +31,7 @@ class ResidentialService  @Inject()(
       case Left(value) =>     Left(new Exception("Station does not exists"))
       case Right(value) => {
         var res:Option[StationResponse] = Await.result(value,Duration.Zero)
-
-
-        //todo: create residential profile.. then create profile
-        //todo: create profile
-        //todo: then create other residential
-     val result: Profile =    Await.result(residentDAO.create(authResponse,request) ,Duration.Zero)
-        //if this works. create item
-        //todo: create resident profile.
+       val result: Profile =    Await.result(residentDAO.create(authResponse,request) ,Duration.Zero)
 
       Right(Future.successful( result.map(populateResponse)))
 
