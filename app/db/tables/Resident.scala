@@ -2,12 +2,19 @@ package db.tables
 
 
 import java.sql.Timestamp
+
+import org.joda.time.DateTime
 import slick.sql.SqlProfile.ColumnOption.SqlType
 import slick.jdbc.PostgresProfile.api._
 
 
 
-case class Resident(id:Long,profile_id:Long,author_id:Long,created_on:Timestamp,updated_by:Long,date_updated:Timestamp)
+case class Resident(id:Long,profile_id:Long,author_id:Long,created_on:Timestamp,updated_by:Long,date_updated:Timestamp
+                    ,station_id:Long
+                   ,join_date:DateTime
+                   )
+
+
 
 class ResidentTable(tag: Tag) extends Table[Resident](tag,"residents"){
   def id      = column[Long]("id",O.PrimaryKey,O.AutoInc)
