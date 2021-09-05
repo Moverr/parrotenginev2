@@ -19,7 +19,6 @@ class ResidentialService  @Inject()(
 
                                    ) {
 
-  //  def inviteUser(): PartialFunction[Try[Profile],] = ???
 
   def create(authResponse: AuthResponse, request:ResidentProfileRequest): Either[java.lang.Throwable,Future[ResidentProfileResponse]]= {
 
@@ -39,12 +38,17 @@ class ResidentialService  @Inject()(
         //todo: work upon adding the residentProfile in there table
         Right(Future.successful( populateResponse(profileResponse,residentProfile)))
 
-
       }
     }
 
 
   }
+
+  //todo: list the items
+
+  //todo: get item details
+
+  //todo: get items by station
 
   def populateResponse(  entity:Profile,resident: Resident): ResidentProfileResponse =
     ResidentProfileResponse(
@@ -61,11 +65,11 @@ class ResidentialService  @Inject()(
 
 
 
-  // todo : create  resident profile
+
 
   //todo: invite them to create user credentials
 
-  //todo: let them create there own credentials
+
 
   //todo: can achive or activate them depending on the permissions
 
