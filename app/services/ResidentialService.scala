@@ -9,8 +9,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{Await, Future}
 import scala.concurrent.duration.Duration
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.util.{Failure, Success, Try}
-import java.time.Instant
+
 
 @Singleton
 class ResidentialService  @Inject()(
@@ -25,7 +24,7 @@ class ResidentialService  @Inject()(
 
     if (authResponse == null) return Left(new Exception("Invalid Authentication"))
     val resp:Either[java.lang.Throwable,Future[Option[StationResponse]]] =  stationService.get(authResponse,request.stationid)
-//    val resp   = Await.result( stationService.get(authResponse,request.stationid))
+
 
 
     resp match {
@@ -37,8 +36,9 @@ class ResidentialService  @Inject()(
         //todo: create residential profile.. then create profile
         //todo: create profile
         //todo: then create other residential
-     val result =    residentDAO.create(authResponse,request)
-           // .map(x=>Future.successful(populateResponse))
+     val result: Profile =    Await.result(residentDAO.create(authResponse,request) ,Duration.Zero)
+        //if this works. create item
+        //todo: create resident profile.
 
       Right(Future.successful( result.map(populateResponse)))
 
