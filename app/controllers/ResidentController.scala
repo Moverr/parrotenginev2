@@ -1,19 +1,19 @@
 package controllers
 
 import org.joda.time.DateTime
-import controllers.requests.{GuestProfileRequest, OrganisationRequest, ProfileType}
+import controllers.requests.{GuestProfileRequest, OrganisationRequest, ProfileType, ResidentProfileRequest}
 import controllers.responses.AuthResponse
 import play.api.mvc.AbstractController
 import javax.inject.{Inject, Singleton}
 import play.api.mvc._
-import services.AuthService
-
+import services.{AuthService, ResidentialService}
 import helpers.Utilities.convertLongToDateTime
 
 @Singleton
 class ResidentController  @Inject()(
                                      val cc: ControllerComponents
-                                   ,  val authService: AuthService,
+                                   ,val authService: AuthService
+                                   ,val residentialService: ResidentialService
                                    )  extends AbstractController(cc) {
 
   //GuestProfileRequest
@@ -28,17 +28,18 @@ class ResidentController  @Inject()(
     val otherName = request.body.asJson.get("otherName").as[String]
     val profiletype = request.body.asJson.get("profiletype").as[String]
     val gender = request.body.asJson.get("gender").as[String]
+    val stationid = request.body.asJson.get("stationid").as[Int]
+
 
     //get a long register date
     val registerDate =  request.body.asJson.get("registerdate").as[Long]
 
     val regDate:DateTime =  convertLongToDateTime(registerDate)
 
-
-    val profileRequest = GuestProfileRequest(surname,otherName,ProfileType.withName(profiletype),gender)
+    val profileRequest = ResidentProfileRequest(surname,otherName,ProfileType.withName(profiletype),gender,stationid)
 
     //todo: send this to the middleware and move on
-
+    val response = residentialService.create(authResponse,profileRequest)
 
     ???
   }

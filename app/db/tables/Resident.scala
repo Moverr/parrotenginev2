@@ -26,4 +26,6 @@ class ResidentTable(tag: Tag) extends Table[Resident](tag,"residents"){
 
   //todo: map a relation ship with profile to get the profile.
   override def * = (id,profile_id,author_id,created_on,updated_by,date_updated).mapTo[Resident]
+
+  //def profile implementation
 }
