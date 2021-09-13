@@ -5,7 +5,7 @@ import java.sql.Timestamp
 
 import controllers.requests.{ResidentProfileRequest, StationRequest}
 import controllers.responses.{AuthResponse, StationResponse}
-import db.tables.{Organization, OrganizationTable, Profile, ProfileTable, Station, StationTable, User, UserTable}
+import db.tables.{Organization, OrganizationTable, Profile, ProfileTable, Resident, ResidentTable, Station, StationTable, User, UserTable}
 
 import scala.concurrent.Future
 import javax.inject.{Inject, Singleton}
@@ -22,18 +22,14 @@ import helpers.Utilities.getCurrentTimeStamp
 class ResidentProfileDAO    @Inject()(dbConfigProvider: DatabaseConfigProvider) extends ProfileDAO (dbConfigProvider){
   //extends ProfileDAO (dbConfigProvider){
 private  val dbConfig = dbConfigProvider.get[JdbcProfile]
-override lazy  val profileTable = TableQuery[ProfileTable]
-override lazy  val organizationTable = TableQuery[OrganizationTable]
 
+ val residentTable = TableQuery[ResidentTable]
 import dbConfig._
 
+  def create(request: Resident): Future[Resident]  =    db.run(residentTable.returning(residentTable) +=   request )
 
-  //todo: create item
-  def create(authResponse: AuthResponse, request: ResidentProfileRequest): Future[Profile] = {
-    db.run(profileTable.returning(profileTable) +=  Profile(0L,None,request.surname,request.othername,request.gender,"RESIDENT",authResponse.user_id,getCurrentTimeStamp,authResponse.user_id,  getCurrentTimeStamp ) )
-  }
 
-  //todo: get tiems and move on
+
 
 
 }
