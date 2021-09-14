@@ -32,7 +32,7 @@ class ResidentController  @Inject()(
 
 
     //get a long register date
-    val registerDate =  request.body.asJson.get("registerdate").as[Option[Long]]
+    val registerDate:Option[Long] =  request.body.asJson.get("registerdate").asOpt[Long]
 
     val regDate:DateTime =  convertLongToDateTime(registerDate)
 
