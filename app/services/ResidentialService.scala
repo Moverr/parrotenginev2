@@ -34,7 +34,7 @@ class ResidentialService  @Inject()(
 
         val profileResponse: Profile =    Await.result(residentDAO.create(profile) ,Duration.Zero)
 
-        val residentProfile:Resident = Resident(0L,profileResponse.id,authResponse.user_id,getCurrentTimeStamp,authResponse.user_id,getCurrentTimeStamp,request.stationid,request.joinDate)
+        val residentProfile:Resident = Resident(0L,profileResponse.id,authResponse.user_id,getCurrentTimeStamp,authResponse.user_id,getCurrentTimeStamp,request.stationid,getCurrentTimeStamp(request.joinDate))
         //todo: work upon adding the residentProfile in there table
         Right(Future.successful( populateResponse(profileResponse,residentProfile)))
 
