@@ -2,6 +2,7 @@ package db.tables
 
 
 import java.sql.Timestamp
+import java.util.Date
 
 import org.joda.time.DateTime
 import slick.sql.SqlProfile.ColumnOption.SqlType
@@ -24,8 +25,11 @@ class ResidentTable(tag: Tag) extends Table[Resident](tag,"residents"){
   def updated_by = column[Long]("updated_by")
   def date_updated = column[Timestamp]("date_updated",SqlType("timestamp not null default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP"))
 
+  def station_id = column[Long]("station_id")
+  def join_date = column[Timestamp]("join_date",SqlType("timestamp not null default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP"))
+
   //todo: map a relation ship with profile to get the profile.
-  override def * = (id,profile_id,author_id,created_on,updated_by,date_updated).mapTo[Resident]
+  override def * = (id,profile_id,author_id,created_on,updated_by,date_updated,station_id,join_date).mapTo[Resident]
 
   //def profile implementation
 }

@@ -7,7 +7,8 @@ import play.api.Mode
 import play.api.db.slick.DatabaseConfigProvider
 import play.api.inject.Injector
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.test.Helpers
+import play.api.libs.json.Json
+import play.api.test.{FakeRequest, Helpers}
 import services.{AuthService, ResidentialService, StationService}
 
 class ResidentiControllerTest extends PlaySpec {
@@ -25,8 +26,16 @@ class ResidentiControllerTest extends PlaySpec {
   val controller   = new ResidentController(Helpers.stubControllerComponents(),authService,residentService)
   "Resident Controller " should  {
     "Create Station  " in {
+      val jsonBody = Json.parse("{\"name\":\"name\", \"details\":\"details\" }")
+      val token:String = "token"
 
       //todo: create stattion and move on
+      val response = controller.create().apply(FakeRequest(Helpers.POST, "/v1/organisation/create")
+        .withJsonBody(jsonBody)
+        .withHeaders(
+          "authentication"-> token
+        ))
+
     }
   }
 }
