@@ -29,7 +29,7 @@ class StationService   @Inject()(
       //todo: Get Account Details  ::
      val response:Option[Organization] = Await.result(organisationDAO.get(request.organization_id.toLong),Duration.Inf)
 
-      if(response.exists(_ =>false))   return Left(new Exception("Invalid Authentication"))
+      if(response.exists(_ =>false))   return Left(new Exception("Organization Exists"))
 
      val stationResponse:Future[Station] =   stationDao.create(request.organization_id, request)
       Right(stationResponse.flatMap(x=>Future.successful(populateResponse(x))))
