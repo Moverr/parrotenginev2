@@ -49,7 +49,7 @@ object Utilities {
   def convertLongToDateTime(time: Long): DateTime =  new  DateTime( time)
 
   def getCurrentTimeStamp(dateTimeObject:DateTime)=new Timestamp( dateTimeObject.getMillis)
-  def getCurrentTimeStamp =   getCurrentTimeStamp( new DateTime())
+  def getCurrentTimeStamp():Timestamp =  getCurrentTimeStamp( new DateTime())
   def getCurrentTimeStampLong =   Instant.now().getEpochSecond
 
 
