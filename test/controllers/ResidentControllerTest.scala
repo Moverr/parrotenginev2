@@ -1,6 +1,6 @@
 package controllers
 
-import controllers.responses.AuthResponse
+import controllers.responses.{AuthResponse, StationResponse}
 import daos.{ResidentProfileDAO, StationDAO}
 import org.mockito.Mockito
 import org.scalatestplus.play.PlaySpec
@@ -11,6 +11,8 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.test.{FakeRequest, Helpers}
 import services.{AuthService, ResidentialService, StationService}
+
+import scala.concurrent.Future
 
 class ResidentControllerTest extends PlaySpec {
 
@@ -30,6 +32,11 @@ class ResidentControllerTest extends PlaySpec {
       val jsonBody = Json.parse("{\"surname\":\"surname\", \"otherName\":\"otherName\" , \"profiletype\":\"profiletype\", \"gender\":\"gender\", \"stationid\":\"1\", \"registerdate\":\"null\" }")
       val token:String = "token"
       Mockito.when(authService.validateTokenv2("token")).thenReturn(  AuthResponse("token","mose",10))
+
+      val stationResponse:StationResponse = StationResponse(1,"station","code",None);
+      val stationResultResponse: Either[java.lang.Throwable,Future[Option[StationResponse]]]  =   Right(Future.successful(stationResponse))
+
+      Mockito.when(stationService.get(  AuthResponse("token","mose",10),1)).thenReturn(stationResultResponse)
 
 
       //todo: create stattion and move on

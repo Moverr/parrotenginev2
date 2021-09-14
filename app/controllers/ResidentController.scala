@@ -16,6 +16,7 @@ class ResidentController  @Inject()(
                                    ,val residentialService: ResidentialService
                                    )  extends AbstractController(cc) {
 
+  def profileType = "Resident";
   //GuestProfileRequest
   //todo: create profile
   def create =Action.async{ implicit  request =>
@@ -32,11 +33,11 @@ class ResidentController  @Inject()(
 
 
     //get a long register date
-    val registerDate:Option[Long] =  request.body.asJson.get("registerdate").asOpt[Long]
+//    val registerDate:Option[Long] =  request.body.asJson.get("registerdate").asOpt[Long]
 
-    val regDate:DateTime =  convertLongToDateTime(registerDate)
+    val regDate:DateTime =  convertLongToDateTime(request.body.asJson.get("registerdate").asOpt[Long])
 
-    val profileRequest = ResidentProfileRequest(surname,otherName,ProfileType.withName(profiletype),gender,stationid,regDate)
+    val profileRequest = ResidentProfileRequest(surname,otherName,ProfileType.withName(profileType),gender,stationid,regDate)
 
     //todo: send this to the middleware and move on
     val response = residentialService.create(authResponse,profileRequest)

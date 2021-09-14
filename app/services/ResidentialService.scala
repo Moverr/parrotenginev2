@@ -29,7 +29,10 @@ class ResidentialService  @Inject()(
     resp match {
       case Left(value) =>     Left(new Exception("Station does not exists"))
       case Right(value) => {
-        val  res:Option[StationResponse] = Await.result(value,Duration.Zero)
+
+        //val  res:Option[StationResponse] = Await.result(value,Duration.Zero)
+
+
         val profile = Profile(0L,None,request.surname,request.othername,request.gender,"RESIDENT",authResponse.user_id,getCurrentTimeStamp,authResponse.user_id,  getCurrentTimeStamp )
 
         val profileResponse: Profile =    Await.result(residentDAO.create(profile) ,Duration.Zero)

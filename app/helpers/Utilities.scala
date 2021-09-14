@@ -46,10 +46,12 @@ object Utilities {
   def validateRegexString(matchString: String, matchType:String):Boolean= Pattern.compile(matchRegex(matchType)).matcher(matchString).matches()
 
 
-  def convertLongToDateTime(time: Option[Long])= time match {
+  def convertLongToDateTime(time: Option[Long]):DateTime= {
+    time match {
       case Some(c) =>  new  DateTime(c)
       case None => new  DateTime()
     }
+  }
 
 
   def getCurrentTimeStamp(dateTimeObject:DateTime)=new Timestamp( dateTimeObject.getMillis)
