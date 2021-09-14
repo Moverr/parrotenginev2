@@ -36,7 +36,7 @@ class ResidentController  @Inject()(
 
     val regDate:DateTime =  convertLongToDateTime(registerDate)
 
-    val profileRequest = ResidentProfileRequest(surname,otherName,ProfileType.withName(profiletype),gender,stationid)
+    val profileRequest = ResidentProfileRequest(surname,otherName,ProfileType.withName(profiletype),gender,stationid,regDate)
 
     //todo: send this to the middleware and move on
     val response = residentialService.create(authResponse,profileRequest)

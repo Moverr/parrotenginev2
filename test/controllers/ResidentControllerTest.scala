@@ -26,7 +26,7 @@ class ResidentControllerTest extends PlaySpec {
 
   val controller   = new ResidentController(Helpers.stubControllerComponents(),authService,residentService)
   "Resident Controller " should  {
-    "Create Station  " in {
+    "Create Resident  " in {
       val jsonBody = Json.parse("{\"surname\":\"surname\", \"otherName\":\"otherName\" , \"profiletype\":\"profiletype\", \"gender\":\"gender\", \"stationid\":\"1\", \"registerdate\":\"null\" }")
       val token:String = "token"
       Mockito.when(authService.validateTokenv2("token")).thenReturn(  AuthResponse("token","mose",10))
