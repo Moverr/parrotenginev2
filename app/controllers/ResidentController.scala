@@ -24,15 +24,15 @@ class ResidentController  @Inject()(
     val authResponse: AuthResponse = authService.validateTokenv2(authorization)
 
     //todo: read the body params
-    val surname = request.body.asJson.get("surname").as[String]
-    val otherName = request.body.asJson.get("otherName").as[String]
-    val profiletype = request.body.asJson.get("profiletype").as[String]
-    val gender = request.body.asJson.get("gender").as[String]
-    val stationid = request.body.asJson.get("stationid").as[Int]
+    val surname:String = request.body.asJson.get("surname").as[String]
+    val otherName:String = request.body.asJson.get("otherName").as[String]
+    val profiletype:String = request.body.asJson.get("profiletype").as[String]
+    val gender:String = request.body.asJson.get("gender").as[String]
+    val stationid:Int = request.body.asJson.get("stationid").as[String].trim.toInt
 
 
     //get a long register date
-    val registerDate =  request.body.asJson.get("registerdate").as[Long]
+    val registerDate =  request.body.asJson.get("registerdate").as[Option[Long]]
 
     val regDate:DateTime =  convertLongToDateTime(registerDate)
 

@@ -1,5 +1,6 @@
 package controllers
 
+import controllers.responses.AuthResponse
 import daos.{ResidentProfileDAO, StationDAO}
 import org.mockito.Mockito
 import org.scalatestplus.play.PlaySpec
@@ -11,7 +12,7 @@ import play.api.libs.json.Json
 import play.api.test.{FakeRequest, Helpers}
 import services.{AuthService, ResidentialService, StationService}
 
-class ResidentiControllerTest extends PlaySpec {
+class ResidentControllerTest extends PlaySpec {
 
   lazy val appBuilder: GuiceApplicationBuilder = new GuiceApplicationBuilder().in(Mode.Test)
   lazy val injector: Injector = appBuilder.injector()
@@ -26,11 +27,13 @@ class ResidentiControllerTest extends PlaySpec {
   val controller   = new ResidentController(Helpers.stubControllerComponents(),authService,residentService)
   "Resident Controller " should  {
     "Create Station  " in {
-      val jsonBody = Json.parse("{\"name\":\"name\", \"details\":\"details\" }")
+      val jsonBody = Json.parse("{\"surname\":\"surname\", \"otherName\":\"otherName\" , \"profiletype\":\"profiletype\", \"gender\":\"gender\", \"stationid\":\"1\", \"registerdate\":\"null\" }")
       val token:String = "token"
+      Mockito.when(authService.validateTokenv2("token")).thenReturn(  AuthResponse("token","mose",10))
+
 
       //todo: create stattion and move on
-      val response = controller.create().apply(FakeRequest(Helpers.POST, "/v1/organisation/create")
+      val response = controller.create().apply(FakeRequest(Helpers.POST, "/v1/resident/create   ")
         .withJsonBody(jsonBody)
         .withHeaders(
           "authentication"-> token
