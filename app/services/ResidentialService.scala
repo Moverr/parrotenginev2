@@ -1,5 +1,7 @@
 package services
 
+import java.sql.Timestamp
+
 import controllers.requests.{ResidentProfileRequest, StationRequest}
 import controllers.responses.{AuthResponse, ResidentProfileResponse, StationResponse}
 import daos._
@@ -10,6 +12,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{Await, Future}
 import scala.concurrent.duration.Duration
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.util.{Failure, Success}
 
 
 @Singleton
@@ -26,37 +29,34 @@ class ResidentialService  @Inject()(
     if (authResponse == null) return Left(new Exception("Invalid Authentication"))
     val resp:Either[java.lang.Throwable,Future[Option[StationResponse]]] =  stationService.get(authResponse,request.stationid)
 
-
-    resp match {
+    val profile = Profile(0L,None,request.surname,request.othername,request.gender,"RESIDENT",authResponse.user_id,getCurrentTimeStamp,authResponse.user_id,  getCurrentTimeStamp )
+   Right( profileDAO.create(profile)
+        .map(
+          populateResponse
+        )
+   )
+  /*  resp match {
       case Left(value) =>     Left(new Exception("Station does not exists"))
       case Right(value) => {
+        value.map{
+          case Some(value) => println("esee")
+          case None =>  println("aloelpse")
+        }
 
         //val  res:Option[StationResponse] = Await.result(value,Duration.Zero)
 
 
-        val profile = Profile(0L,None,request.surname,request.othername,request.gender,"RESIDENT",authResponse.user_id,getCurrentTimeStamp,authResponse.user_id,  getCurrentTimeStamp )
-
-         profileDAO.create(profile)
-          .map(x=>{
-            println(x.id);
-          })
-          .recover {
-            error => {
-
-              Left(new Exception(error.getMessage))
-            }
-          }
 
 
-        val residentProfile:Resident = Resident(0L,1,authResponse.user_id,getCurrentTimeStamp,authResponse.user_id,getCurrentTimeStamp,request.stationid,getCurrentTimeStamp(request.joinDate))
-        //todo: work upon adding the residentProfile in there table
-//       save the resident profile
-        Right(Future.successful( populateResponse(???,residentProfile)))
+
+
+
 
       }
     }
+    */
 
-
+   // Right(Future.successful("testing"))
   }
 
   //todo: list the items
@@ -78,7 +78,17 @@ class ResidentialService  @Inject()(
 
     )
 
-
+  def populateResponse(  entity:Profile): ResidentProfileResponse =
+    ResidentProfileResponse(
+      entity.surname
+      ,entity.other_names
+      ,entity.profile_type
+      ,entity.gender
+      ,1
+        ,new Timestamp(0l)
+      ,0l
+,""
+    )
 
 
 

@@ -8,6 +8,15 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc._
 import services.{AuthService, ResidentialService}
 import helpers.Utilities.convertLongToDateTime
+import play.api.libs.json.Json
+
+import implicits.ResidentProfileWrites._
+
+
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+
+
 
 @Singleton
 class ResidentController  @Inject()(
@@ -40,9 +49,22 @@ class ResidentController  @Inject()(
     val profileRequest = ResidentProfileRequest(surname,otherName,ProfileType.withName(profileType),gender,stationid,regDate)
 
     //todo: send this to the middleware and move on
-    val response = residentialService.create(authResponse,profileRequest)
 
-    ???
+
+    try {
+    residentialService.create(authResponse,profileRequest)
+      match {
+        case Left(exception) => Future.successful(BadRequest(Json.toJson(exception.getMessage)))
+        case Right(value) =>  value.flatMap(x=> Future.successful(Ok(Json.toJson(x))))
+
+      }
+
+    }
+    catch {
+      case e: Exception => Future.successful(InternalServerError(e.getMessage))
+    }
+
+
   }
 
   //todo: view list items
