@@ -1,7 +1,7 @@
 package controllers
 
 import controllers.responses.{AuthResponse, StationResponse}
-import daos.{ResidentProfileDAO, StationDAO}
+import daos.{ProfileDAO, ResidentProfileDAO, StationDAO}
 import org.mockito.Mockito
 import org.scalatestplus.play.PlaySpec
 import play.api.Mode
@@ -20,12 +20,14 @@ class ResidentControllerTest extends PlaySpec {
   lazy val injector: Injector = appBuilder.injector()
   lazy val dbConfProvider: DatabaseConfigProvider = injector.instanceOf[DatabaseConfigProvider]
 
+
+  val profileDao = new ProfileDAO(dbConfProvider)
   val residentDAO = new ResidentProfileDAO(dbConfProvider)
     //Mockito.mock(classOf[ResidentProfileDAO])
   val authService:AuthService =  Mockito.mock(classOf[AuthService])
   val stationService:StationService =  Mockito.mock(classOf[StationService])
 
-  val residentService:ResidentialService =   new ResidentialService(residentDAO,stationService);
+  val residentService:ResidentialService =   new ResidentialService(residentDAO,profileDao,stationService);
 
   val controller   = new ResidentController(Helpers.stubControllerComponents(),authService,residentService)
   "Resident Controller " should  {

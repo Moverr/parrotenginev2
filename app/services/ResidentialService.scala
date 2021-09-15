@@ -36,12 +36,22 @@ class ResidentialService  @Inject()(
 
         val profile = Profile(0L,None,request.surname,request.othername,request.gender,"RESIDENT",authResponse.user_id,getCurrentTimeStamp,authResponse.user_id,  getCurrentTimeStamp )
 
-        val profileResponse: Profile =    Await.result(profileDAO.create(profile) ,Duration.Zero)
+         profileDAO.create(profile)
+          .map(x=>{
+            println(x.id);
+          })
+          .recover {
+            error => {
 
-        val residentProfile:Resident = Resident(0L,profileResponse.id,authResponse.user_id,getCurrentTimeStamp,authResponse.user_id,getCurrentTimeStamp,request.stationid,getCurrentTimeStamp(request.joinDate))
+              Left(new Exception(error.getMessage))
+            }
+          }
+
+
+        val residentProfile:Resident = Resident(0L,1,authResponse.user_id,getCurrentTimeStamp,authResponse.user_id,getCurrentTimeStamp,request.stationid,getCurrentTimeStamp(request.joinDate))
         //todo: work upon adding the residentProfile in there table
 //       save the resident profile
-        Right(Future.successful( populateResponse(profileResponse,residentProfile)))
+        Right(Future.successful( populateResponse(???,residentProfile)))
 
       }
     }
