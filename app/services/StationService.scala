@@ -56,8 +56,6 @@ class StationService   @Inject()(
 
   //todo: Archive
 
-
-
   def populateResponse(station:Future[Station]):Future[StationResponse]= station.flatMap{
     record=> Future.successful(populateResponse(record))
     }

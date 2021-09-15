@@ -20,7 +20,8 @@ class ResidentControllerTest extends PlaySpec {
   lazy val injector: Injector = appBuilder.injector()
   lazy val dbConfProvider: DatabaseConfigProvider = injector.instanceOf[DatabaseConfigProvider]
 
-  val residentDAO =  Mockito.mock(classOf[ResidentProfileDAO])
+  val residentDAO = new ResidentProfileDAO(dbConfProvider)
+    //Mockito.mock(classOf[ResidentProfileDAO])
   val authService:AuthService =  Mockito.mock(classOf[AuthService])
   val stationService:StationService =  Mockito.mock(classOf[StationService])
 
@@ -33,7 +34,7 @@ class ResidentControllerTest extends PlaySpec {
       val token:String = "token"
       Mockito.when(authService.validateTokenv2("token")).thenReturn(  AuthResponse("token","mose",10))
 
-      val stationResponse:StationResponse = StationResponse(1,"station","code",None);
+      val stationResponse:Option[StationResponse] =  Some(StationResponse(1,"station","code",None))
       val stationResultResponse: Either[java.lang.Throwable,Future[Option[StationResponse]]]  =   Right(Future.successful(stationResponse))
 
       Mockito.when(stationService.get(  AuthResponse("token","mose",10),1)).thenReturn(stationResultResponse)

@@ -19,7 +19,7 @@ import java.sql.Timestamp
 import helpers.Utilities.getCurrentTimeStamp
 
 @Singleton
-class ResidentProfileDAO    @Inject()(dbConfigProvider: DatabaseConfigProvider) extends ProfileDAO (dbConfigProvider){
+class ResidentProfileDAO    @Inject()(dbConfigProvider: DatabaseConfigProvider)  {
   //extends ProfileDAO (dbConfigProvider){
 private  val dbConfig = dbConfigProvider.get[JdbcProfile]
 

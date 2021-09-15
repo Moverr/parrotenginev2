@@ -29,7 +29,10 @@ class ProfileDAO   @Inject()(dbConfigProvider: DatabaseConfigProvider) {
   //todo: Create Profile ..
   //todo: create station
 
-  def create(  request: Profile): Future[Profile] =   db.run(profileTable.returning(profileTable) +=   request )
+  def create(  request: Profile): Future[Profile] =  {
+
+    db.run(profileTable.returning(profileTable) +=   request )
+  }
 
 
 

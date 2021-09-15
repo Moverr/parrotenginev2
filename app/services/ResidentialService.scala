@@ -15,6 +15,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 @Singleton
 class ResidentialService  @Inject()(
                                      residentDAO: ResidentProfileDAO
+                                   ,   profileDAO: ProfileDAO
                                      ,stationService: StationService
 
                                    ) {
@@ -35,10 +36,11 @@ class ResidentialService  @Inject()(
 
         val profile = Profile(0L,None,request.surname,request.othername,request.gender,"RESIDENT",authResponse.user_id,getCurrentTimeStamp,authResponse.user_id,  getCurrentTimeStamp )
 
-        val profileResponse: Profile =    Await.result(residentDAO.create(profile) ,Duration.Zero)
+        val profileResponse: Profile =    Await.result(profileDAO.create(profile) ,Duration.Zero)
 
         val residentProfile:Resident = Resident(0L,profileResponse.id,authResponse.user_id,getCurrentTimeStamp,authResponse.user_id,getCurrentTimeStamp,request.stationid,getCurrentTimeStamp(request.joinDate))
         //todo: work upon adding the residentProfile in there table
+//       save the resident profile
         Right(Future.successful( populateResponse(profileResponse,residentProfile)))
 
       }
