@@ -24,17 +24,50 @@ class ResidentialService  @Inject()(
                                    ) {
 
 
+  def saveResidentProfile(profile: Profile): Future[ResidentProfileResponse] ={
+    val x:ResidentProfileResponse = new ResidentProfileResponse("dd","dd","dd","dd",1,null,0l,"se")
+    Future.successful(x)
+  }
   def create(authResponse: AuthResponse, request:ResidentProfileRequest): Either[java.lang.Throwable,Future[ResidentProfileResponse]]= {
 
     if (authResponse == null) return Left(new Exception("Invalid Authentication"))
     val resp:Either[java.lang.Throwable,Future[Option[StationResponse]]] =  stationService.get(authResponse,request.stationid)
 
     val profile = Profile(0L,None,request.surname,request.othername,request.gender,"RESIDENT",authResponse.user_id,getCurrentTimeStamp,authResponse.user_id,  getCurrentTimeStamp )
-   Right( profileDAO.create(profile)
-        .map(
-          populateResponse
-        )
-   )
+    val profileResponse = profileDAO.create(profile)
+
+
+    val p = for{
+      future1  <- profileDAO.create(profile).recoverWith{
+        case t:Throwable =>  Future.failed(new Exception("Not Able to create client profile "))
+      }
+      future2 <-   saveResidentProfile(future1).recoverWith{
+        case t:Throwable =>  Future.failed(new Exception("Not Able to create client profile "))
+      }
+
+    } yield future2
+
+
+    Right(p.map(x=>x))
+//    profileResponse.flatMap{
+//      x=>   Right(Future.successful(populateResponse(x)))
+//    }.
+
+
+
+//    profileResponse.onComplete{
+//      case Success(value) => {
+//        //todo: work upon sending
+//        Right(populateResponse(value))
+//      }
+//      case Failure(exception) => Left(new Exception("Something went amis"))
+//    }
+
+//   Right( profileDAO.create(profile)
+//        .map(
+//          populateResponse
+//        )
+//   )
   /*  resp match {
       case Left(value) =>     Left(new Exception("Station does not exists"))
       case Right(value) => {
