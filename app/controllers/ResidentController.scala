@@ -8,6 +8,15 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc._
 import services.{AuthService, ResidentialService}
 import helpers.Utilities.convertLongToDateTime
+import play.api.libs.json.Json
+
+import implicits.ResidentProfileWrites._
+
+
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+
+
 
 @Singleton
 class ResidentController  @Inject()(
@@ -16,6 +25,7 @@ class ResidentController  @Inject()(
                                    ,val residentialService: ResidentialService
                                    )  extends AbstractController(cc) {
 
+  def profileType = "Resident";
   //GuestProfileRequest
   //todo: create profile
   def create =Action.async{ implicit  request =>
@@ -24,24 +34,37 @@ class ResidentController  @Inject()(
     val authResponse: AuthResponse = authService.validateTokenv2(authorization)
 
     //todo: read the body params
-    val surname = request.body.asJson.get("surname").as[String]
-    val otherName = request.body.asJson.get("otherName").as[String]
-    val profiletype = request.body.asJson.get("profiletype").as[String]
-    val gender = request.body.asJson.get("gender").as[String]
-    val stationid = request.body.asJson.get("stationid").as[Int]
+    val surname:String = request.body.asJson.get("surname").as[String]
+    val otherName:String = request.body.asJson.get("otherName").as[String]
+    val profiletype:String = request.body.asJson.get("profiletype").as[String]
+    val gender:String = request.body.asJson.get("gender").as[String]
+    val stationid:Int = request.body.asJson.get("stationid").as[String].trim.toInt
 
 
     //get a long register date
-    val registerDate =  request.body.asJson.get("registerdate").as[Long]
+//    val registerDate:Option[Long] =  request.body.asJson.get("registerdate").asOpt[Long]
 
-    val regDate:DateTime =  convertLongToDateTime(registerDate)
+    val regDate:DateTime =  convertLongToDateTime(request.body.asJson.get("registerdate").asOpt[Long])
 
-    val profileRequest = ResidentProfileRequest(surname,otherName,ProfileType.withName(profiletype),gender,stationid)
+    val profileRequest = ResidentProfileRequest(surname,otherName,ProfileType.withName(profileType),gender,stationid,regDate)
 
     //todo: send this to the middleware and move on
-    val response = residentialService.create(authResponse,profileRequest)
 
-    ???
+
+    try {
+    residentialService.create(authResponse,profileRequest)
+      match {
+        case Left(exception) => Future.successful(BadRequest(Json.toJson(exception.getMessage)))
+        case Right(value) =>  value.flatMap(x=> Future.successful(Ok(Json.toJson(x))))
+
+      }
+
+    }
+    catch {
+      case e: Exception => Future.successful(InternalServerError(e.getMessage))
+    }
+
+
   }
 
   //todo: view list items

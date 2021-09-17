@@ -32,6 +32,7 @@ class OrganizationController @Inject()(
     val details = request.body.asJson.get("details").as[String]
     val orgRequest = OrganisationRequest(name, details)
 
+
     try {
       orgService.create(authResponse, orgRequest)
       match {
