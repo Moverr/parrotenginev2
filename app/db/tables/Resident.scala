@@ -17,7 +17,7 @@ case class Resident(id:Long,profile_id:Long,author_id:Long,created_on:Timestamp,
 
 
 
-class ResidentTable(tag: Tag) extends Table[Resident](tag,"residents"){
+class ResidentTable(tag: Tag) extends Table[Resident](tag,"resident"){
   def id      = column[Long]("id",O.PrimaryKey,O.AutoInc)
   def profile_id = column[Long]("profile_id")
   def author_id = column[Long]("author_id")
