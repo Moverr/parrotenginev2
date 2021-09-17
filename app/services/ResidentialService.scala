@@ -34,7 +34,7 @@ class ResidentialService  @Inject()(
     val resp:Either[java.lang.Throwable,Future[Option[StationResponse]]] =  stationService.get(authResponse,request.stationid)
 
     val profile = Profile(0L,None,request.surname,request.othername,request.gender,"RESIDENT",authResponse.user_id,getCurrentTimeStamp,authResponse.user_id,  getCurrentTimeStamp )
-    val profileResponse = profileDAO.create(profile)
+   /// val profileResponse = profileDAO.create(profile)
 
 
     val p = for{
@@ -45,10 +45,10 @@ class ResidentialService  @Inject()(
         case t:Throwable =>  Future.failed(new Exception("Not Able to create client profile "))
       }
 
-    } yield future2
+    } yield future1
 
 
-    Right(p.map(x=>x))
+    Right(p.map(x=>populateResponse(x)))
 //    profileResponse.flatMap{
 //      x=>   Right(Future.successful(populateResponse(x)))
 //    }.
