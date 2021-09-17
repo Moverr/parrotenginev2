@@ -61,7 +61,6 @@ class ResidentialService  @Inject()(
 				}
 			}
 
-
 		}
 
 	}
