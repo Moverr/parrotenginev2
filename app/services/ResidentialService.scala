@@ -49,47 +49,7 @@ class ResidentialService  @Inject()(
 
 
     Right(p.map(x=>populateResponse(x)))
-//    profileResponse.flatMap{
-//      x=>   Right(Future.successful(populateResponse(x)))
-//    }.
 
-
-
-//    profileResponse.onComplete{
-//      case Success(value) => {
-//        //todo: work upon sending
-//        Right(populateResponse(value))
-//      }
-//      case Failure(exception) => Left(new Exception("Something went amis"))
-//    }
-
-//   Right( profileDAO.create(profile)
-//        .map(
-//          populateResponse
-//        )
-//   )
-  /*  resp match {
-      case Left(value) =>     Left(new Exception("Station does not exists"))
-      case Right(value) => {
-        value.map{
-          case Some(value) => println("esee")
-          case None =>  println("aloelpse")
-        }
-
-        //val  res:Option[StationResponse] = Await.result(value,Duration.Zero)
-
-
-
-
-
-
-
-
-      }
-    }
-    */
-
-   // Right(Future.successful("testing"))
   }
 
   //todo: list the items
