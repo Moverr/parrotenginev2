@@ -39,18 +39,18 @@ class ResidentialService @Inject()(
         case Right(station) => {
 
           val stationId: Future[Long] = for {
-            x <- station.map(y => y.get)
-          } yield (x.id)
+            record <- station.map(y => y.get)
+          } yield (record.id)
 
 
           val profile = Profile(0L, None, request.surname, request.othername, request.gender, "RESIDENT", authResponse.user_id, getCurrentTimeStamp, authResponse.user_id, getCurrentTimeStamp)
 
           val record = for {
             future1 <- profileDAO.create(profile).recoverWith {
-              case t: Throwable => Future.failed(new Exception(t.getMessage))
+              case exception: Throwable => Future.failed(new Exception(exception.getMessage))
             }
             future2 <- saveResidentProfile(future1).recoverWith {
-              case t: Throwable => Future.failed(new Exception(t.getMessage))
+              case exception: Throwable => Future.failed(new Exception(exception.getMessage))
             }
 
           } yield (future1, future2)
