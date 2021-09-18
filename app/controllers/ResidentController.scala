@@ -6,12 +6,10 @@ import controllers.responses.AuthResponse
 import play.api.mvc.AbstractController
 import javax.inject.{Inject, Singleton}
 import play.api.mvc._
-import services.{AuthService, ResidentialService}
+import services.{AuthService, ResidentialService, TResidentialService}
 import helpers.Utilities.convertLongToDateTime
 import play.api.libs.json.Json
-
 import implicits.ResidentProfileWrites._
-
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -22,7 +20,7 @@ import scala.concurrent.Future
 class ResidentController  @Inject()(
                                      val cc: ControllerComponents
                                    ,val authService: AuthService
-                                   ,val residentialService: ResidentialService
+                                   ,val residentialService: TResidentialService
                                    )  extends AbstractController(cc) {
 
   def profileType = "Resident";

@@ -18,18 +18,18 @@ import scala.util.{Failure, Success}
 @Singleton
 class ResidentialService  @Inject()(
 																		 residentDAO: ResidentProfileDAO
-																	 ,   profileDAO: ProfileDAO
+																		 ,   profileDAO: ProfileDAO
 																		 ,stationService: StationService
 
-																	 ) {
+																	 ) extends TResidentialService {
 
 
-	def saveResidentProfile(profile: Profile): Future[Resident] ={
+	override def saveResidentProfile(profile: Profile): Future[Resident] ={
 		val resident:Resident = new Resident(0L,profile.id,1,getCurrentTimeStamp(),1,getCurrentTimeStamp(),1,getCurrentTimeStamp())
 		residentDAO.create(resident)
 
 	}
-	def create(authResponse: AuthResponse, request:ResidentProfileRequest): Either[java.lang.Throwable,Future[ResidentProfileResponse]]= {
+	override def create(authResponse: AuthResponse, request:ResidentProfileRequest): Either[java.lang.Throwable,Future[ResidentProfileResponse]]= {
 
 		if (authResponse == null)  Left(new Exception("Invalid Authentication"))
 		else {
@@ -39,9 +39,9 @@ class ResidentialService  @Inject()(
 				case Left(exc) =>  Left(new Exception(exc.getMessage))
 				case Right(station) =>{
 
-          val stationId:Future[Long] =  for{
-               x <- station.map(y=>y.get)
-          } yield (x.id)
+					val stationId:Future[Long] =  for{
+						x <- station.map(y=>y.get)
+					} yield (x.id)
 
 
 					val profile = Profile(0L, None, request.surname, request.othername, request.gender, "RESIDENT", authResponse.user_id, getCurrentTimeStamp, authResponse.user_id, getCurrentTimeStamp)
@@ -71,7 +71,7 @@ class ResidentialService  @Inject()(
 
 	//todo: get items by station
 
-	def populateResponse(  entity:Profile,resident: Resident): ResidentProfileResponse =
+	override def populateResponse(  entity:Profile,resident: Resident): ResidentProfileResponse =
 		ResidentProfileResponse(
 			entity.surname
 			,entity.other_names
@@ -86,16 +86,16 @@ class ResidentialService  @Inject()(
 
 
 
-	def populateResponse(  entity:Profile): ResidentProfileResponse =
+	override def populateResponse(  entity:Profile): ResidentProfileResponse =
 		ResidentProfileResponse(
 			entity.surname
 			,entity.other_names
 			,entity.profile_type
 			,entity.gender
 			,1
-				,new Timestamp(0l)
+			,new Timestamp(0l)
 			,0l
-,""
+			,""
 		)
 
 
