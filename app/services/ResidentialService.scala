@@ -47,7 +47,7 @@ class ResidentialService @Inject()(
 
           val record = for {
             future1 <- profileDAO.create(profile).recoverWith {
-              case t: Throwable => Future.failed(new Exception("Not Able to create client profile "))
+              case t: Throwable => Future.failed(new Exception(t.getMessage))
             }
             future2 <- saveResidentProfile(future1).recoverWith {
               case t: Throwable => Future.failed(new Exception(t.getMessage))
