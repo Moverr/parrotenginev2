@@ -3,9 +3,9 @@ package services
 import java.sql.Timestamp
 
 import controllers.requests.ResidentProfileRequest
-import controllers.responses.{AuthResponse, ResidentProfileResponse, StationResponse}
+import controllers.responses.{AuthResponse, OrganisationResponse, ResidentProfileResponse, StationResponse}
 import daos._
-import db.tables.{Profile, Resident}
+import db.tables.{Organization, Profile, Resident}
 import helpers.Utilities.getCurrentTimeStamp
 import javax.inject.{Inject, Singleton}
 
@@ -65,6 +65,20 @@ class ResidentialService @Inject()(
   }
 
   //todo: list the items
+
+    def list(authResponse: AuthResponse,offset:Int, limit:Int,station:Option[Int]): Either[java.lang.Throwable,Future[Seq[OrganisationResponse]] ]= {
+    if(authResponse == null ) return  Left(new Exception("Invalid Authentication"))
+    val result : Future[Seq[Organization]] =  residentDAO(authResponse.user_id,offset,limit)
+
+
+    Right{
+      result.map{
+        y=>y.map(p=>populateResponse(p))
+      }
+    }
+
+
+  }
 
   //todo: get item details
 

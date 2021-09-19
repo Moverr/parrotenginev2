@@ -61,9 +61,13 @@ class ResidentController @Inject()(
       case e: Exception => Future.successful(InternalServerError(e.getMessage))
     }
 
-
   }
 
+  /*
+  -- List all the items that belong to me
+  -- List all the itmes that belong to my station 
+
+   */
   //todo: view list items
   def listByStation(offset: Int, limit: Int, options: String) = Action.async { implicit request =>
 

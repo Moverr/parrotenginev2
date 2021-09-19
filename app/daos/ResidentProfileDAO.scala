@@ -29,6 +29,21 @@ import dbConfig._
   def create(request: Resident): Future[Resident]  =    db.run(residentTable.returning(residentTable) +=   request )
 
 
+  //todo: list items 
+  def list(offset:Int,limit:Int,owner_id:Option[Long],station_id:Option[Long]): Future[Seq[Resident]] ={
+    val records = residentTable
+      .drop(offset)
+      .take(limit)
+
+    if(station_id.isDefined){
+      records.filter(_.station_id == station_id.get)
+    }
+    if(owner_id.isDefined){
+      records.filter(_.author_id == owner_id.get)
+    }
+
+    db.run(records.result)
+  }
 
 
 
