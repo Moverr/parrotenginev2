@@ -1,7 +1,12 @@
 package controllers
 
-import controllers.responses.{AuthResponse, StationResponse}
+
+
+
+
+import controllers.responses.{AuthResponse, OrganisationResponse, ResidentProfileResponse, StationResponse}
 import daos.{ProfileDAO, ResidentProfileDAO, StationDAO}
+import helpers.Utilities
 import org.mockito.Mockito
 import org.scalatestplus.play.PlaySpec
 import play.api.Mode
@@ -9,10 +14,14 @@ import play.api.db.slick.DatabaseConfigProvider
 import play.api.inject.Injector
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
+import play.api.test.Helpers.{contentAsString, status}
 import play.api.test.{FakeRequest, Helpers}
 import services.{AuthService, ResidentialService, StationService}
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
+import play.api.test.Helpers._
+
+
 
 class ResidentControllerTest extends PlaySpec {
 
@@ -48,6 +57,14 @@ class ResidentControllerTest extends PlaySpec {
         .withHeaders(
           "authentication"-> token
         ))
+
+      val bodyText: String = contentAsString(response)
+
+      status(response) mustBe  OK
+      val expectedResult:ResidentProfileResponse = Utilities.fromJson[ResidentProfileResponse](bodyText)
+      expectedResult.surname mustBe  "surname"
+
+
 
     }
   }
