@@ -78,7 +78,10 @@ class ResidentController @Inject()(
     try {
       residentialService.list(authResponse, offset, limit, stationid) match {
         case Left(exception: Exception) => Future.successful(BadRequest(Json.toJson(exception.getMessage)))
-        case Right(value) => Future.successful(Ok(Json.toJson(value)))
+        case Right(result) =>result.flatMap{
+          result =>Future.successful(Ok(Json.toJson(result)))
+        }
+          //Future.successful(Ok(Json.toJson(value)))
       }
     }
     catch {

@@ -40,10 +40,10 @@ import dbConfig._
 
 
     if(station_id.isDefined){
-      records.filter(_.station_id == station_id.get)
+      records.filter(_.station_id === station_id.get)
     }
     if(owner_id.isDefined){
-      records.filter(_.author_id == owner_id.get)
+      records.filter(_.author_id === owner_id.get)
     }
 
     db.run(records.result)

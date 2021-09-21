@@ -99,7 +99,7 @@ class ResidentialService @Inject()(
     )
 
 
-   def populateResponse(entity: Resident): ResidentProfileResponse =
+  override def populateResponse(entity: Resident): ResidentProfileResponse =
     ResidentProfileResponse(
       "name"
       , "'othernames"

@@ -17,6 +17,8 @@ case class Resident(id:Long,profile_id:Long,author_id:Long,created_on:Timestamp,
 
 
 
+
+
 class ResidentTable(tag: Tag) extends Table[Resident](tag,"resident"){
   def id      = column[Long]("id",O.PrimaryKey,O.AutoInc)
   def profile_id = column[Long]("profile_id")
@@ -31,5 +33,6 @@ class ResidentTable(tag: Tag) extends Table[Resident](tag,"resident"){
   //todo: map a relation ship with profile to get the profile.
   override def * = (id,profile_id,author_id,created_on,updated_by,date_updated,station_id,join_date).mapTo[Resident]
 
+  def profile = foreignKey("PROF",profile_id, TableQuery[Profile])(_.id,onUpdate = ForeignKeyAction.NoAction,  onDelete = ForeignKeyAction.NoAction )
   //def profile implementation
 }
