@@ -68,12 +68,12 @@ class ResidentialService @Inject()(
 
     def list(authResponse: AuthResponse,offset:Int, limit:Int,station:Option[Int]): Either[java.lang.Throwable,Future[Seq[ResidentProfileResponse]] ]= {
     if(authResponse == null ) return  Left(new Exception("Invalid Authentication"))
-    val result:Future[Seq[Resident]]  =  residentDAO.list(Some(authResponse.user_id),None,offset,limit)
+    val result:Future[Seq[(Resident,Profile)]]  =  residentDAO.list(Some(authResponse.user_id),None,offset,limit)
 
     Right{
       result.map{
         y=>
-            y.map(x=>populateResponse(x))
+            y.map(x=>populateResponse(x._2,x._1))
 
       }
     }
