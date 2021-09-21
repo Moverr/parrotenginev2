@@ -26,14 +26,18 @@ private  val dbConfig = dbConfigProvider.get[JdbcProfile]
  val residentTable = TableQuery[ResidentTable]
 import dbConfig._
 
+  /*
+  Create resident data to the database
+   */
   def create(request: Resident): Future[Resident]  =    db.run(residentTable.returning(residentTable) +=   request )
 
 
-  //todo: list items 
-  def list(offset:Int,limit:Int,owner_id:Option[Long],station_id:Option[Long]): Future[Seq[Resident]] ={
+  //todo: list items
+  def list(owner_id:Option[Long],station_id:Option[Long],offset:Int,limit:Int): Future[Seq[Resident]] ={
     val records = residentTable
       .drop(offset)
       .take(limit)
+
 
     if(station_id.isDefined){
       records.filter(_.station_id == station_id.get)

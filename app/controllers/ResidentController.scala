@@ -8,7 +8,7 @@ import javax.inject.{Inject, Singleton}
 import org.joda.time.DateTime
 import play.api.libs.json.Json
 import play.api.mvc.{AbstractController, _}
-import services.{AuthService, ResidentialService, TResidentialService}
+import services.{AuthService, ResidentialService}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -69,13 +69,24 @@ class ResidentController @Inject()(
 
    */
   //todo: view list items
-  def listByStation(offset: Int, limit: Int, options: String) = Action.async { implicit request =>
+  def list(offset: Int, limit: Int, stationid: Option[Int]) = Action.async { implicit request =>
 
     val authorization: String = request.headers.get("authentication").getOrElse("")
     val authResponse: AuthResponse = authService.validateTokenv2(authorization)
 
 
-    ???
+    try {
+      residentialService.list(authResponse, offset, limit, stationid) match {
+        case Left(exception: Exception) => Future.successful(BadRequest(Json.toJson(exception.getMessage)))
+        case Right(value) => Future.successful(Ok(Json.toJson(value)))
+      }
+    }
+    catch {
+      case e: Exception => Future.successful(InternalServerError(e.getMessage))
+    }
+
+
+
   }
 
   //todo: update the profile

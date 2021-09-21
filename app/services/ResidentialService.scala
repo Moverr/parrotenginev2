@@ -66,14 +66,15 @@ class ResidentialService @Inject()(
 
   //todo: list the items
 
-    def list(authResponse: AuthResponse,offset:Int, limit:Int,station:Option[Int]): Either[java.lang.Throwable,Future[Seq[OrganisationResponse]] ]= {
+    def list(authResponse: AuthResponse,offset:Int, limit:Int,station:Option[Int]): Either[java.lang.Throwable,Future[Seq[ResidentProfileResponse]] ]= {
     if(authResponse == null ) return  Left(new Exception("Invalid Authentication"))
-    val result : Future[Seq[Organization]] =  residentDAO(authResponse.user_id,offset,limit)
-
+    val result:Future[Seq[Resident]]  =  residentDAO.list(Some(authResponse.user_id),None,offset,limit)
 
     Right{
       result.map{
-        y=>y.map(p=>populateResponse(p))
+        y=>
+            y.map(x=>populateResponse(x))
+
       }
     }
 
@@ -98,12 +99,12 @@ class ResidentialService @Inject()(
     )
 
 
-  override def populateResponse(entity: Profile): ResidentProfileResponse =
+   def populateResponse(entity: Resident): ResidentProfileResponse =
     ResidentProfileResponse(
-      entity.surname
-      , entity.other_names
-      , entity.profile_type
-      , entity.gender
+      "name"
+      , "'othernames"
+      , "type"
+      , "gender"
       , 1
       , new Timestamp(0l)
       , 0L
