@@ -7,6 +7,7 @@ import java.util.Date
 import org.joda.time.DateTime
 import slick.sql.SqlProfile.ColumnOption.SqlType
 import slick.jdbc.PostgresProfile.api._
+import slick.lifted.TableQuery
 
 
 
@@ -14,6 +15,8 @@ case class Resident(id:Long,profile_id:Long,author_id:Long,created_on:Timestamp,
                     ,station_id:Long
                    ,join_date:Timestamp
                    )
+
+
 
 
 
@@ -31,5 +34,8 @@ class ResidentTable(tag: Tag) extends Table[Resident](tag,"resident"){
   //todo: map a relation ship with profile to get the profile.
   override def * = (id,profile_id,author_id,created_on,updated_by,date_updated,station_id,join_date).mapTo[Resident]
 
+//  val profileTable =  TableQuery[Profile]
+//  def profile = foreignKey("PROF",profile_id, TableQuery[Profile])
+  //(_.id,onUpdate = ForeignKeyAction.NoAction,  onDelete = ForeignKeyAction.NoAction )
   //def profile implementation
 }

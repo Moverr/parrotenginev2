@@ -3,9 +3,9 @@ package services
 import java.sql.Timestamp
 
 import controllers.requests.ResidentProfileRequest
-import controllers.responses.{AuthResponse, ResidentProfileResponse, StationResponse}
+import controllers.responses.{AuthResponse, OrganisationResponse, ResidentProfileResponse, StationResponse}
 import daos._
-import db.tables.{Profile, Resident}
+import db.tables.{Organization, Profile, Resident}
 import helpers.Utilities.getCurrentTimeStamp
 import javax.inject.{Inject, Singleton}
 
@@ -66,6 +66,21 @@ class ResidentialService @Inject()(
 
   //todo: list the items
 
+    def list(authResponse: AuthResponse,offset:Int, limit:Int,station:Option[Int]): Either[java.lang.Throwable,Future[Seq[ResidentProfileResponse]] ]= {
+    if(authResponse == null ) return  Left(new Exception("Invalid Authentication"))
+    val result:Future[Seq[(Resident,Profile)]]  =  residentDAO.list(Some(authResponse.user_id),None,offset,limit)
+
+    Right{
+      result.map{
+        y=>
+            y.map(x=>populateResponse(x._2,x._1))
+
+      }
+    }
+
+
+  }
+
   //todo: get item details
 
   //todo: get items by station
@@ -84,12 +99,12 @@ class ResidentialService @Inject()(
     )
 
 
-  override def populateResponse(entity: Profile): ResidentProfileResponse =
+  override def populateResponse(entity: Resident): ResidentProfileResponse =
     ResidentProfileResponse(
-      entity.surname
-      , entity.other_names
-      , entity.profile_type
-      , entity.gender
+      "name"
+      , "'othernames"
+      , "type"
+      , "gender"
       , 1
       , new Timestamp(0l)
       , 0L

@@ -13,5 +13,5 @@ trait TResidentialService {
 
   def populateResponse(entity: Profile, resident: Resident): ResidentProfileResponse
 
-  def populateResponse(entity: Profile): ResidentProfileResponse
+  def populateResponse(entity: Resident): ResidentProfileResponse
 }
