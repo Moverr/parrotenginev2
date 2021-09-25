@@ -28,10 +28,10 @@
 [0m2021.02.07 23:55:46 WARN  no build target for: D:\mover\parrotenginev2\app\controllers\AuthController.scala[0m
 Feb 07, 2021 11:55:47 PM scala.meta.internal.pc.CompilerAccess handleError
 SEVERE: file%3A%2F%2F%2FD%3A%2Fmover%2Fparrotenginev2%2Fapp%2Fcontrollers%2Fworksheet.sc:3: error: expected class or object definition val
-val userBase = List(
+val userBase = ListCustom(
 ^
 file%3A%2F%2F%2FD%3A%2Fmover%2Fparrotenginev2%2Fapp%2Fcontrollers%2Fworksheet.sc:3: error: expected class or object definition val
-val userBase = List(
+val userBase = ListCustom(
 ^
 	at scala.meta.internal.parsers.Reporter.syntaxError(Reporter.scala:16)
 	at scala.meta.internal.parsers.Reporter.syntaxError$(Reporter.scala:16)
@@ -63,10 +63,10 @@ val userBase = List(
 [0m2021.02.07 23:55:47 WARN  no build target for: D:\mover\parrotenginev2\app\controllers\worksheet.sc[0m
 Feb 07, 2021 11:55:48 PM scala.meta.internal.pc.CompilerAccess handleError
 SEVERE: file%3A%2F%2F%2FD%3A%2Fmover%2Fparrotenginev2%2Fapp%2Fcontrollers%2Fworksheet.sc:3: error: expected class or object definition val
-val userBase = List(
+val userBase = ListCustom(
 ^
 file%3A%2F%2F%2FD%3A%2Fmover%2Fparrotenginev2%2Fapp%2Fcontrollers%2Fworksheet.sc:3: error: expected class or object definition val
-val userBase = List(
+val userBase = ListCustom(
 ^
 	at scala.meta.internal.parsers.Reporter.syntaxError(Reporter.scala:16)
 	at scala.meta.internal.parsers.Reporter.syntaxError$(Reporter.scala:16)
