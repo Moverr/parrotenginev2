@@ -3,7 +3,9 @@ package controllers.requests
 import controllers.requests.ProfileType.ProfileType
 import org.joda.time.DateTime
 
-abstract class ProfileRequest{
+//sealed trait  ProfileReq
+
+sealed trait ProfileRequest{
   def  surname:String
   def  othername:String
   def  profiletype:ProfileType

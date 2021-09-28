@@ -1,6 +1,7 @@
 import scala.collection.mutable.ListBuffer
 import scala.io.StdIn
 
+
 def solution(): String ={
   val item:String = "pprrqq";
   val stringArray = item.split("")
@@ -32,3 +33,4 @@ def solution(): String ={
 }
 
 solution()
+

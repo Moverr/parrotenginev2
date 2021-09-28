@@ -23,7 +23,7 @@ Installation
   <li>Organisation 
 <uL>
  <li>Create Organization
- <li>List Organizations
+ <li>ListCustom Organizations
  <li>Archive Organization
  
  </UL>
