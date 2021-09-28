@@ -13,9 +13,7 @@ import java.time.Instant
 import org.joda.time.DateTime
 
 
-
-object Utilities {
-
+  class  Utilities{
   val emailRegex:String = "^(.+)@(.+)$"
   val simplePhonePatternRegex:String = "^\\d{10}$"
   val phoneWithSpacePatternRegex:String = "^(\\d{3}[- .]?){2}\\d{4}$"
@@ -57,6 +55,16 @@ object Utilities {
   def getCurrentTimeStamp(dateTimeObject:DateTime)=new Timestamp( dateTimeObject.getMillis)
   def getCurrentTimeStamp():Timestamp =  getCurrentTimeStamp( new DateTime())
   def getCurrentTimeStampLong =   Instant.now().getEpochSecond
+
+
+
+}
+
+object Utilities extends Utilities {
+
+
+
+  def apply(): Utilities = new Utilities()
 
 
 

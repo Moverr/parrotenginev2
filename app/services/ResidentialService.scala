@@ -43,7 +43,7 @@ class ResidentialService @Inject()(
           } yield (record.id)
 
 
-          val profile = Profile(0L, None, request.surname, request.othername, request.gender, "RESIDENT", authResponse.user_id, getCurrentTimeStamp, authResponse.user_id, getCurrentTimeStamp)
+          val profile = Profile(0L, None, request.surname, request.othername, request.gender, "RESIDENT", authResponse.user_id, getCurrentTimeStamp(), authResponse.user_id, getCurrentTimeStamp())
 
           val record = for {
             future1 <- profileDAO.create(profile).recoverWith {

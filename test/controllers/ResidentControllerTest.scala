@@ -4,9 +4,14 @@ package controllers
 
 
 
+import java.sql.Timestamp
+
 import controllers.responses.{AuthResponse, OrganisationResponse, ResidentProfileResponse, StationResponse}
 import daos.{ProfileDAO, ResidentProfileDAO, StationDAO}
-import helpers.Utilities
+import db.tables.{Profile, Resident}
+import helpers.Utilities._
+import helpers.Utilities.getCurrentTimeStamp
+import org.joda.time.DateTime
 import org.mockito.Mockito
 import org.scalatestplus.play.PlaySpec
 import play.api.Mode
@@ -29,20 +34,39 @@ class ResidentControllerTest extends PlaySpec {
   lazy val injector: Injector = appBuilder.injector()
   lazy val dbConfProvider: DatabaseConfigProvider = injector.instanceOf[DatabaseConfigProvider]
 
+  //mocking the utils.
+  val staticDateforTests= new Timestamp( new DateTime().getMillis)
+  val utils = Mockito.mock(classOf[helpers.Utilities])
 
-  val profileDao = new ProfileDAO(dbConfProvider)
-  val residentDAO = new ResidentProfileDAO(dbConfProvider)
-    //Mockito.mock(classOf[ResidentProfileDAO])
+  Mockito.when(utils.getCurrentTimeStamp()).thenReturn( staticDateforTests)
+  val profileDao =   Mockito.mock(classOf[ProfileDAO])
+  val residentDAO =  Mockito.mock(classOf[ResidentProfileDAO])
+
+
+
+  val profile = Profile(0L, None, "surname", "otherName", "male", "RESIDENT", 10, getCurrentTimeStamp(),10, getCurrentTimeStamp())
+  val resident: Resident = new Resident(0L, profile.id, 1, getCurrentTimeStamp(), 1, getCurrentTimeStamp(), 1, getCurrentTimeStamp())
+
+
+  Mockito.when(profileDao.create(profile)).thenReturn( Future.successful(profile))
+  Mockito.when(residentDAO.create(resident)).thenReturn( Future.successful(resident))
+
+
+
+
+  //Mockito.mock(classOf[ResidentProfileDAO])
   val authService:AuthService =  Mockito.mock(classOf[AuthService])
   val stationService:StationService =  Mockito.mock(classOf[StationService])
 
-  val residentService:ResidentialService =   new ResidentialService(residentDAO,profileDao,stationService);
+  val residentService:ResidentialService =   new ResidentialService(residentDAO,profileDao,stationService)
+  val token:String = "token"
 
   val controller   = new ResidentController(Helpers.stubControllerComponents(),authService,residentService)
   "Resident Controller " should  {
     "Create Resident  " in {
-      val jsonBody = Json.parse("{\"surname\":\"surname\", \"otherName\":\"otherName\" , \"profiletype\":\"profiletype\", \"gender\":\"gender\", \"stationid\":\"1\", \"registerdate\":\"null\" }")
-      val token:String = "token"
+      val jsonBody = Json.parse("{\"surname\":\"surname\", \"otherName\":\"otherName\" , \"profiletype\":\"profiletype\", \"gender\":\"male\", \"stationid\":\"1\", \"registerdate\":\"null\" }")
+
+
       Mockito.when(authService.validateTokenv2("token")).thenReturn(  AuthResponse("token","mose",10))
 
       val stationResponse:Option[StationResponse] =  Some(StationResponse(1,"station","code",None))
@@ -52,7 +76,7 @@ class ResidentControllerTest extends PlaySpec {
 
 
       //todo: create stattion and move on
-      val response = controller.create().apply(FakeRequest(Helpers.POST, "/v1/resident/create   ")
+      val response = controller.create().apply(FakeRequest(Helpers.POST, "/v1/resident/create")
         .withJsonBody(jsonBody)
         .withHeaders(
           "authentication"-> token
@@ -61,7 +85,7 @@ class ResidentControllerTest extends PlaySpec {
       val bodyText: String = contentAsString(response)
 
       status(response) mustBe  OK
-      val expectedResult:ResidentProfileResponse = Utilities.fromJson[ResidentProfileResponse](bodyText)
+      val expectedResult:ResidentProfileResponse = fromJson[ResidentProfileResponse](bodyText)
       expectedResult.surname mustBe  "surname"
 
 
