@@ -49,7 +49,7 @@ class OrganisationDAO  @Inject()(@NamedDatabase("default") dbConfigProvider: Dat
   * Create Organisation
  */
     def create(name:String, details:String, owner:Long): Future[Organization] =
-    db.run(orgTable.returning(orgTable) += Organization(0L,name,details,owner, getCurrentTimeStamp,0L,getCurrentTimeStamp,0L))
+    db.run(orgTable.returning(orgTable) += Organization(0L,name,details,owner, getCurrentTimeStamp(),0L,getCurrentTimeStamp(),0L))
 
 
 }

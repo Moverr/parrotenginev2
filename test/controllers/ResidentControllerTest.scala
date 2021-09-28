@@ -44,12 +44,11 @@ class ResidentControllerTest extends PlaySpec {
 
 
 
-  val profile = Profile(0L, None, "surname", "otherName", "male", "RESIDENT", 10, getCurrentTimeStamp(),10, getCurrentTimeStamp())
+  val profile = Profile(0L, None, "surname", "otherName", "male", "RESIDENT", 1, getCurrentTimeStamp(),1, getCurrentTimeStamp())
+  val profileRes = Profile(1, None, "surname", "otherName", "male", "RESIDENT", 1, getCurrentTimeStamp(),1, getCurrentTimeStamp())
+
   val resident: Resident = new Resident(0L, profile.id, 1, getCurrentTimeStamp(), 1, getCurrentTimeStamp(), 1, getCurrentTimeStamp())
 
-
-  Mockito.when(profileDao.create(profile)).thenReturn( Future.successful(profile))
-  Mockito.when(residentDAO.create(resident)).thenReturn( Future.successful(resident))
 
 
 
@@ -64,6 +63,13 @@ class ResidentControllerTest extends PlaySpec {
   val controller   = new ResidentController(Helpers.stubControllerComponents(),authService,residentService)
   "Resident Controller " should  {
     "Create Resident  " in {
+
+      Mockito.when(profileDao.create(profile)).thenReturn( Future.successful(profileRes))
+      Mockito.when(residentDAO.create(resident)).thenReturn( Future.successful(resident))
+
+
+
+
       val jsonBody = Json.parse("{\"surname\":\"surname\", \"otherName\":\"otherName\" , \"profiletype\":\"profiletype\", \"gender\":\"male\", \"stationid\":\"1\", \"registerdate\":\"null\" }")
 
 
