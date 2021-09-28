@@ -24,6 +24,7 @@ object BorzLlist {
     case Borz(head, tail) =>head * product(tail)
   }
 
+//  def ++[A](n:ListCustom[A],b:ListCustom[A])[A] = n+b
 
 //variadic function
 
@@ -34,5 +35,28 @@ def apply[A](as:A*):ListCustom[A] = {
 
 }
 
+
+
+def dropWhile[A](l:List[A],f:A=>Boolean): List[A]
+
+val xst:List[Int] = List(1,2,3,4,5)
+
+
+val kio = dropWhile(xst,(x:Int)=>x<4)
+
+kio
+
 // a trait is an abstract interface which may optionally contain  implementations
 // of some methods.
+
+//out of a class we can make companion objects. and we can gegt use of them depending on pattern matching.
+
+
+
+//Types of pattern matching
+// variable pattern.
+// uing data constructor patter..
+// Match error runtime exeception
+
+//we dont copy data, we reusue it.
+
