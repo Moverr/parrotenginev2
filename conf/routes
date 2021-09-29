@@ -24,7 +24,7 @@ GET  /v1/station/list                 controllers.StationController.list(organis
 
 #Resident Profile
 POST /v1/resident/create               controllers.ResidentController.create()
-GET  /v1/resident/list                 controllers.ResidentController.list(offset:Int=0,limit:Int=6,stationid:Option[Int] = None)
+GET  /v1/resident/list                 controllers.ResidentController.list(offset:Int=0,limit:Int=6,station_id:Option[Long] )
 
 
 # Map static resources from the /public folder to the /assets URL path

@@ -69,14 +69,14 @@ class ResidentController @Inject()(
 
    */
   //todo: view list items
-  def list(offset: Int, limit: Int, stationid: Option[Int]) = Action.async { implicit request =>
+  def list(offset: Int, limit: Int, station_id: Option[Long]) = Action.async { implicit request =>
 
     val authorization: String = request.headers.get("authentication").getOrElse("")
     val authResponse: AuthResponse = authService.validateTokenv2(authorization)
 
 
     try {
-      residentialService.list(authResponse, offset, limit, stationid) match {
+      residentialService.list(authResponse, offset, limit, station_id) match {
         case Left(exception: Exception) => Future.successful(BadRequest(Json.toJson(exception.getMessage)))
         case Right(result) =>result.flatMap{
           result =>Future.successful(Ok(Json.toJson(result)))

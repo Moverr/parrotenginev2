@@ -7,7 +7,7 @@ package controllers
 import java.sql.Timestamp
 
 import controllers.responses.{AuthResponse, OrganisationResponse, ResidentProfileResponse, StationResponse}
-import daos.{ProfileDAO, ResidentProfileDAO, StationDAO}
+import daos.{OrganisationDAO, ProfileDAO, ResidentProfileDAO, StationDAO}
 import db.tables.{Profile, Resident}
 import helpers.Utilities._
 import helpers.Utilities.getCurrentTimeStamp
@@ -39,8 +39,10 @@ class ResidentControllerTest extends PlaySpec {
   val utils = Mockito.mock(classOf[helpers.Utilities])
 
   Mockito.when(utils.getCurrentTimeStamp()).thenReturn( staticDateforTests)
-  val profileDao =   Mockito.mock(classOf[ProfileDAO])
-  val residentDAO =  Mockito.mock(classOf[ResidentProfileDAO])
+  val profileDao =   new ProfileDAO(dbConfProvider)
+    //Mockito.mock(classOf[ProfileDAO])
+  val residentDAO =   new ResidentProfileDAO(dbConfProvider)
+    //Mockito.mock(classOf[ResidentProfileDAO])
 
 
 
@@ -63,9 +65,6 @@ class ResidentControllerTest extends PlaySpec {
   val controller   = new ResidentController(Helpers.stubControllerComponents(),authService,residentService)
   "Resident Controller " should  {
     "Create Resident  " in {
-
-      Mockito.when(profileDao.create(profile)).thenReturn( Future.successful(profileRes))
-      Mockito.when(residentDAO.create(resident)).thenReturn( Future.successful(resident))
 
 
 
