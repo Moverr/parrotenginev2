@@ -27,7 +27,7 @@ class ResidentProfileDAO @Inject()(dbConfigProvider: DatabaseConfigProvider) {
 
 
   //todo: list items
-  def list(owner_id: Option[Long], station_id: Option[Long], offset: Int, limit: Int): Future[Seq[(Resident, Profile)]] = {
+  def list(owner_id: Option[Long], station_id: Option[Long], offset: Int, limit: Int,searchQueury:Option[String]): Future[Seq[(Resident, Profile)]] = {
 
     val records = for {
       (resident, profile) <- {
@@ -42,15 +42,19 @@ class ResidentProfileDAO @Inject()(dbConfigProvider: DatabaseConfigProvider) {
 
 
 
-//        val ownerQuery =  for(record<- owner_id match {
-//          case Some(owner_id) => stationQuery.filter(_._2.author_id  === owner_id)
-//          case None => stationQuery
-//        }) yield (record)
+        val ownerQuery =  for(query<- owner_id match {
+          case Some(owner_id) => stationQuery.filter(_._2.author_id  === owner_id)
+          case None => stationQuery
+        }) yield (query)
 
 
+        val searchQueury = for(query<- searchQueury match {
+          case Some(searchCriteria) => stationQuery.filter(_._2.surname === s"%$searchCriteria%" ) .filter(_._2.other_names === s"%$searchCriteria%" )
+          case None => ownerQuery
+        }) yield (query)
 
-        stationQuery
-        //drop (offset) take (limit)
+
+        searchQueury drop (offset) take (limit)
       }
 
     }
