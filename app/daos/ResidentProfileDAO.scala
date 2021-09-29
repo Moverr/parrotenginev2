@@ -63,4 +63,14 @@ class ResidentProfileDAO @Inject()(dbConfigProvider: DatabaseConfigProvider) {
   }
 
 
+  def get(id:Long): Future[Option[(Resident, Profile)]] ={
+    val record = residentTable join profileTable on (_.profile_id === _.id)
+    db.run(record.filter(_._1.id === id).result.headOption)
+  }
+
+
+  //todo: upate and move on
+  def archive(id:Long): Unit ={
+???
+  }
 }
