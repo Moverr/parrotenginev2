@@ -27,20 +27,34 @@ class ResidentProfileDAO @Inject()(dbConfigProvider: DatabaseConfigProvider) {
 
 
   //todo: list items
-  def list(owner_id: Option[Long], station_id: Option[Long], offset: Int, limit: Int): Future[Seq[(Resident, Profile)]] = {
+  def list(owner_id: Option[Long], station_id: Option[Long], offset: Int, limit: Int,searchQueury:Option[String]): Future[Seq[(Resident, Profile)]] = {
 
     val records = for {
       (resident, profile) <- {
-        val record = residentTable join profileTable on (_.profile_id === _.id) drop (offset) take (limit)
+        val record = residentTable join profileTable on (_.profile_id === _.id)
+        //val stationQuery = record.filter(_._1.station_id  === station_id.get)
 
-        if (station_id.isDefined) {
-          record.filter(_._1.station_id === station_id.get)
-        }
-        if (owner_id.isDefined) {
-          record.filter(_._1.author_id === owner_id.get)
-        }
 
-        record
+        val stationQuery =  for(query<- station_id match {
+          case Some(station_id) => record.filter(_._1.station_id  === station_id)
+          case None => record
+        }) yield (query)
+
+
+
+        val ownerQuery =  for(query<- owner_id match {
+          case Some(owner_id) => stationQuery.filter(_._2.author_id  === owner_id)
+          case None => stationQuery
+        }) yield (query)
+
+
+        val searchQueury = for(query<- searchQueury match {
+          case Some(searchCriteria) => stationQuery.filter(_._2.surname === s"%$searchCriteria%" ) .filter(_._2.other_names === s"%$searchCriteria%" )
+          case None => ownerQuery
+        }) yield (query)
+
+
+        searchQueury drop (offset) take (limit)
       }
 
     }

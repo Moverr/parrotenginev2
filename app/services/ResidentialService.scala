@@ -8,9 +8,11 @@ import daos._
 import db.tables.{Organization, Profile, Resident}
 import helpers.Utilities.getCurrentTimeStamp
 import javax.inject.{Inject, Singleton}
+import slick.util.SQLBuilder.Result
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, Future}
 
 
 @Singleton
@@ -43,12 +45,17 @@ class ResidentialService @Inject()(
           } yield (record.id)
 
 
-          val profile = Profile(0L, None, request.surname, request.othername, request.gender, "RESIDENT", authResponse.user_id, getCurrentTimeStamp, authResponse.user_id, getCurrentTimeStamp)
+//          val profile = Profile(0L, None, request.surname, request.othername, request.gender, "RESIDENT", authResponse.user_id, getCurrentTimeStamp(), authResponse.user_id, getCurrentTimeStamp())
+
+          val respo:Profile  = Await.result(profileDAO.create(request.surname,request.othername,request.gender,authResponse.user_id,None,"RESIDENT"),Duration.Inf)
+
 
           val record = for {
-            future1 <- profileDAO.create(profile).recoverWith {
+            future1 <- profileDAO.create(request.surname,request.othername,request.gender,authResponse.user_id,None,"RESIDENT").recoverWith {
               case exception: Throwable => Future.failed(new Exception(exception.getMessage))
             }
+
+            //todoo: let me see this.
             future2 <- saveResidentProfile(future1).recoverWith {
               case exception: Throwable => Future.failed(new Exception(exception.getMessage))
             }
@@ -66,15 +73,13 @@ class ResidentialService @Inject()(
 
   //todo: list the items
 
-    def list(authResponse: AuthResponse,offset:Int, limit:Int,station:Option[Int]): Either[java.lang.Throwable,Future[Seq[ResidentProfileResponse]] ]= {
+    def list(authResponse: AuthResponse,offset:Int, limit:Int,station:Option[Long],query:Option[String]): Either[java.lang.Throwable,Future[Seq[ResidentProfileResponse]] ]= {
     if(authResponse == null ) return  Left(new Exception("Invalid Authentication"))
-    val result:Future[Seq[(Resident,Profile)]]  =  residentDAO.list(Some(authResponse.user_id),None,offset,limit)
+    val result:Future[Seq[(Resident,Profile)]]  =  residentDAO.list(Some(authResponse.user_id),station,offset,limit,query)
 
     Right{
       result.map{
-        y=>
-            y.map(x=>populateResponse(x._2,x._1))
-
+        record=>  record.map(x=>populateResponse(x._2,x._1))
       }
     }
 
@@ -106,7 +111,7 @@ class ResidentialService @Inject()(
       , "type"
       , "gender"
       , 1
-      , new Timestamp(0l)
+      , new Timestamp(0L)
       , 0L
       , ""
     )
