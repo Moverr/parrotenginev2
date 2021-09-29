@@ -19,12 +19,13 @@ GET  /v1/organisation                 controllers.OrganizationController.get(id:
 #Station Management
 POST /v1/station/create               controllers.StationController.create()
 GET  /v1/station/list                 controllers.StationController.list(organisation_id:Int,offset:Int=0,limit:Int=6)
-#GET  /v1/organisation                 controllers.StationController.get(id:Int)
+#GET  /v1/organisation                controllers.StationController.get(id:Int)
 
 
 #Resident Profile
 POST /v1/resident/create               controllers.ResidentController.create()
-GET  /v1/resident/list                 controllers.ResidentController.list(offset:Int=0,limit:Int=6,station_id:Option[Long] )
+GET  /v1/resident/list                 controllers.ResidentController.list(offset:Int=0,limit:Int=6,station_id:Option[Long] ,query:Option[String])
+GET  /v1/resident                      controllers.ResidentController.get(id:Long)
 
 
 # Map static resources from the /public folder to the /assets URL path

@@ -3,16 +3,14 @@ package services
 import java.sql.Timestamp
 
 import controllers.requests.ResidentProfileRequest
-import controllers.responses.{AuthResponse, OrganisationResponse, ResidentProfileResponse, StationResponse}
+import controllers.responses.{AuthResponse, GeneralProfileResponse, ProfileResponse, ResidentProfileResponse, StationResponse}
 import daos._
-import db.tables.{Organization, Profile, Resident}
+import db.tables.{Profile, Resident}
 import helpers.Utilities.getCurrentTimeStamp
 import javax.inject.{Inject, Singleton}
-import slick.util.SQLBuilder.Result
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration.Duration
-import scala.concurrent.{Await, Future}
+import scala.concurrent.Future
 
 
 @Singleton
@@ -44,10 +42,6 @@ class ResidentialService @Inject()(
             record <- station.map(y => y.get)
           } yield (record.id)
 
-
-//          val profile = Profile(0L, None, request.surname, request.othername, request.gender, "RESIDENT", authResponse.user_id, getCurrentTimeStamp(), authResponse.user_id, getCurrentTimeStamp())
-
-          val respo:Profile  = Await.result(profileDAO.create(request.surname,request.othername,request.gender,authResponse.user_id,None,"RESIDENT"),Duration.Inf)
 
 
           val record = for {
@@ -83,19 +77,29 @@ class ResidentialService @Inject()(
       }
     }
 
-
   }
 
+
+  //todo: dealingn with muultiple owners. owner_id...
   //todo: get item details
+  def get(authResponse: AuthResponse,id:Long): Either[java.lang.Throwable,Future[Option[ResidentProfileResponse]] ]= {
+    if(authResponse == null ) return  Left(new Exception("Invalid Authentication"))
+    val result:Future[Option[(Resident,Profile)]]  =  residentDAO.get(id)
+
+    Right{
+      result.map{
+        record=>  record.map(x=>populateResponse(x._2,x._1))
+      }
+    }
+  }
+
 
   //todo: get items by station
 
-  override def populateResponse(entity: Profile, resident: Resident): ResidentProfileResponse =
+  override def populateResponse(profile: Profile, resident: Resident): ResidentProfileResponse =
     ResidentProfileResponse(
-      entity.surname
-      , entity.other_names
-      , entity.profile_type
-      , entity.gender
+      resident.id
+        ,populateResponse(profile)
       , resident.station_id.toInt
       , resident.join_date
       , resident.created_on.getTime
@@ -103,18 +107,18 @@ class ResidentialService @Inject()(
 
     )
 
+  def populateResponse(profile:Profile): GeneralProfileResponse ={
+    GeneralProfileResponse(
+      profile.id
+      ,profile.surname
+      , profile.other_names
+      , profile.profile_type
+      , profile.gender
 
-  override def populateResponse(entity: Resident): ResidentProfileResponse =
-    ResidentProfileResponse(
-      "name"
-      , "'othernames"
-      , "type"
-      , "gender"
-      , 1
-      , new Timestamp(0L)
-      , 0L
-      , ""
     )
+  }
+
+  override def populateResponse(entity: Resident): ResidentProfileResponse = ???
 
 
   //todo: invite them to create user credentials

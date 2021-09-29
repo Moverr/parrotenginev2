@@ -46,10 +46,7 @@ class StationDAO    @Inject()(dbConfigProvider: DatabaseConfigProvider) {
   }
 
   def get(id:Long):Future[Option[Station]]={
-    db.run(stationTable
-      .filter(_.id === id)
-      .take(1)
-      .result.headOption)
+    db.run(stationTable.filter(_.id === id).result.headOption)
   }
   //todo: Populate Response
 }

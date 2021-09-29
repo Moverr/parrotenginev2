@@ -69,14 +69,14 @@ class ResidentController @Inject()(
 
    */
   //todo: view list items
-  def list(offset: Int, limit: Int, station_id: Option[Long]) = Action.async { implicit request =>
+  def list(offset: Int, limit: Int, station_id: Option[Long],query:Option[String]) = Action.async { implicit request =>
 
     val authorization: String = request.headers.get("authentication").getOrElse("")
     val authResponse: AuthResponse = authService.validateTokenv2(authorization)
 
 
     try {
-      residentialService.list(authResponse, offset, limit, station_id) match {
+      residentialService.list(authResponse, offset, limit, station_id,query) match {
         case Left(exception: Exception) => Future.successful(BadRequest(Json.toJson(exception.getMessage)))
         case Right(result) =>result.flatMap{
           result =>Future.successful(Ok(Json.toJson(result)))
@@ -91,6 +91,32 @@ class ResidentController @Inject()(
 
 
   }
+
+
+  //todo: get item by id
+  def get(id: Long) = Action.async { implicit request =>
+
+    val authorization: String = request.headers.get("authentication").getOrElse("")
+    val authResponse: AuthResponse = authService.validateTokenv2(authorization)
+
+
+    try {
+      residentialService.get(authResponse, id) match {
+        case Left(exception: Exception) => Future.successful(BadRequest(Json.toJson(exception.getMessage)))
+        case Right(result) =>result.flatMap{
+          result =>Future.successful(Ok(Json.toJson(result)))
+        }
+
+      }
+    }
+    catch {
+      case e: Exception => Future.successful(InternalServerError(e.getMessage))
+    }
+
+
+
+  }
+
 
   //todo: update the profile
   def update = Action.async { implicit request =>
