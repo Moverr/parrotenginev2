@@ -77,7 +77,6 @@ class ResidentialService @Inject()(
       }
     }
 
-
   }
 
 
@@ -92,8 +91,6 @@ class ResidentialService @Inject()(
         record=>  record.map(x=>populateResponse(x._2,x._1))
       }
     }
-
-
   }
 
 
