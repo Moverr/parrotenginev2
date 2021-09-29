@@ -3,7 +3,7 @@ package services
 import java.sql.Timestamp
 
 import controllers.requests.ResidentProfileRequest
-import controllers.responses.{AuthResponse, ResidentProfileResponse, StationResponse}
+import controllers.responses.{AuthResponse, GeneralProfileResponse, ProfileResponse, ResidentProfileResponse, StationResponse}
 import daos._
 import db.tables.{Profile, Resident}
 import helpers.Utilities.getCurrentTimeStamp
@@ -82,7 +82,7 @@ class ResidentialService @Inject()(
 
   //todo: dealingn with muultiple owners. owner_id...
   //todo: get item details
-  def get(authResponse: AuthResponse,id:Int): Either[java.lang.Throwable,Future[Option[ResidentProfileResponse]] ]= {
+  def get(authResponse: AuthResponse,id:Long): Either[java.lang.Throwable,Future[Option[ResidentProfileResponse]] ]= {
     if(authResponse == null ) return  Left(new Exception("Invalid Authentication"))
     val result:Future[Option[(Resident,Profile)]]  =  residentDAO.get(id)
 
@@ -96,12 +96,10 @@ class ResidentialService @Inject()(
 
   //todo: get items by station
 
-  override def populateResponse(entity: Profile, resident: Resident): ResidentProfileResponse =
+  override def populateResponse(profile: Profile, resident: Resident): ResidentProfileResponse =
     ResidentProfileResponse(
-      entity.surname
-      , entity.other_names
-      , entity.profile_type
-      , entity.gender
+      resident.id
+        ,populateResponse(profile)
       , resident.station_id.toInt
       , resident.join_date
       , resident.created_on.getTime
@@ -109,18 +107,18 @@ class ResidentialService @Inject()(
 
     )
 
+  def populateResponse(profile:Profile): GeneralProfileResponse ={
+    GeneralProfileResponse(
+      profile.id
+      ,profile.surname
+      , profile.other_names
+      , profile.profile_type
+      , profile.gender
 
-  override def populateResponse(entity: Resident): ResidentProfileResponse =
-    ResidentProfileResponse(
-      "name"
-      , "'othernames"
-      , "type"
-      , "gender"
-      , 1
-      , new Timestamp(0L)
-      , 0L
-      , ""
     )
+  }
+
+  override def populateResponse(entity: Resident): ResidentProfileResponse = ???
 
 
   //todo: invite them to create user credentials

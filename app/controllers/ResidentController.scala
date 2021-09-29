@@ -94,7 +94,7 @@ class ResidentController @Inject()(
 
 
   //todo: get item by id
-  def get(id: Int) = Action.async { implicit request =>
+  def get(id: Long) = Action.async { implicit request =>
 
     val authorization: String = request.headers.get("authentication").getOrElse("")
     val authResponse: AuthResponse = authService.validateTokenv2(authorization)
