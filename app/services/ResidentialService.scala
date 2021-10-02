@@ -68,6 +68,7 @@ class ResidentialService @Inject()(
     if(authResponse == null ) return  Left(new Exception("Invalid Authentication"))
     val result:Future[Seq[(Resident,Profile)]]  =  residentDAO.list(Some(authResponse.user_id),station,offset,limit,query)
 
+
     Right{
       result.map{
         record=>  record.map(x=>populateResponse(x._2,x._1))
