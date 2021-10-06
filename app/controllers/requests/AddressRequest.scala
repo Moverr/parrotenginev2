@@ -7,4 +7,3 @@ case class PoBoxAddress(number:String,country:String,code:Int) extends  AddressR
 //online address
 case class OnlineAddress(details:String, address_type:String) extends  AddressRequest
 
- 
