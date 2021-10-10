@@ -5,12 +5,7 @@ import org.joda.time.DateTime
 
 //sealed trait  ProfileReq
 
-sealed trait ProfileRequest{
-  def  surname:String
-  def  othername:String
-  def  profiletype:ProfileType
-  def  gender:String
-}
+sealed trait ProfileRequest
 //,user_id:Option[Long]
 case class BasicProfileRequest(surname:String,othername:String,profiletype: ProfileType,gender:String  ) extends  ProfileRequest
 
