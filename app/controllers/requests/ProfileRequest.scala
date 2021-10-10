@@ -14,6 +14,6 @@ case class BasicProfileRequest(surname:String,othername:String,profiletype: Prof
 case class ResidentProfileRequest(surname:String,othername:String,profiletype: ProfileType,gender:String,stationid:Int,joinDate:DateTime  ) extends  ProfileRequest
 //Guest
 //,user_id:Option[Long]
-case class GuestProfileRequest(surname:String,othername:String,profiletype: ProfileType,gender:String,registerDate:DateTime,location: PhysicalAddress) extends  ProfileRequest
+case class GuestProfileRequest(surname:String,othername:String,profiletype: ProfileType,gender:String,registerDate:Long,location: PhysicalAddress) extends  ProfileRequest
 
 
