@@ -6,7 +6,7 @@ import play.api.mvc.{AbstractController, ControllerComponents}
 import services.AuthService
 
 @Singleton
-class VisitorController @Inject()(
+class GuestController @Inject()(
                                    controllerComponents: ControllerComponents
                                    , val authService: AuthService
                                  )  extends  AbstractController(controllerComponents) {
