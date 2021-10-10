@@ -1,11 +1,9 @@
 package services
 
-import java.sql.Timestamp
-
-import controllers.requests.ResidentProfileRequest
-import controllers.responses.{AuthResponse, GeneralProfileResponse, ProfileResponse, ResidentProfileResponse, StationResponse}
+import controllers.requests.{ProfileRequest, ResidentProfileRequest}
+import controllers.responses.{AuthResponse, GeneralProfileResponse, ResidentProfileResponse, StationResponse}
 import daos._
-import db.tables.{Profile, Resident, Station}
+import db.tables.{Profile, Resident}
 import helpers.Utilities.getCurrentTimeStamp
 import javax.inject.{Inject, Singleton}
 
@@ -22,56 +20,62 @@ class ResidentialService @Inject()(
                                   ) extends TResidentialService {
 
 
-  override def saveResidentProfile(authResponse: AuthResponse, profile: Profile,stationResponse: StationResponse): Future[Resident] = {
+  override def saveResidentProfile(authResponse: AuthResponse, profile: Profile, stationResponse: StationResponse): Future[Resident] = {
     val resident: Resident = new Resident(0L, profile.id, authResponse.user_id, getCurrentTimeStamp(), authResponse.user_id, getCurrentTimeStamp(), stationResponse.id, getCurrentTimeStamp())
     residentDAO.create(resident)
 
   }
 
-  override def create(authResponse: AuthResponse, request: ResidentProfileRequest): Either[java.lang.Throwable, Future[ResidentProfileResponse]] = {
+  override def create(authResponse: AuthResponse, request: ProfileRequest): Either[java.lang.Throwable, Future[ResidentProfileResponse]] = {
 
     if (authResponse == null) Left(new Exception("Invalid Authentication"))
     else {
 
-      val resp: Either[java.lang.Throwable, Future[Option[StationResponse]]] = stationService.get(authResponse, request.stationid)
-      resp match {
-        case Left(exc) => Left(new Exception(exc.getMessage))
-        case Right(station) => {
+      request match {
+
+        case ResidentProfileRequest(surname, othername, profiletype, gender, stationid, joinDate) => {
 
 
+          val resp: Either[java.lang.Throwable, Future[Option[StationResponse]]] = stationService.get(authResponse, stationid)
+          resp match {
+            case Left(exc) => Left(new Exception(exc.getMessage))
+            case Right(station) => {
 
 
-          val record = for {
-            future1 <- profileDAO.create(request.surname,request.othername,request.gender,authResponse.user_id,None,"RESIDENT").recoverWith {
-              case exception: Throwable => Future.failed(new Exception(exception.getMessage))
+              val record = for {
+                future1 <- profileDAO.create(surname, othername, gender, authResponse.user_id, None, "RESIDENT").recoverWith {
+                  case exception: Throwable => Future.failed(new Exception(exception.getMessage))
+                }
+                _station_record <- for (record <- station) yield (record.get)
+
+                future2 <- saveResidentProfile(authResponse, future1, _station_record).recoverWith {
+                  case exception: Throwable => Future.failed(new Exception(exception.getMessage))
+                }
+
+              } yield (future1, future2)
+
+              Right(record.map(item => populateResidentialProfile(item._1, item._2)))
+
             }
-            _station_record <- for (record <- station) yield (record.get)
 
-            future2 <- saveResidentProfile(authResponse,future1,_station_record).recoverWith {
-              case exception: Throwable => Future.failed(new Exception(exception.getMessage))
-            }
-
-          } yield (future1, future2)
-
-          Right(record.map(item => populateResponse(item._1, item._2)))
-
+          }
         }
+
       }
 
     }
-
   }
 
   //todo: list the items
 
-    def list(authResponse: AuthResponse,offset:Int, limit:Int,station:Option[Long],query:Option[String]): Either[java.lang.Throwable,Future[Seq[ResidentProfileResponse]] ]= {
-    if(authResponse == null ) return  Left(new Exception("Invalid Authentication"))
-    val result:Future[Seq[(Resident,Profile)]]  =  residentDAO.list(Some(authResponse.user_id),station,offset,limit,query)
+  def list(authResponse: AuthResponse, offset: Int, limit: Int, station: Option[Long], query: Option[String]): Either[java.lang.Throwable, Future[Seq[ResidentProfileResponse]]] = {
+    if (authResponse == null) return Left(new Exception("Invalid Authentication"))
+    val result: Future[Seq[(Resident, Profile)]] = residentDAO.list(Some(authResponse.user_id), station, offset, limit, query)
 
 
-    Right{
-      result.map{
-        record=>  record.map(x=>populateResponse(x._2,x._1))
+    Right {
+      result.map {
+        record => record.map(x => populateResidentialProfile(x._2, x._1))
       }
     }
 
@@ -80,13 +84,13 @@ class ResidentialService @Inject()(
 
   //todo: dealingn with muultiple owners. owner_id...
   //todo: get item details
-  def get(authResponse: AuthResponse,id:Long): Either[java.lang.Throwable,Future[Option[ResidentProfileResponse]] ]= {
-    if(authResponse == null ) return  Left(new Exception("Invalid Authentication"))
-    val result:Future[Option[(Resident,Profile)]]  =  residentDAO.get(id)
+  def get(authResponse: AuthResponse, id: Long): Either[java.lang.Throwable, Future[Option[ResidentProfileResponse]]] = {
+    if (authResponse == null) return Left(new Exception("Invalid Authentication"))
+    val result: Future[Option[(Resident, Profile)]] = residentDAO.get(id)
 
-    Right{
-      result.map{
-        record=>  record.map(x=>populateResponse(x._2,x._1))
+    Right {
+      result.map {
+        record => record.map(x => populateResidentialProfile(x._2, x._1))
       }
     }
   }
@@ -94,10 +98,10 @@ class ResidentialService @Inject()(
 
   //todo: get items by station
 
-  override def populateResponse(profile: Profile, resident: Resident): ResidentProfileResponse =
+  def populateResidentialProfile(profile: Profile, resident: Resident): ResidentProfileResponse =
     ResidentProfileResponse(
       resident.id
-        ,populateResponse(profile)
+      , populateBasicProfile(profile)
       , resident.station_id.toInt
       , resident.join_date
       , resident.created_on.getTime
@@ -105,18 +109,16 @@ class ResidentialService @Inject()(
 
     )
 
-  def populateResponse(profile:Profile): GeneralProfileResponse ={
+  def populateBasicProfile(profile: Profile): GeneralProfileResponse = {
     GeneralProfileResponse(
       profile.id
-      ,profile.surname
+      , profile.surname
       , profile.other_names
       , profile.profile_type
       , profile.gender
 
     )
   }
-
-  override def populateResponse(entity: Resident): ResidentProfileResponse = ???
 
 
   //todo: invite them to create user credentials
