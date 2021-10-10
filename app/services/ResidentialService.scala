@@ -5,7 +5,7 @@ import java.sql.Timestamp
 import controllers.requests.ResidentProfileRequest
 import controllers.responses.{AuthResponse, GeneralProfileResponse, ProfileResponse, ResidentProfileResponse, StationResponse}
 import daos._
-import db.tables.{Profile, Resident}
+import db.tables.{Profile, Resident, Station}
 import helpers.Utilities.getCurrentTimeStamp
 import javax.inject.{Inject, Singleton}
 
@@ -22,8 +22,8 @@ class ResidentialService @Inject()(
                                   ) extends TResidentialService {
 
 
-  override def saveResidentProfile(profile: Profile): Future[Resident] = {
-    val resident: Resident = new Resident(0L, profile.id, 1, getCurrentTimeStamp(), 1, getCurrentTimeStamp(), 1, getCurrentTimeStamp())
+  override def saveResidentProfile(authResponse: AuthResponse, profile: Profile,stationResponse: StationResponse): Future[Resident] = {
+    val resident: Resident = new Resident(0L, profile.id, authResponse.user_id, getCurrentTimeStamp(), authResponse.user_id, getCurrentTimeStamp(), stationResponse.id, getCurrentTimeStamp())
     residentDAO.create(resident)
 
   }
@@ -38,9 +38,6 @@ class ResidentialService @Inject()(
         case Left(exc) => Left(new Exception(exc.getMessage))
         case Right(station) => {
 
-          val stationId: Future[Long] = for {
-            record <- station.map(y => y.get)
-          } yield (record.id)
 
 
 
@@ -48,9 +45,9 @@ class ResidentialService @Inject()(
             future1 <- profileDAO.create(request.surname,request.othername,request.gender,authResponse.user_id,None,"RESIDENT").recoverWith {
               case exception: Throwable => Future.failed(new Exception(exception.getMessage))
             }
+            _station_record <- for (record <- station) yield (record.get)
 
-            //todoo: let me see this.
-            future2 <- saveResidentProfile(future1).recoverWith {
+            future2 <- saveResidentProfile(authResponse,future1,_station_record).recoverWith {
               case exception: Throwable => Future.failed(new Exception(exception.getMessage))
             }
 
@@ -70,6 +67,7 @@ class ResidentialService @Inject()(
     def list(authResponse: AuthResponse,offset:Int, limit:Int,station:Option[Long],query:Option[String]): Either[java.lang.Throwable,Future[Seq[ResidentProfileResponse]] ]= {
     if(authResponse == null ) return  Left(new Exception("Invalid Authentication"))
     val result:Future[Seq[(Resident,Profile)]]  =  residentDAO.list(Some(authResponse.user_id),station,offset,limit,query)
+
 
     Right{
       result.map{

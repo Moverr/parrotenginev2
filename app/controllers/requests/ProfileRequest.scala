@@ -5,12 +5,7 @@ import org.joda.time.DateTime
 
 //sealed trait  ProfileReq
 
-sealed trait ProfileRequest{
-  def  surname:String
-  def  othername:String
-  def  profiletype:ProfileType
-  def  gender:String
-}
+sealed trait ProfileRequest
 //,user_id:Option[Long]
 case class BasicProfileRequest(surname:String,othername:String,profiletype: ProfileType,gender:String  ) extends  ProfileRequest
 
@@ -19,6 +14,6 @@ case class BasicProfileRequest(surname:String,othername:String,profiletype: Prof
 case class ResidentProfileRequest(surname:String,othername:String,profiletype: ProfileType,gender:String,stationid:Int,joinDate:DateTime  ) extends  ProfileRequest
 //Guest
 //,user_id:Option[Long]
-case class GuestProfileRequest(surname:String,othername:String,profiletype: ProfileType,gender:String,registerDate:DateTime) extends  ProfileRequest
+case class GuestProfileRequest(surname:String,othername:String,profiletype: ProfileType,gender:String,registerDate:DateTime,location: PhysicalAddress) extends  ProfileRequest
 
 
