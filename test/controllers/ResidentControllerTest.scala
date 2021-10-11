@@ -91,7 +91,7 @@ class ResidentControllerTest extends PlaySpec {
 
       status(response) mustBe  OK
       val expectedResult:ResidentProfileResponse = fromJson[ResidentProfileResponse](bodyText)
-      expectedResult.surname mustBe  "surname"
+      expectedResult.profile.surname mustBe  "surname"
 
 
 
