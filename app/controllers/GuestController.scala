@@ -36,8 +36,6 @@ class GuestController @Inject()(
     val profileRequest = GuestProfileRequest(surname, otherName, ProfileType.withName(profileType), gender,registratioon_date_long, address_location)
 
 
-
-
     ???
 
   }
