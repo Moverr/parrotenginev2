@@ -13,11 +13,9 @@ class GuestController @Inject()(
                                  )  extends  AbstractController(controllerComponents) {
 
   //todo: create visiotr regirstration profile
-  def create = Action.async { implicit request =>
+  def selfregister = Action.async { implicit request =>
 
-    val authorization: String = request.headers.get("authentication").getOrElse("")
-    val authResponse: AuthResponse = authService.validateTokenv2(authorization)
-
+    
     val surname: String = request.body.asJson.get("surname").as[String]
     val otherName: String = request.body.asJson.get("otherName").as[String]
     val profileType: String = request.body.asJson.get("profiletype").as[String]
