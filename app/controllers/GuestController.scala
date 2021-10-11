@@ -22,7 +22,7 @@ class GuestController @Inject()(
     val gender: String = request.body.asJson.get("gender").as[String]
 //    val stationid: Int = request.body.asJson.get("stationid").as[String].trim.toInt
 
-    val registratioon_date_long: Long = request.body.asJson.get("registrattion_date").as[Long]
+    val registratioon_date_long: Long = request.body.asJson.get("registration_date").as[Long]
     val location:String =  request.body.asJson.get("location").as[String]
     //host information
     val host_id =  request.body.asJson.get("host_id").as[Long]
