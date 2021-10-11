@@ -25,6 +25,7 @@ class GuestService  @Inject()(
       case GuestProfileRequest(surname, othername, profiletype, gender, host_id, registerDate, location) =>{
         //todo: check if host exists
         val result: Future[Option[(Resident, Profile)]] = residentDAO.get(host_id)
+        //todo: check if there exists a profile of the guest. as in the gueust has ever been there before.
 
         ???
       }
