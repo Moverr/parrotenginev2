@@ -12,7 +12,7 @@ import scala.concurrent.Future
 
 
 @Singleton
-class ResidentialService @Inject()(
+class ResidentService @Inject()(
                                     residentDAO: ResidentProfileDAO
                                     , profileDAO: ProfileDAO
                                     , stationService: StationService

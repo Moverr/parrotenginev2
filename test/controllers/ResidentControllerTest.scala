@@ -21,7 +21,7 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.test.Helpers.{contentAsString, status}
 import play.api.test.{FakeRequest, Helpers}
-import services.{AuthService, ResidentialService, StationService}
+import services.{AuthService, ResidentService, StationService}
 
 import scala.concurrent.{ExecutionContext, Future}
 import play.api.test.Helpers._
@@ -59,7 +59,7 @@ class ResidentControllerTest extends PlaySpec {
   val authService:AuthService =  Mockito.mock(classOf[AuthService])
   val stationService:StationService =  Mockito.mock(classOf[StationService])
 
-  val residentService:ResidentialService =   new ResidentialService(residentDAO,profileDao,stationService)
+  val residentService:ResidentService =   new ResidentService(residentDAO,profileDao,stationService)
   val token:String = "token"
 
   val controller   = new ResidentController(Helpers.stubControllerComponents(),authService,residentService)

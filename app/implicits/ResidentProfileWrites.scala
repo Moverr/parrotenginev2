@@ -11,6 +11,9 @@ import GeneralProfileWrites._
 
 object ResidentProfileWrites {
 
+
+
+
   implicit val organizationResponseWrites: Writes[ResidentProfileResponse] = (
     (JsPath \ "id").write[Long] and
     (JsPath \ "profile").write[GeneralProfileResponse] and

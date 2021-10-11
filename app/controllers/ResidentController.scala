@@ -8,7 +8,7 @@ import javax.inject.{Inject, Singleton}
 import org.joda.time.DateTime
 import play.api.libs.json.Json
 import play.api.mvc.{AbstractController, _}
-import services.{AuthService, ResidentialService}
+import services.{AuthService, ResidentService}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -18,7 +18,7 @@ import scala.concurrent.Future
 class ResidentController @Inject()(
                                     val cc: ControllerComponents
                                     , val authService: AuthService
-                                    , val residentialService: ResidentialService
+                                    , val residentialService: ResidentService
                                   ) extends AbstractController(cc) {
 
   def profileType = "Resident";
