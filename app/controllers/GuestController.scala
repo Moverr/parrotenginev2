@@ -1,6 +1,6 @@
 package controllers
 
-import controllers.requests.{GuestProfileRequest, PhysicalAddress, ProfileType, ResidentProfileRequest}
+import controllers.requests.{GuestProfileRequest, PhysicalAddress, ProfileRequest, ProfileType, ResidentProfileRequest}
 import controllers.responses.AuthResponse
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{AbstractController, ControllerComponents}
@@ -26,14 +26,19 @@ class GuestController @Inject()(
 
     val registratioon_date_long: Long = request.body.asJson.get("registrattion_date").as[Long]
     val location:String =  request.body.asJson.get("location").as[String]
+    //host information
+    val host_id =  request.body.asJson.get("host_id").as[Long]
+
 
     val latitude:Double =  request.body.asJson.get("location").as[Double]
     val longitude:Double =  request.body.asJson.get("location").as[Double]
 
     val address_location = PhysicalAddress(location,"LOCATION",Some(latitude),Some(longitude))
 
+
+
     //todo: guest profile reequest
-    val profileRequest = GuestProfileRequest(surname, otherName, ProfileType.withName(profileType), gender,registratioon_date_long, address_location)
+    val guestRequest:ProfileRequest = GuestProfileRequest(surname, otherName, ProfileType.withName(profileType), gender,host_id,registratioon_date_long, address_location)
 
 
     ???
