@@ -58,6 +58,7 @@ class ResidentialService @Inject()(
 
             }
 
+            case _ => Left(new Exception("Invalid request"))
           }
         }
 
