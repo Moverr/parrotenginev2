@@ -2,7 +2,7 @@ package services
 
 import controllers.requests.{BasicProfileRequest, GuestProfileRequest, ProfileRequest, ResidentProfileRequest}
 import controllers.responses.ProfileResponse
-import daos.{ProfileDAO, ResidentProfileDAO}
+import daos.{GuestDAO, ProfileDAO, ResidentProfileDAO}
 import db.tables.{Profile, Resident}
 import javax.inject.{Inject, Singleton}
 
@@ -12,6 +12,7 @@ import scala.concurrent.Future
 class GuestService  @Inject()(
                                residentDAO: ResidentProfileDAO
                                       , profileDAO: ProfileDAO
+                                      ,guestDAO: GuestDAO
                                       , stationService: StationService
 
                                     ) {
@@ -25,7 +26,11 @@ class GuestService  @Inject()(
       case GuestProfileRequest(surname, othername, profiletype, gender, host_id, registerDate, location) =>{
         //todo: check if host exists
         val result: Future[Option[(Resident, Profile)]] = residentDAO.get(host_id)
-        //todo: check if there exists a profile of the guest. as in the gueust has ever been there before.
+        //todo: check to see that username and othernames are mandatory
+        if(surname.isEmpty && othername.isEmpty) Left(throw new Exception("Names are mandatory "))
+        else{
+          //todo: check if there exists a profile of the guest. as in the gueust has ever been there before.
+        }
 
         ???
       }
