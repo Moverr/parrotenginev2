@@ -4,12 +4,13 @@ import controllers.requests.{GuestProfileRequest, PhysicalAddress, ProfileReques
 import controllers.responses.AuthResponse
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{AbstractController, ControllerComponents}
-import services.AuthService
+import services.{AuthService, GuestService}
 
 @Singleton
 class GuestController @Inject()(
                                    controllerComponents: ControllerComponents
                                    , val authService: AuthService
+                               ,val guestService: GuestService
                                  )  extends  AbstractController(controllerComponents) {
 
   //todo: create visiotr regirstration profile
