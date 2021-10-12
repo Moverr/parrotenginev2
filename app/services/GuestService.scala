@@ -3,10 +3,12 @@ package services
 import controllers.requests.{BasicProfileRequest, GuestProfileRequest, ProfileRequest, ResidentProfileRequest}
 import controllers.responses.ProfileResponse
 import daos.{GuestDAO, ProfileDAO, ResidentProfileDAO}
-import db.tables.{Profile, Resident}
+import db.tables.{Guest, Profile, Resident}
 import javax.inject.{Inject, Singleton}
 
 import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
+
 
 @Singleton
 class GuestService  @Inject()(
@@ -15,7 +17,7 @@ class GuestService  @Inject()(
                                       ,guestDAO: GuestDAO
                                       , stationService: StationService
 
-                                    ) {
+                             ) {
 
   //todo create
   //list guests on a given statioon or visitor on a given day
@@ -30,7 +32,18 @@ class GuestService  @Inject()(
         if(surname.isEmpty && othername.isEmpty) Left(throw new Exception("Names are mandatory "))
         else{
           //todo: check if there exists a profile of the guest. as in the gueust has ever been there before.
-        }
+         val response =  guestDAO.getByProfileName(Some(surname),Some(othername))
+           for{
+             re <- {
+
+           }
+              val recordresponse =  for {
+                  response:Option[(Guest,Profile)] <- response.map(record=>record)
+           } yield (response.map(x=>(x._1,x._2)))
+
+
+        } yield re
+
 
         ???
       }
