@@ -20,10 +20,12 @@ class GuestDAO  @Inject()(dbConfigProvider: DatabaseConfigProvider) {
   val profileTable = TableQuery[ProfileTable]
 
   import dbConfig._
-  def getByProfileName(firstname: Option[String], lastname: Option[String]): Future[Seq[(Guest, Profile)]] = {
+
+  //todoo: Just get one existing profile of a guest in the database .
+  def getByProfileName(firstname: Option[String], lastname: Option[String]): Future[Option[(Guest, Profile)]] = {
 
     val records = for {
-      (resident, profile) <- {
+      (guest, profile) <- {
         val record = guestTable join profileTable on (_.profile_id === _.id)
 
 
@@ -44,10 +46,10 @@ class GuestDAO  @Inject()(dbConfigProvider: DatabaseConfigProvider) {
       }
 
     }
-      yield (resident, profile)
+      yield (guest, profile)
 
 
-    db.run(records.result)
+    db.run(records.result.headOption)
   }
 
 
