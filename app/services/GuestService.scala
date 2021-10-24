@@ -32,17 +32,12 @@ class GuestService @Inject()(
         if (surname.isEmpty && othername.isEmpty) Left(throw new Exception("Names are mandatory "))
         else {
           //todo: check if there exists a profile of the guest. as in the gueust has ever been there before.
-          val response = guestDAO.getByProfileName(Some(surname), Some(othername))
-          for {
-            re <- {
-
-            }
-            val recordresponse = for {
-              response: Option[(Guest, Profile)] <- response.map(record => record)
-            } yield (response.map(x => (x._1, x._2)))
+          val res =    for{
+            x <- guestDAO.getByProfileName(Some(surname), Some(othername)).map(x=>x.get)
+          }yield (x)
 
 
-          } yield re
+
 
 
           ???
