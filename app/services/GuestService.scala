@@ -5,9 +5,12 @@ import controllers.responses.ProfileResponse
 import daos.{GuestDAO, ProfileDAO, ResidentProfileDAO}
 import db.tables.{Guest, Profile, Resident}
 import javax.inject.{Inject, Singleton}
+import play.api.mvc.Results
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, Future}
+import scala.concurrent.impl.Promise
 
 
 @Singleton
@@ -21,30 +24,41 @@ class GuestService @Inject()(
 
   //todo create
   //list guests on a given statioon or visitor on a given day
-
+  def CreateGuestProfile(request: GuestProfileRequest): Future[Profile] = {
+    ???
+  }
   //todo: create
-  def create(request: ProfileRequest): Either[Throwable, ProfileResponse] = {
+  def CreateInvitation(request: ProfileRequest): Either[Throwable, ProfileResponse] = {
     request match {
       case GuestProfileRequest(surname, othername, profiletype, gender, host_id, registerDate, location) => {
-        //todo: check if host exists
-        val result: Future[Option[(Resident, Profile)]] = residentDAO.get(host_id)
-        //todo: check to see that username and othernames are mandatory
-        if (surname.isEmpty && othername.isEmpty) Left(throw new Exception("Names are mandatory "))
-        else {
-          //todo: check if there exists a profile of the guest. as in the gueust has ever been there before.
-          val res =    for{
-            x <- guestDAO.getByProfileName(Some(surname), Some(othername)).map(x=>x.get)
-          }yield (x)
+        //todo: check if host exists ?? jump this
 
 
 
+       val response:Option[(Guest, Profile)] =  Await.result( guestDAO.getByProfileName(Some(surname),Some(othername)),Duration.Inf)
+
+        //todo: create a  profile if does not exist.
+        // else continue.
+
+      response match {
+        case Some(value:(Guest,Profile)) => {
+          val profile_id =   value._2.id
+          val guest_id = value._1.id
+          //todo: create profile
+
+        }    // todo  call the other guy and continue
+        case None =>     // continue
+      }
 
 
-          ???
+
+        if(response.isEmpty){
+          //todo: create the profile ..
         }
       }
-      case _ => Left(new Exception("Something went wrong"))
-    }
+        ???
+      }
+
     //1: u dont need authorization
     //2: check to see that the host id exists
     //3: check to see that profile for guest exists.
@@ -52,6 +66,7 @@ class GuestService @Inject()(
     //5: register vistor in the book register
     //6: assigng registration external_id
   }
+
 
 
   def populateResponse(): ProfileResponse = {
