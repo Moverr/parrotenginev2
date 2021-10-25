@@ -28,7 +28,7 @@ class GuestService @Inject()(
 
   //todo create
   //list guests on a given statioon or visitor on a given day
-  def CreateGuestProfile(request: GuestProfileRequest): Future[(Profile,Guest)] = {
+  def CreateGuestProfile(request: GuestProfileRequest): Future[(Guest,Profile)] = {
     val record = for {
       future1:Future[Profile] <- profileDAO.create(request.surname, request.othername, request.gender, 0L, None, "RESIDENT").recoverWith {
         case exception: Throwable => Future.failed(new Exception(exception.getMessage))
@@ -42,17 +42,13 @@ class GuestService @Inject()(
       }
 
 
-    } yield (future1,future2)
+    } yield (future2,future1)
 
     record
   }
 
-  def createInvitation(visitation: Visitation): Unit ={
+  def createVisitation(visitation: Visitation): Future[Visitation] =  visitationDAO.create(visitation)
 
-
-    //visitationDAO
-    ???
-  }
   //todo: create
   def Inviation(request: ProfileRequest): Either[Throwable, ProfileResponse] = {
     request match {
@@ -68,21 +64,29 @@ class GuestService @Inject()(
 
       response match {
         case Some(value:(Guest,Profile)) => {
-          val profile_id =   value._2.id
-          val guest_id = value._1.id
           //todo: create profile
+          val visitation = Visitation(0L,value._1.id,host_id,Some(getCurrentTimeStamp()),None,None,None,Some("pending"))
+          val response = createVisitation(visitation)
 
+          ???
         }    // todo  call the other guy and continue
-        case None =>     // continue
-      }
+        case None =>  {
 
+      val response =    for {
+           resp <-CreateGuestProfile(GuestProfileRequest(surname, othername, profiletype, gender, host_id, registerDate, location) )
+           visitation = Visitation(0L,resp._1.id,host_id,Some(getCurrentTimeStamp()),None,None,None,Some("pending"))
+           result = createVisitation(visitation)
+         }yield (result)
 
-
-        if(response.isEmpty){
-          //todo: create the profile ..
         }
+
+          ???
       }
-        ???
+
+
+
+      }
+
       }
 
     //1: u dont need authorization
