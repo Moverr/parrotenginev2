@@ -1,19 +1,15 @@
 package services
 
-import java.sql.Timestamp
-
 import controllers.requests.{GuestProfileRequest, ProfileRequest}
-import controllers.responses.{GuestInvitationResponse, ProfileResponse}
+import controllers.responses.GuestInvitationResponse
 import daos.{GuestDAO, ProfileDAO, ResidentProfileDAO, VisitationDAO}
-import db.tables.{Guest, Profile, Resident, Visitation}
+import db.tables.{Guest, Profile, Visitation}
 import helpers.Utilities.getCurrentTimeStamp
 import javax.inject.{Inject, Singleton}
-import play.api.mvc.Results
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
-import scala.concurrent.impl.Promise
 
 
 @Singleton
@@ -22,48 +18,48 @@ class GuestService @Inject()(
                               , profileDAO: ProfileDAO
                               , guestDAO: GuestDAO
                               , stationService: StationService
-                              ,visitationDAO: VisitationDAO
+                              , visitationDAO: VisitationDAO
 
                             ) {
 
   //todo: create
-  def Inviation(request: ProfileRequest): Either[Throwable, GuestInvitationResponse] = {
+  def Inviation(request: ProfileRequest): Either[Throwable, Future[GuestInvitationResponse]] = {
     request match {
       case GuestProfileRequest(surname, othername, profiletype, gender, host_id, registerDate, location) => {
         //todo: check if host exists ?? jump this
 
 
-
-        val response:Option[(Guest, Profile)] =  Await.result( guestDAO.getByProfileName(Some(surname),Some(othername)),Duration.Inf)
+        val response: Option[(Guest, Profile)] = Await.result(guestDAO.getByProfileName(Some(surname), Some(othername)), Duration.Inf)
 
         //todo: create a  profile if does not exist.
         // else continue.
 
         response match {
-          case Some(value:(Guest,Profile)) => {
+          case Some(value: (Guest, Profile)) => {
             //todo: create profile
-            val visitation = Visitation(0L,value._1.id,host_id,Some(getCurrentTimeStamp()),None,None,None,Some("pending"))
-            for {
-              response <- createVisitation(visitation)
+            val visitation = Visitation(0L, value._1.id, host_id, Some(getCurrentTimeStamp()), None, None, None, Some("pending"))
+            val record = for {
+              response <- createVisitation(visitation).map(x => populateResponse(x))
 
 
             } yield (response)
 
-            Right( populateResponse(???))
-          }    // todo  call the other guy and continue
-          case None =>  {
+            Right(record)
+          } // todo  call the other guy and continue
+          case None => {
 
-            val result =    for {
-              resp <-CreateGuestProfile(GuestProfileRequest(surname, othername, profiletype, gender, host_id, registerDate, location) )
-              visitation = Visitation(0L,resp._1.id,host_id,Some(getCurrentTimeStamp()),None,None,None,Some("pending"))
-              result = createVisitation(visitation)
-            }yield (result)
-            Right( populateResponse(???))
+            val response = for {
+              resp <- CreateGuestProfile(GuestProfileRequest(surname, othername, profiletype, gender, host_id, registerDate, location))
+              visitation = Visitation(0L, resp._1.id, host_id, Some(getCurrentTimeStamp()), None, None, None, Some("pending"))
+              result <- createVisitation(visitation).map(x => populateResponse(x))
+
+            } yield (result)
+
+            Right(response)
           }
 
 
         }
-
 
 
       }
@@ -80,26 +76,26 @@ class GuestService @Inject()(
 
   //todo create
   //list guests on a given statioon or visitor on a given day
-  def CreateGuestProfile(request: GuestProfileRequest): Future[(Guest,Profile)] = {
+  def CreateGuestProfile(request: GuestProfileRequest): Future[(Guest, Profile)] = {
     val record = for {
-      future1:Future[Profile] <- profileDAO.create(request.surname, request.othername, request.gender, 0L, None, "RESIDENT").recoverWith {
+      future1: Future[Profile] <- profileDAO.create(request.surname, request.othername, request.gender, 0L, None, "RESIDENT").recoverWith {
         case exception: Throwable => Future.failed(new Exception(exception.getMessage))
       }
 
-      future2:Future[Guest] <- {
-        val guest:Guest =   Guest(0L,future1.id,None,getCurrentTimeStamp(),None,getCurrentTimeStamp())
+      future2: Future[Guest] <- {
+        val guest: Guest = Guest(0L, future1.id, None, getCurrentTimeStamp(), None, getCurrentTimeStamp())
         guestDAO.create(guest).recoverWith {
           case exception: Throwable => Future.failed(new Exception(exception.getMessage))
         }
       }
 
 
-    } yield (future2,future1)
+    } yield (future2, future1)
 
     record
   }
 
-  def createVisitation(visitation: Visitation): Future[Visitation] =  visitationDAO.create(visitation)
+  def createVisitation(visitation: Visitation): Future[Visitation] = visitationDAO.create(visitation)
 
   def populateResponse(visitation: Visitation): GuestInvitationResponse = {
     //GuestResponse
