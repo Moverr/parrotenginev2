@@ -22,9 +22,61 @@ class GuestService @Inject()(
                               , profileDAO: ProfileDAO
                               , guestDAO: GuestDAO
                               , stationService: StationService
-                            ,visitationDAO: VisitationDAO
+                              ,visitationDAO: VisitationDAO
 
                             ) {
+
+  //todo: create
+  def Inviation(request: ProfileRequest): Either[Throwable, GuestInvitationResponse] = {
+    request match {
+      case GuestProfileRequest(surname, othername, profiletype, gender, host_id, registerDate, location) => {
+        //todo: check if host exists ?? jump this
+
+
+
+        val response:Option[(Guest, Profile)] =  Await.result( guestDAO.getByProfileName(Some(surname),Some(othername)),Duration.Inf)
+
+        //todo: create a  profile if does not exist.
+        // else continue.
+
+        response match {
+          case Some(value:(Guest,Profile)) => {
+            //todo: create profile
+            val visitation = Visitation(0L,value._1.id,host_id,Some(getCurrentTimeStamp()),None,None,None,Some("pending"))
+            for {
+              response <- createVisitation(visitation)
+
+
+            } yield (response)
+
+            Right( populateResponse(???))
+          }    // todo  call the other guy and continue
+          case None =>  {
+
+            val result =    for {
+              resp <-CreateGuestProfile(GuestProfileRequest(surname, othername, profiletype, gender, host_id, registerDate, location) )
+              visitation = Visitation(0L,resp._1.id,host_id,Some(getCurrentTimeStamp()),None,None,None,Some("pending"))
+              result = createVisitation(visitation)
+            }yield (result)
+            Right( populateResponse(???))
+          }
+
+
+        }
+
+
+
+      }
+
+    }
+
+    //1: u dont need authorization
+    //2: check to see that the host id exists
+    //3: check to see that profile for guest exists.
+    //4: create profile if not exists
+    //5: register vistor in the book register
+    //6: assigng registration external_id
+  }
 
   //todo create
   //list guests on a given statioon or visitor on a given day
@@ -48,60 +100,6 @@ class GuestService @Inject()(
   }
 
   def createVisitation(visitation: Visitation): Future[Visitation] =  visitationDAO.create(visitation)
-
-  //todo: create
-  def Inviation(request: ProfileRequest): Either[Throwable, GuestInvitationResponse] = {
-    request match {
-      case GuestProfileRequest(surname, othername, profiletype, gender, host_id, registerDate, location) => {
-        //todo: check if host exists ?? jump this
-
-
-
-       val response:Option[(Guest, Profile)] =  Await.result( guestDAO.getByProfileName(Some(surname),Some(othername)),Duration.Inf)
-
-        //todo: create a  profile if does not exist.
-        // else continue.
-
-      response match {
-        case Some(value:(Guest,Profile)) => {
-          //todo: create profile
-          val visitation = Visitation(0L,value._1.id,host_id,Some(getCurrentTimeStamp()),None,None,None,Some("pending"))
-        for {
-              response <- createVisitation(visitation)
-
-
-             } yield (response)
-
-          Right( populateResponse(???))
-        }    // todo  call the other guy and continue
-        case None =>  {
-
-      val result =    for {
-           resp <-CreateGuestProfile(GuestProfileRequest(surname, othername, profiletype, gender, host_id, registerDate, location) )
-           visitation = Visitation(0L,resp._1.id,host_id,Some(getCurrentTimeStamp()),None,None,None,Some("pending"))
-           result = createVisitation(visitation)
-         }yield (result)
-          Right( populateResponse(???))
-        }
-
-
-      }
-
-
-
-      }
-
-      }
-
-    //1: u dont need authorization
-    //2: check to see that the host id exists
-    //3: check to see that profile for guest exists.
-    //4: create profile if not exists
-    //5: register vistor in the book register
-    //6: assigng registration external_id
-  }
-
-
 
   def populateResponse(visitation: Visitation): GuestInvitationResponse = {
     //GuestResponse
