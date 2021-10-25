@@ -23,7 +23,7 @@ class GuestService @Inject()(
                             ) {
 
   //todo: create
-  def Inviation(request: ProfileRequest): Either[Throwable, Future[GuestInvitationResponse]] = {
+  def Invitation(request: ProfileRequest): Either[Throwable, Future[GuestInvitationResponse]] = {
     request match {
       case GuestProfileRequest(surname, othername, profiletype, gender, host_id, registerDate, location) => {
         //todo: check if host exists ?? jump this
@@ -39,7 +39,7 @@ class GuestService @Inject()(
             //todo: create profile
             val visitation = Visitation(0L, value._1.id, host_id, Some(getCurrentTimeStamp()), None, None, None, Some("pending"))
             val record = for {
-              response <- createVisitation(visitation).map(x => populateResponse(x))
+              response <- createVisitation(visitation).map(x => populateResponse(value._2,value._1,x))
 
 
             } yield (response)
@@ -51,7 +51,7 @@ class GuestService @Inject()(
             val response = for {
               resp <- CreateGuestProfile(GuestProfileRequest(surname, othername, profiletype, gender, host_id, registerDate, location))
               visitation = Visitation(0L, resp._1.id, host_id, Some(getCurrentTimeStamp()), None, None, None, Some("pending"))
-              result <- createVisitation(visitation).map(x => populateResponse(x))
+              result <- createVisitation(visitation).map(x => populateResponse(resp._2,resp._1,x))
 
             } yield (result)
 
@@ -97,7 +97,7 @@ class GuestService @Inject()(
 
   def createVisitation(visitation: Visitation): Future[Visitation] = visitationDAO.create(visitation)
 
-  def populateResponse(visitation: Visitation): GuestInvitationResponse = {
+  def populateResponse(profile: Profile, guest: Guest,visitation: Visitation): GuestInvitationResponse = {
     //GuestResponse
     ???
   }
