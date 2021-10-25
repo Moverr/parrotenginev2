@@ -34,7 +34,7 @@ class GuestService @Inject()(
       }
 
       future2:Future[Guest] <- {
-        val guest:Guest = new Guest(0L,future1.id,None,getCurrentTimeStamp(),None,getCurrentTimeStamp())
+        val guest:Guest =   Guest(0L,future1.id,None,getCurrentTimeStamp(),None,getCurrentTimeStamp())
         guestDAO.create(guest).recoverWith {
           case exception: Throwable => Future.failed(new Exception(exception.getMessage))
         }
@@ -45,8 +45,10 @@ class GuestService @Inject()(
 
     record
   }
+
+  def createInviation(guest: Guest,guestInvi)
   //todo: create
-  def CreateInvitation(request: ProfileRequest): Either[Throwable, ProfileResponse] = {
+  def Inviation(request: ProfileRequest): Either[Throwable, ProfileResponse] = {
     request match {
       case GuestProfileRequest(surname, othername, profiletype, gender, host_id, registerDate, location) => {
         //todo: check if host exists ?? jump this
