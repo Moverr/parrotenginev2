@@ -1,9 +1,12 @@
 package services
 
+import java.sql.Timestamp
+
 import controllers.requests.{GuestProfileRequest, ProfileRequest}
 import controllers.responses.ProfileResponse
 import daos.{GuestDAO, ProfileDAO, ResidentProfileDAO}
 import db.tables.{Guest, Profile, Resident}
+import helpers.Utilities.getCurrentTimeStamp
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.Results
 
@@ -24,20 +27,23 @@ class GuestService @Inject()(
 
   //todo create
   //list guests on a given statioon or visitor on a given day
-  def CreateGuestProfile(request: GuestProfileRequest): Future[Profile] = {
+  def CreateGuestProfile(request: GuestProfileRequest): Future[(Profile,Guest)] = {
     val record = for {
-      future1 <- profileDAO.create(request.surname, request.othername, request.gender, 0L, None, "RESIDENT").recoverWith {
+      future1:Future[Profile] <- profileDAO.create(request.surname, request.othername, request.gender, 0L, None, "RESIDENT").recoverWith {
         case exception: Throwable => Future.failed(new Exception(exception.getMessage))
       }
 
-      future2 <- {
-        guestDAO.create(resident)
+      future2:Future[Guest] <- {
+        val guest:Guest = new Guest(0L,future1.id,None,getCurrentTimeStamp(),None,getCurrentTimeStamp())
+        guestDAO.create(guest).recoverWith {
+          case exception: Throwable => Future.failed(new Exception(exception.getMessage))
+        }
       }
 
 
-    }
+    } yield (future1,future2)
 
-    ???
+    record
   }
   //todo: create
   def CreateInvitation(request: ProfileRequest): Either[Throwable, ProfileResponse] = {
