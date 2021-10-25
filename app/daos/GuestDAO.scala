@@ -62,6 +62,7 @@ class GuestDAO  @Inject()(dbConfigProvider: DatabaseConfigProvider) {
   }
 
 
+  def create(request: Guest) =   db.run(guestTable.returning(guestTable) += request)
 
 
 }
