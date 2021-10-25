@@ -4,8 +4,8 @@ import java.sql.Timestamp
 
 import controllers.requests.{GuestProfileRequest, ProfileRequest}
 import controllers.responses.ProfileResponse
-import daos.{GuestDAO, ProfileDAO, ResidentProfileDAO}
-import db.tables.{Guest, Profile, Resident}
+import daos.{GuestDAO, ProfileDAO, ResidentProfileDAO, VisitationDAO}
+import db.tables.{Guest, Profile, Resident, Visitation}
 import helpers.Utilities.getCurrentTimeStamp
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.Results
@@ -22,6 +22,7 @@ class GuestService @Inject()(
                               , profileDAO: ProfileDAO
                               , guestDAO: GuestDAO
                               , stationService: StationService
+                            ,visitationDAO: VisitationDAO
 
                             ) {
 
@@ -46,7 +47,12 @@ class GuestService @Inject()(
     record
   }
 
-  def createInviation(guest: Guest,guestInvi)
+  def createInvitation(visitation: Visitation): Unit ={
+
+
+    //visitationDAO
+    ???
+  }
   //todo: create
   def Inviation(request: ProfileRequest): Either[Throwable, ProfileResponse] = {
     request match {

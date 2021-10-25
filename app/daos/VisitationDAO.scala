@@ -23,7 +23,7 @@ class VisitationDAO @Inject()(dbConfigProvider: DatabaseConfigProvider) {
 
   def create(request: Visitation) =   db.run(visitationTable.returning(visitationTable) += request)
 
-  //todo; get visitation on a given host.. day etc. 
+  //todo; get visitation on a given host.. day etc.
 
 
 }
