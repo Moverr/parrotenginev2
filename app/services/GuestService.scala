@@ -3,7 +3,7 @@ package services
 import java.sql.Timestamp
 
 import controllers.requests.{GuestProfileRequest, ProfileRequest}
-import controllers.responses.ProfileResponse
+import controllers.responses.{GuestInvitationResponse, ProfileResponse}
 import daos.{GuestDAO, ProfileDAO, ResidentProfileDAO, VisitationDAO}
 import db.tables.{Guest, Profile, Resident, Visitation}
 import helpers.Utilities.getCurrentTimeStamp
@@ -50,7 +50,7 @@ class GuestService @Inject()(
   def createVisitation(visitation: Visitation): Future[Visitation] =  visitationDAO.create(visitation)
 
   //todo: create
-  def Inviation(request: ProfileRequest): Either[Throwable, ProfileResponse] = {
+  def Inviation(request: ProfileRequest): Either[Throwable, GuestInvitationResponse] = {
     request match {
       case GuestProfileRequest(surname, othername, profiletype, gender, host_id, registerDate, location) => {
         //todo: check if host exists ?? jump this
@@ -66,21 +66,25 @@ class GuestService @Inject()(
         case Some(value:(Guest,Profile)) => {
           //todo: create profile
           val visitation = Visitation(0L,value._1.id,host_id,Some(getCurrentTimeStamp()),None,None,None,Some("pending"))
-          val response = createVisitation(visitation)
+        for {
+              response <- createVisitation(visitation)
 
-          ???
+
+             } yield (response)
+
+          Right( populateResponse(???))
         }    // todo  call the other guy and continue
         case None =>  {
 
-      val response =    for {
+      val result =    for {
            resp <-CreateGuestProfile(GuestProfileRequest(surname, othername, profiletype, gender, host_id, registerDate, location) )
            visitation = Visitation(0L,resp._1.id,host_id,Some(getCurrentTimeStamp()),None,None,None,Some("pending"))
            result = createVisitation(visitation)
          }yield (result)
-
+          Right( populateResponse(???))
         }
 
-          ???
+
       }
 
 
@@ -99,7 +103,7 @@ class GuestService @Inject()(
 
 
 
-  def populateResponse(): ProfileResponse = {
+  def populateResponse(visitation: Visitation): GuestInvitationResponse = {
     //GuestResponse
     ???
   }
