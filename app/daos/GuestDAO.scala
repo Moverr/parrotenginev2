@@ -22,6 +22,15 @@ class GuestDAO  @Inject()(dbConfigProvider: DatabaseConfigProvider) {
   import dbConfig._
 
   //todoo: Just get one existing profile of a guest in the database .
+  /**
+   *   *
+   * @param firstname
+   * @param lastname
+   * @return
+   * @FutureIMpl: make sure you are able filter both firstname and lastname, since they might be interchanged at entrace.
+   */
+
+
   def getByProfileName(firstname: Option[String], lastname: Option[String]): Future[Option[(Guest, Profile)]] = {
 
     val records = for {
@@ -53,6 +62,7 @@ class GuestDAO  @Inject()(dbConfigProvider: DatabaseConfigProvider) {
   }
 
 
+  def create(request: Guest) =   db.run(guestTable.returning(guestTable) += request)
 
 
 }

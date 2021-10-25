@@ -33,13 +33,16 @@ libraryDependencies ++= Seq(
   "org.scalatestplus" %% "mockito-3-4" % "3.2.2.0" % "test",
 
   //Adding JWT TOkens
-  "com.nimbusds" % "nimbus-jose-jwt" % "8.20.2"
+  "com.nimbusds" % "nimbus-jose-jwt" % "8.20.2",
 
+  // Adding akka actors
+ "com.typesafe.akka" %% "akka-actor" % "2.6.3"
 
 )
 enablePlugins(UniversalPlugin)
 enablePlugins(JavaAppPackaging)
 import com.typesafe.sbt.packager.docker.DockerChmodType
 import com.typesafe.sbt.packager.docker.DockerPermissionStrategy
+import sbt.Keys.libraryDependencies
 dockerChmodType := DockerChmodType.UserGroupWriteExecute
 dockerPermissionStrategy := DockerPermissionStrategy.CopyChown

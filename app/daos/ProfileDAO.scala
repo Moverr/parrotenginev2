@@ -35,10 +35,9 @@ class ProfileDAO   @Inject()(dbConfigProvider: DatabaseConfigProvider) {
     val query = profileTable.returning(profileTable) += profile
     db.run(query)
 
-
-//   val res =  db.run(profileTable.returning(profileTable) +=   request )
-//    res
   }
+
+
 
 
 
