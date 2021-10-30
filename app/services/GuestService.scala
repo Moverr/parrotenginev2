@@ -99,7 +99,8 @@ class GuestService @Inject()(
 
   def populateResponse(profile: Profile, guest: Guest,visitation: Visitation): GuestInvitationResponse = {
     //GuestResponse
-    ???
+    val x = GuestInvitationResponse()
+    x
   }
 
   //update profile info
