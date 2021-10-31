@@ -58,7 +58,7 @@ import scala.util.Random
   def getCurrentTimeStamp():Timestamp =  getCurrentTimeStamp( new DateTime())
   def getCurrentTimeStampLong =   Instant.now().getEpochSecond
 
-    def randomString(length: Int=10) = scala.util.Random.alphanumeric.take(length).mkString
+    def RandomString(length: Int=10) = scala.util.Random.alphanumeric.take(length).mkString
 
 
 }
