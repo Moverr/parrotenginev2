@@ -4,6 +4,7 @@ import controllers.requests.{GuestProfileRequest, ProfileRequest}
 import controllers.responses.{GeneralProfileResponse, GuestInvitationResponse, GuestResponse}
 import daos.{GuestDAO, ProfileDAO, ResidentProfileDAO, VisitationDAO}
 import db.tables.{Guest, Profile, Visitation}
+import helpers.Utilities
 import helpers.Utilities.getCurrentTimeStamp
 import javax.inject.{Inject, Singleton}
 
@@ -37,7 +38,7 @@ class GuestService @Inject()(
         response match {
           case Some(value: (Guest, Profile)) => {
             //todo: create profile
-            val visitation = Visitation(0L, value._1.id, host_id, Some(getCurrentTimeStamp()), None, None, None, Some("pending"))
+            val visitation = Visitation(0L, value._1.id, host_id, Some(getCurrentTimeStamp()), None, None, None, Some("pending"),Utilities.RandomString())
             val record = for {
               response <- createVisitation(visitation).map(x => populateResponse(value._2,value._1,x))
 
@@ -50,7 +51,7 @@ class GuestService @Inject()(
 
             val response = for {
               resp <- CreateGuestProfile(GuestProfileRequest(surname, othername, profiletype, gender, host_id, registerDate, location))
-              visitation = Visitation(0L, resp._1.id, host_id, Some(getCurrentTimeStamp()), None, None, None, Some("pending"))
+              visitation = Visitation(0L, resp._1.id, host_id, Some(getCurrentTimeStamp()), None, None, None, Some("pending"),Utilities.RandomString())
               result <- createVisitation(visitation).map(x => populateResponse(resp._2,resp._1,x))
 
             } yield (result)
@@ -78,19 +79,19 @@ class GuestService @Inject()(
   //list guests on a given statioon or visitor on a given day
   def CreateGuestProfile(request: GuestProfileRequest): Future[(Guest, Profile)] = {
     val record = for {
-      future1: Future[Profile] <- profileDAO.create(request.surname, request.othername, request.gender, 0L, None, "RESIDENT").recoverWith {
+      profile  <- profileDAO.create(request.surname, request.othername, request.gender, 0L, None, "RESIDENT").recoverWith {
         case exception: Throwable => Future.failed(new Exception(exception.getMessage))
       }
 
-      future2: Future[Guest] <- {
-        val guest: Guest = Guest(0L, future1.id, None, getCurrentTimeStamp(), None, getCurrentTimeStamp())
+      future2  <- {
+        val guest: Guest = Guest(0L, 1L, None, getCurrentTimeStamp(), None, getCurrentTimeStamp())
         guestDAO.create(guest).recoverWith {
           case exception: Throwable => Future.failed(new Exception(exception.getMessage))
         }
       }
 
 
-    } yield (future2, future1)
+    } yield (future2, profile)
 
     record
   }
@@ -105,15 +106,16 @@ class GuestService @Inject()(
   }
 
 
-  //todo: populate basic profile
-  def populateResponse(profile:Profile):GuestResponse=  GuestResponse(profile.id,profile.surname,profile.other_names,profile.profile_type,profile.gender)
-
   //update profile info
   //cance information
 
   //  register profile.
   //  // check if  host exists. .
   //  visitation type..
+
+
+  //todo: populate basic profile
+  def populateResponse(profile:Profile):GuestResponse=  GuestResponse(profile.id,profile.surname,profile.other_names,profile.profile_type,profile.gender)
 
 
 }
