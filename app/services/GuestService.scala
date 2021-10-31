@@ -1,7 +1,7 @@
 package services
 
 import controllers.requests.{GuestProfileRequest, ProfileRequest}
-import controllers.responses.GuestInvitationResponse
+import controllers.responses.{GeneralProfileResponse, GuestInvitationResponse, GuestResponse}
 import daos.{GuestDAO, ProfileDAO, ResidentProfileDAO, VisitationDAO}
 import db.tables.{Guest, Profile, Visitation}
 import helpers.Utilities.getCurrentTimeStamp
@@ -99,7 +99,8 @@ class GuestService @Inject()(
 
   def populateResponse(profile: Profile, guest: Guest,visitation: Visitation): GuestInvitationResponse = {
     //GuestResponse
-    val x = GuestInvitationResponse()
+    val profileResponse = GuestResponse()
+    val x = GuestInvitationResponse(profileResponse,Some(visitation.time_in.get.getTime),Some(visitation.time_out.get.getTime),visitation.reference_id,visitation.status)
     x
   }
 
