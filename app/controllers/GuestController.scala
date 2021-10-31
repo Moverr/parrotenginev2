@@ -1,9 +1,14 @@
 package controllers
 
 import controllers.requests.{GuestProfileRequest, PhysicalAddress, ProfileRequest, ProfileType}
+import controllers.responses.GuestInvitationResponse
 import javax.inject.{Inject, Singleton}
+import play.api.libs.json.Json
 import play.api.mvc.{AbstractController, ControllerComponents}
 import services.{AuthService, GuestService}
+
+import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
 
 @Singleton
 class GuestController @Inject()(
@@ -37,8 +42,20 @@ class GuestController @Inject()(
     //todo: guest profile reequest
     val guestRequest: ProfileRequest = GuestProfileRequest(surname, otherName, ProfileType.withName(profileType), gender, host_id, registratioon_date_long, address_location)
 
+    val  response : Either[Throwable, Future[GuestInvitationResponse]] = guestService.Invitation(guestRequest)
 
-    ???
+    try{
+      response match {
+        case Left(exception) =>  Future.successful(BadRequest(Json.toJson(exception.getMessage)))
+        case Right(value) => value.flatMap(response=> Future.successful(Ok(Json.toJson(response))) )
+      }
+
+    }
+    catch {
+
+      case e:Exception =>  Future.successful(InternalServerError(e.getMessage))
+    }
+
 
   }
 
