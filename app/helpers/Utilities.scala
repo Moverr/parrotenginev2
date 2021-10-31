@@ -12,6 +12,8 @@ import java.time.Instant
 
 import org.joda.time.DateTime
 
+import scala.util.Random
+
 
   class  Utilities{
   val emailRegex:String = "^(.+)@(.+)$"
@@ -56,6 +58,7 @@ import org.joda.time.DateTime
   def getCurrentTimeStamp():Timestamp =  getCurrentTimeStamp( new DateTime())
   def getCurrentTimeStampLong =   Instant.now().getEpochSecond
 
+    def randomString(length: Int=10) = scala.util.Random.alphanumeric.take(length).mkString
 
 
 }
