@@ -99,10 +99,14 @@ class GuestService @Inject()(
 
   def populateResponse(profile: Profile, guest: Guest,visitation: Visitation): GuestInvitationResponse = {
     //GuestResponse
-    val profileResponse = GuestResponse()
-    val x = GuestInvitationResponse(profileResponse,Some(visitation.time_in.get.getTime),Some(visitation.time_out.get.getTime),visitation.reference_id,visitation.status)
-    x
+    val profileResponse = populateResponse(profile)
+    val response = GuestInvitationResponse(profileResponse ,Some(visitation.time_in.get.getTime)  ,Some(visitation.time_out.get.getTime)  ,visitation.reference_id,visitation.status.get)
+    response
   }
+
+
+  //todo: populate basic profile
+  def populateResponse(profile:Profile):GuestResponse=  GuestResponse(profile.id,profile.surname,profile.other_names,profile.profile_type,profile.gender)
 
   //update profile info
   //cance information
