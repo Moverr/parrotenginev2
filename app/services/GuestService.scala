@@ -101,7 +101,7 @@ class GuestService @Inject()(
   def populateResponse(profile: Profile, guest: Guest,visitation: Visitation): GuestInvitationResponse = {
     //GuestResponse
     val profileResponse = populateResponse(profile)
-    val response = GuestInvitationResponse(profileResponse ,Some(visitation.time_in.get.getTime)  ,Some(visitation.time_out.get.getTime)  ,visitation.reference_id,visitation.status.get)
+    val response = GuestInvitationResponse(profileResponse ,visitation.time_in  ,visitation.time_out  ,visitation.reference_id,visitation.status.get)
     response
   }
 

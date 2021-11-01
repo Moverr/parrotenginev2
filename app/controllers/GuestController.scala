@@ -19,7 +19,7 @@ class GuestController @Inject()(
                                ) extends AbstractController(controllerComponents) {
 
   //todo: create visiotr regirstration profile
-  def selfregister = Action.async { implicit request =>
+  def register = Action.async { implicit request =>
 
 
     val surname: String = request.body.asJson.get("surname").as[String]
@@ -34,8 +34,10 @@ class GuestController @Inject()(
     val host_id = request.body.asJson.get("host_id").as[Long]
 
 
-    val latitude: Double = request.body.asJson.get("location").as[Double]
-    val longitude: Double = request.body.asJson.get("location").as[Double]
+    val latitude: Double = 0.0
+      ///request.body.asJson.get("location").as[Double]
+    val longitude: Double =  0.0
+      //request.body.asJson.get("location").as[Double]
 
     val address_location = PhysicalAddress(location, "LOCATION", Some(latitude), Some(longitude))
 

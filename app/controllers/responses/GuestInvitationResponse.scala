@@ -1,3 +1,5 @@
 package controllers.responses
 
-case class GuestInvitationResponse(profile: GuestResponse,timein:Option[Long],timeout:Option[Long],reference_id:String,status:String)
+import java.sql.Timestamp
+
+case class GuestInvitationResponse(profile: GuestResponse, timein:Option[Timestamp], timeout:Option[Timestamp], reference_id:String, status:String)
