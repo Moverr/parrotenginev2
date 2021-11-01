@@ -9,6 +9,7 @@ import services.{AuthService, GuestService}
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import implicits.GuestInvitationResponseWrites._
 
 @Singleton
 class GuestController @Inject()(
