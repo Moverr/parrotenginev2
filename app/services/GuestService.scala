@@ -76,15 +76,15 @@ class GuestService @Inject()(
   }
 
   //todo create
-  //list guests on a given statioon or visitor on a given day
+  //list guests on a given statioon or visitor on a given days
   def CreateGuestProfile(request: GuestProfileRequest): Future[(Guest, Profile)] = {
     val record = for {
-      profile  <- profileDAO.create(request.surname, request.othername, request.gender, 0L, None, "RESIDENT").recoverWith {
+      profile  <- profileDAO.create(request.surname, request.othername, request.gender, 0L, None, "GUEST").recoverWith {
         case exception: Throwable => Future.failed(new Exception(exception.getMessage))
       }
 
       future2  <- {
-        val guest: Guest = Guest(0L, 1L, None, getCurrentTimeStamp(), None, getCurrentTimeStamp())
+        val guest: Guest = Guest(0L, profile.id, None, getCurrentTimeStamp(), None, getCurrentTimeStamp())
         guestDAO.create(guest).recoverWith {
           case exception: Throwable => Future.failed(new Exception(exception.getMessage))
         }
