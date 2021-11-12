@@ -12,7 +12,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import implicits.GuestInvitationResponseWrites._
 
 @Singleton
-class GuestController @Inject()(
+class VisitationController @Inject()(
                                  controllerComponents: ControllerComponents
                                  , val authService: AuthService
                                  , val guestService: GuestService

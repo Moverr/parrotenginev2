@@ -28,7 +28,7 @@ GET  /v1/resident/list                 controllers.ResidentController.list(offse
 GET  /v1/resident                      controllers.ResidentController.get(id:Long)
 
 #visitor
-POST /v1/visitor/register               controllers.GuestController.register()
+POST /v1/visitor/register               controllers.VisitationController.register()
 
 
 # Map static resources from the /public folder to the /assets URL path
