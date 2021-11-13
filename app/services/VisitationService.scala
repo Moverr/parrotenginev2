@@ -23,7 +23,18 @@ class VisitationService @Inject()(
 
                             ) {
 
-  //todo: create
+/*
+1 : You dont need authorization to register a visitation
+2 : you can specify the host
+3 : The host will be notified of a visitor through channels like ....
+
+    //1: u dont need authorization
+    //2: check to see that the host id exists
+    //3: check to see that profile for guest exists.
+    //4: create profile if not exists
+    //5: register vistor in the book register
+    //6: assigng registration external_id
+ */
   def Invitation(request: ProfileRequest): Either[Throwable, Future[GuestInvitationResponse]] = {
     request match {
       case GuestProfileRequest(surname, othername, profiletype, gender, host_id, registerDate, location) => {
@@ -46,7 +57,7 @@ class VisitationService @Inject()(
             } yield (response)
 
             Right(record)
-          } // todo  call the other guy and continue
+          }
           case None => {
 
             val response = for {
@@ -67,12 +78,6 @@ class VisitationService @Inject()(
 
     }
 
-    //1: u dont need authorization
-    //2: check to see that the host id exists
-    //3: check to see that profile for guest exists.
-    //4: create profile if not exists
-    //5: register vistor in the book register
-    //6: assigng registration external_id
   }
 
   //todo create

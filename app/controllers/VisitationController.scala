@@ -4,7 +4,7 @@ import controllers.requests.{GuestProfileRequest, PhysicalAddress, ProfileReques
 import controllers.responses.GuestInvitationResponse
 import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Json
-import play.api.mvc.{AbstractController, ControllerComponents}
+import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents}
 import services.{AuthService, VisitationService}
 
 import scala.concurrent.Future
@@ -63,4 +63,10 @@ class VisitationController @Inject()(
   }
 
   //todo; view registrations etcs,
+  def list(organisation_id: Option[Int],station_id: Option[Int],kiosk_id: Option[Int], offset: Int, limit: Int ):Action[AnyContent] = Action.async{ implicit  request =>
+
+    //todo: get me all the list items 
+    ???
+  }
+  //todo: view registrations on a given
 }
