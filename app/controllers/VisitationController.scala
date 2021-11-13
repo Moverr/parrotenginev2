@@ -5,7 +5,7 @@ import controllers.responses.GuestInvitationResponse
 import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Json
 import play.api.mvc.{AbstractController, ControllerComponents}
-import services.{AuthService, GuestService}
+import services.{AuthService, VisitationService}
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -15,7 +15,7 @@ import implicits.GuestInvitationResponseWrites._
 class VisitationController @Inject()(
                                  controllerComponents: ControllerComponents
                                  , val authService: AuthService
-                                 , val guestService: GuestService
+                                 , val guestService: VisitationService
                                ) extends AbstractController(controllerComponents) {
 
   //todo: create visiotr regirstration profile

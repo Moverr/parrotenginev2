@@ -14,7 +14,7 @@ import scala.concurrent.{Await, Future}
 
 
 @Singleton
-class GuestService @Inject()(
+class VisitationService @Inject()(
                               residentDAO: ResidentProfileDAO
                               , profileDAO: ProfileDAO
                               , guestDAO: GuestDAO
