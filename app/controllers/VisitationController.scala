@@ -15,7 +15,7 @@ import implicits.GuestInvitationResponseWrites._
 class VisitationController @Inject()(
                                  controllerComponents: ControllerComponents
                                  , val authService: AuthService
-                                 , val guestService: VisitationService
+                                 , val visitationService: VisitationService
                                ) extends AbstractController(controllerComponents) {
 
   //todo: create visiotr regirstration profile
@@ -45,7 +45,7 @@ class VisitationController @Inject()(
     //todo: guest profile reequest
     val guestRequest: ProfileRequest = GuestProfileRequest(surname, otherName, ProfileType.withName(profileType), gender, host_id, registratioon_date_long, address_location)
 
-    val  response : Either[Throwable, Future[GuestInvitationResponse]] = guestService.Invitation(guestRequest)
+    val  response : Either[Throwable, Future[GuestInvitationResponse]] = visitationService.Invitation(guestRequest)
 
     try{
       response match {
@@ -65,7 +65,7 @@ class VisitationController @Inject()(
   //todo; view registrations etcs,
   def list(organisation_id: Option[Int],station_id: Option[Int],kiosk_id: Option[Int], offset: Int, limit: Int ):Action[AnyContent] = Action.async{ implicit  request =>
 
-    //todo: get me all the list items 
+    //todo: get me all the list items
     ???
   }
   //todo: view registrations on a given
