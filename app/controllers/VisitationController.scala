@@ -4,22 +4,22 @@ import controllers.requests.{GuestProfileRequest, PhysicalAddress, ProfileReques
 import controllers.responses.GuestInvitationResponse
 import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Json
-import play.api.mvc.{AbstractController, ControllerComponents}
-import services.{AuthService, GuestService}
+import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents}
+import services.{AuthService, VisitationService}
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 import implicits.GuestInvitationResponseWrites._
 
 @Singleton
-class GuestController @Inject()(
+class VisitationController @Inject()(
                                  controllerComponents: ControllerComponents
                                  , val authService: AuthService
-                                 , val guestService: GuestService
+                                 , val visitationService: VisitationService
                                ) extends AbstractController(controllerComponents) {
 
   //todo: create visiotr regirstration profile
-  def selfregister = Action.async { implicit request =>
+  def register = Action.async { implicit request =>
 
 
     val surname: String = request.body.asJson.get("surname").as[String]
@@ -34,8 +34,10 @@ class GuestController @Inject()(
     val host_id = request.body.asJson.get("host_id").as[Long]
 
 
-    val latitude: Double = request.body.asJson.get("location").as[Double]
-    val longitude: Double = request.body.asJson.get("location").as[Double]
+    val latitude: Double = 0.0
+      ///request.body.asJson.get("location").as[Double]
+    val longitude: Double =  0.0
+      //request.body.asJson.get("location").as[Double]
 
     val address_location = PhysicalAddress(location, "LOCATION", Some(latitude), Some(longitude))
 
@@ -43,7 +45,7 @@ class GuestController @Inject()(
     //todo: guest profile reequest
     val guestRequest: ProfileRequest = GuestProfileRequest(surname, otherName, ProfileType.withName(profileType), gender, host_id, registratioon_date_long, address_location)
 
-    val  response : Either[Throwable, Future[GuestInvitationResponse]] = guestService.Invitation(guestRequest)
+    val  response : Either[Throwable, Future[GuestInvitationResponse]] = visitationService.Invitation(guestRequest)
 
     try{
       response match {
@@ -61,4 +63,10 @@ class GuestController @Inject()(
   }
 
   //todo; view registrations etcs,
+  def list(organisation_id: Option[Int],station_id: Option[Int],kiosk_id: Option[Int], offset: Int, limit: Int ):Action[AnyContent] = Action.async{ implicit  request =>
+
+    //todo: get me all the list items
+    ???
+  }
+  //todo: view registrations on a given
 }

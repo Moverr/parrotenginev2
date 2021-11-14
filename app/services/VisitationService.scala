@@ -1,7 +1,7 @@
 package services
 
 import controllers.requests.{GuestProfileRequest, ProfileRequest}
-import controllers.responses.{GeneralProfileResponse, GuestInvitationResponse, GuestResponse}
+import controllers.responses.{AuthResponse, GeneralProfileResponse, GuestInvitationResponse, GuestResponse, StationResponse}
 import daos.{GuestDAO, ProfileDAO, ResidentProfileDAO, VisitationDAO}
 import db.tables.{Guest, Profile, Visitation}
 import helpers.Utilities
@@ -14,7 +14,7 @@ import scala.concurrent.{Await, Future}
 
 
 @Singleton
-class GuestService @Inject()(
+class VisitationService @Inject()(
                               residentDAO: ResidentProfileDAO
                               , profileDAO: ProfileDAO
                               , guestDAO: GuestDAO
@@ -23,7 +23,18 @@ class GuestService @Inject()(
 
                             ) {
 
-  //todo: create
+/*
+1 : You dont need authorization to register a visitation
+2 : you can specify the host
+3 : The host will be notified of a visitor through channels like ....
+
+    //1: u dont need authorization
+    //2: check to see that the host id exists
+    //3: check to see that profile for guest exists.
+    //4: create profile if not exists
+    //5: register vistor in the book register
+    //6: assigng registration external_id
+ */
   def Invitation(request: ProfileRequest): Either[Throwable, Future[GuestInvitationResponse]] = {
     request match {
       case GuestProfileRequest(surname, othername, profiletype, gender, host_id, registerDate, location) => {
@@ -46,7 +57,7 @@ class GuestService @Inject()(
             } yield (response)
 
             Right(record)
-          } // todo  call the other guy and continue
+          }
           case None => {
 
             val response = for {
@@ -67,24 +78,28 @@ class GuestService @Inject()(
 
     }
 
-    //1: u dont need authorization
-    //2: check to see that the host id exists
-    //3: check to see that profile for guest exists.
-    //4: create profile if not exists
-    //5: register vistor in the book register
-    //6: assigng registration external_id
   }
 
+  //todo: list Stations
+  def list(authResponse: AuthResponse,organisation_id:Option[Int],station_id:Option[Int] ,kiosk_id:Option[Int],offset:Int, limit:Int): Either[java.lang.Throwable,Future[Seq[StationResponse]] ]= {
+    if(authResponse == null ) return  Left(new Exception("Invalid Authentication"))
+
+    Right(
+      visitationDAO.list(organisation_id.toLong,offset,limit) .map(y=>y.map(record=>populateResponse(record)))
+    )
+  }
+
+
   //todo create
-  //list guests on a given statioon or visitor on a given day
+  //list guests on a given statioon or visitor on a given days
   def CreateGuestProfile(request: GuestProfileRequest): Future[(Guest, Profile)] = {
     val record = for {
-      profile  <- profileDAO.create(request.surname, request.othername, request.gender, 0L, None, "RESIDENT").recoverWith {
+      profile  <- profileDAO.create(request.surname, request.othername, request.gender, 0L, None, "GUEST").recoverWith {
         case exception: Throwable => Future.failed(new Exception(exception.getMessage))
       }
 
       future2  <- {
-        val guest: Guest = Guest(0L, 1L, None, getCurrentTimeStamp(), None, getCurrentTimeStamp())
+        val guest: Guest = Guest(0L, profile.id, None, getCurrentTimeStamp(), None, getCurrentTimeStamp())
         guestDAO.create(guest).recoverWith {
           case exception: Throwable => Future.failed(new Exception(exception.getMessage))
         }
@@ -101,7 +116,7 @@ class GuestService @Inject()(
   def populateResponse(profile: Profile, guest: Guest,visitation: Visitation): GuestInvitationResponse = {
     //GuestResponse
     val profileResponse = populateResponse(profile)
-    val response = GuestInvitationResponse(profileResponse ,Some(visitation.time_in.get.getTime)  ,Some(visitation.time_out.get.getTime)  ,visitation.reference_id,visitation.status.get)
+    val response = GuestInvitationResponse(profileResponse ,visitation.time_in  ,visitation.time_out  ,visitation.reference_id,visitation.status.get)
     response
   }
 

@@ -24,34 +24,35 @@ class GuestDAO  @Inject()(dbConfigProvider: DatabaseConfigProvider) {
   //todoo: Just get one existing profile of a guest in the database .
   /**
    *   *
-   * @param firstname
-   * @param lastname
+   * @param surname
+   * @param otherName
    * @return
-   * @FutureIMpl: make sure you are able filter both firstname and lastname, since they might be interchanged at entrace.
+   * @FutureIMpl: make sure you are able filter both surname and otherName, since they might be interchanged at entrace.
    */
 
 
-  def getByProfileName(firstname: Option[String], lastname: Option[String]): Future[Option[(Guest, Profile)]] = {
+  def getByProfileName(surname: Option[String], otherName: Option[String]): Future[Option[(Guest, Profile)]] = {
 
     val records = for {
       (guest, profile) <- {
         val record = guestTable join profileTable on (_.profile_id === _.id)
 
 
-        val firstNameQuery =  for(query<- firstname match {
-          case Some(firstName) => record.filter(_._2.surname === firstName)
-          case None => record
-        }) yield (query)
+//        val firstNameQuery =  for(query<- surname match {
+//          case Some(surname) => record.filter(_._2.surname === surname)
+//          case None => record
+//        }) yield (query)
+//
+//
+//
+//        val lastNameQuery =  for(query<- otherName match {
+//          case Some(otherName) => firstNameQuery.filter(_._2.other_names  === otherName)
+//          case None => firstNameQuery
+//        }) yield (query)
 
 
-
-        val lastNameQuery =  for(query<- lastname match {
-          case Some(lastName) => firstNameQuery.filter(_._2.other_names  === lastName)
-          case None => firstNameQuery
-        }) yield (query)
-
-
-        lastNameQuery drop (0) take (1)
+        record
+        //drop (0) take (1)
       }
 
     }

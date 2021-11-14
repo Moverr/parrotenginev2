@@ -2,7 +2,8 @@ package db.tables
 import java.sql.Timestamp
 import slick.sql.SqlProfile.ColumnOption.SqlType
 import slick.jdbc.PostgresProfile.api._
-
+import slick.jdbc.JdbcProfile
+import slick.lifted.TableQuery
 
 case class Visitation(id:Long,guest_id:Long,host_id:Long,time_in:Option[Timestamp],time_out:Option[Timestamp],station_id:Option[Long],kiosk_id:Option[Long],status:Option[String],reference_id:String) ;
 
@@ -10,6 +11,7 @@ case class Visitation(id:Long,guest_id:Long,host_id:Long,time_in:Option[Timestam
 
 
 class  VisitationTable(tag: Tag) extends Table[Visitation](tag,"visitations"){
+
 
   def id = column[Long]("id",O.PrimaryKey,O.AutoInc)
   def  guest_id  = column[Long]("guest_id")
@@ -20,5 +22,7 @@ class  VisitationTable(tag: Tag) extends Table[Visitation](tag,"visitations"){
   def  kiosk_id= column[Option[Long]]("kiosk_id")
   def  status= column[Option[String]]("status")
   def  reference_id= column[String]("reference_id")
+
+
   override def * = (id,guest_id,host_id,time_in,time_out,station_id,kiosk_id,status,reference_id)<>( (Visitation.apply _).tupled ,Visitation.unapply)
 }
