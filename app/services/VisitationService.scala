@@ -30,8 +30,8 @@ class VisitationService @Inject()(
 
     //1: u dont need authorization
     //2: check to see that the host id exists
-    //3: check to see that profile for guest exists.
-    //4: create profile if not exists
+    //3: check to see that guestProfile for guest exists.
+    //4: create guestProfile if not exists
     //5: register vistor in the book register
     //6: assigng registration external_id
  */
@@ -43,12 +43,12 @@ class VisitationService @Inject()(
 
         val response: Option[(Guest, Profile)] = Await.result(guestDAO.getByProfileName(Some(surname), Some(othername)), Duration.Inf)
 
-        //todo: create a  profile if does not exist.
+        //todo: create a  guestProfile if does not exist.
         // else continue.
 
         response match {
           case Some(value: (Guest, Profile)) => {
-            //todo: create profile
+            //todo: create guestProfile
             val visitation = Visitation(0L, value._1.id, host_id, Some(getCurrentTimeStamp()), None, None, None, Some("pending"),Utilities.RandomString())
             val record = for {
               response <- createVisitation(visitation).map(x => populateResponse(value._2,value._1,x))
@@ -80,12 +80,12 @@ class VisitationService @Inject()(
 
   }
 
-  //todo: list Stations
-  def list(authResponse: AuthResponse,organisation_id:Option[Int],station_id:Option[Int] ,kiosk_id:Option[Int],offset:Int, limit:Int): Either[java.lang.Throwable,Future[Seq[StationResponse]] ]= {
+  //todo: list visitations
+  def list(authResponse: AuthResponse,organisation_id:Option[Int],station_id:Option[Int] ,kiosk_id:Option[Int],offset:Int, limit:Int): Either[java.lang.Throwable,Future[Seq[GuestInvitationResponse]] ]= {
     if(authResponse == null ) return  Left(new Exception("Invalid Authentication"))
 
     Right(
-      visitationDAO.list(organisation_id.toLong,offset,limit) .map(y=>y.map(record=>populateResponse(record)))
+      visitationDAO.list(organisation_id,station_id,kiosk_id,offset,limit) .map(y=>y.map(record=>populateResponse(record._1._1._1._2.get,record._1._1._1._1._2,record._1._1._1._1._1)))
     )
   }
 
@@ -113,23 +113,23 @@ class VisitationService @Inject()(
 
   def createVisitation(visitation: Visitation): Future[Visitation] = visitationDAO.create(visitation)
 
-  def populateResponse(profile: Profile, guest: Guest,visitation: Visitation): GuestInvitationResponse = {
+  def populateResponse(guestProfile: Profile, guest: Guest, visitation: Visitation): GuestInvitationResponse = {
     //GuestResponse
-    val profileResponse = populateResponse(profile)
+    val profileResponse = populateResponse(guestProfile)
     val response = GuestInvitationResponse(profileResponse ,visitation.time_in  ,visitation.time_out  ,visitation.reference_id,visitation.status.get)
     response
   }
 
 
-  //update profile info
+  //update guestProfile info
   //cance information
 
-  //  register profile.
+  //  register guestProfile.
   //  // check if  host exists. .
   //  visitation type..
 
 
-  //todo: populate basic profile
+  //todo: populate basic guestProfile
   def populateResponse(profile:Profile):GuestResponse=  GuestResponse(profile.id,profile.surname,profile.other_names,profile.profile_type,profile.gender)
 
 
