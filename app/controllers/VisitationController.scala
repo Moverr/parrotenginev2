@@ -1,7 +1,7 @@
 package controllers
 
 import controllers.requests.{GuestProfileRequest, PhysicalAddress, ProfileRequest, ProfileType}
-import controllers.responses.GuestInvitationResponse
+import controllers.responses.{AuthResponse, GuestInvitationResponse}
 import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Json
 import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents}
@@ -66,7 +66,17 @@ class VisitationController @Inject()(
   def list(organisation_id: Option[Int],station_id: Option[Int],kiosk_id: Option[Int], offset: Int, limit: Int ):Action[AnyContent] = Action.async{ implicit  request =>
 
     //todo: get me all the list items
-    ???
+    val authorization: String = request.headers.get("authentication").getOrElse("")
+    val authResponse: AuthResponse = authService.validateTokenv2(authorization)
+    val result = visitationService.list(authResponse, organisation_id,station_id,kiosk_id, offset, limit)
+
+    result match {
+      case Left(exception) => Future.successful(BadRequest(Json.toJson(exception.getMessage)))
+      case Right(result) => result flatMap {
+        result => Future.successful(Ok(Json.toJson(result)))
+      }
+    }
+
   }
   //todo: view registrations on a given
 }
