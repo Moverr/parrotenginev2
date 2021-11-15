@@ -24,5 +24,6 @@ class  VisitationTable(tag: Tag) extends Table[Visitation](tag,"visitations"){
   def  reference_id= column[String]("reference_id")
 
 
-  override def * = (id,guest_id,host_id,time_in,time_out,station_id,kiosk_id,status,reference_id)<>( (Visitation.apply _).tupled ,Visitation.unapply)
+  override def * = (id,guest_id,host_id,time_in,time_out,station_id,kiosk_id,status,reference_id).mapTo[Visitation]
+  //<>( (Visitation.apply _).tupled ,Visitation.unapply)
 }
