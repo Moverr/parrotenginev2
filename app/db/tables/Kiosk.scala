@@ -23,6 +23,7 @@ class KioskTable(tag: Tag) extends  Table[Kiosk](tag,"kiosks"){
   def updated_by =  column[Long]("updated_by")
 
 //  (id,organisation_id,name,code) <> (Station.tupled,Station.unapply)
-  override def * = (id,reference,details,device_token,station_id,date_created,date_updated,author_id,updated_by) <> (Kiosk.tupled,Kiosk.unapply)
+  override def * = (id,reference,details,device_token,station_id,date_created,date_updated,author_id,updated_by).mapTo[Kiosk]
+  //<> (Kiosk.tupled,Kiosk.unapply)
 
 }
