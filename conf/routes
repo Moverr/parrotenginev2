@@ -29,7 +29,7 @@ GET  /v1/resident                      controllers.ResidentController.get(id:Lon
 
 #visitor
 POST /v1/visitor/register               controllers.VisitationController.register()
-POST /v1/visitor/list                   controllers.VisitationController.list(organisation_id:Option[Int]=None,station_id:Option[Int]=None,kiosk_id:Option[Int]=None,offset:Int=0,limit:Int=6)
+GET /v1/visitor/list                    controllers.VisitationController.list(organisation_id:Option[Int]=None,station_id:Option[Int]=None,kiosk_id:Option[Int]=None,offset:Int=0,limit:Int=6)
 
 
 # Map static resources from the /public folder to the /assets URL path
