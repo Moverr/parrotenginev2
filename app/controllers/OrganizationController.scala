@@ -53,20 +53,34 @@ class OrganizationController @Inject()(
   //todo: list Organization
   def list(offset: Int, limit: Int) = Action.async { implicit request =>
     val authorization: String = request.headers.get("authentication").getOrElse("")
-    val authResponse: AuthResponse = authService.validateTokenv2(authorization)
+    val authResponse: Future[Option[AuthResponse]] = authService.validateTokenv2(authorization)
+
 
     try {
-     val result =  orgService.list(authResponse, offset, limit)
-      result match {
-        case Left(exception) => Future.successful(BadRequest(Json.toJson(exception.getMessage)))
-        case Right(result) => result flatMap {
-          result => Future.successful(Ok(Json.toJson(result)))
+
+      authResponse.flatMap(x=> x match {
+        case Some(value) =>{
+
+          val result =  orgService.list(value, offset, limit)
+          result match {
+            case Left(exception) => Future.successful(BadRequest(Json.toJson(exception.getMessage)))
+            case Right(result) => result flatMap {
+              result => Future.successful(Ok(Json.toJson(result)))
+            }
+          }
+
+
         }
-      }
+        case None => Future.successful(Unauthorized("User  not authorized"))
+      })
+
+
+
+
 
     }
     catch {
-      case e: Exception => Future.successful(InternalServerError(e.getMessage))
+      case e: Exception => Future.successful(BadRequest(e.getMessage))
     }
 
   }
