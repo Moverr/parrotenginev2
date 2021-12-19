@@ -31,20 +31,30 @@ class AuthService @Inject()(userDao: UserDao )   {
   }
 
   //validate token
-  def validateToken(authorizationToken: String):Either[java.lang.Throwable, Future[Option[AuthResponse]] ]= {
+  def validateToken(authorizationToken: Option[String]):Either[java.lang.Throwable, Future[Option[AuthResponse]] ]= {
     if(authorizationToken == "")    Left( new Exception("You are not authorized to this item "))
-    Right(validate(decryptPairString(authorizationToken)).map(x=>x))
+
+    val decrypted:Either[Exception,LoginRequest] =  decryptPairString(authorizationToken)
+    decrypted match {
+      case Left(value) =>  Left( new Exception("Invalid  token  ") )
+      case Right(value) => Right(validate(value))
+    }
+
+
   }
 
 
   //validate Token Overloading
   def validateTokenv2(authorizationToken: String): Future[Option[AuthResponse]] = {
-  val response =  for {
-    record <- validate( decryptPairString(JwtUtility.retrievePasswordPair(authorizationToken)))
 
-   } yield (record)
+    val xp = JwtUtility.retrievePasswordPair(authorizationToken)
+    val decrypted:Either[Exception,LoginRequest] =  decryptPairString(xp)
+    decrypted match {
+      case Left(value) => Future.successful(None)
+      case Right(value) => validate(value)
+    }
 
-    response
+
   }
 
 
@@ -73,9 +83,15 @@ class AuthService @Inject()(userDao: UserDao )   {
     AuthResponse(JwtUtility.generateKey(pairString), user.username,user.id)
   }
 
-  private def decryptPairString(pairString:String ):LoginRequest ={
-    val loginiArray:Array[String] = pairString.split(":")
-    LoginRequest(loginiArray(0),loginiArray(1))
+  private def decryptPairString(pairString:Option[String] ):Either[Exception,LoginRequest] ={
+    pairString match {
+      case Some(value) =>{
+        val loginiArray:Array[String] = value.split(":")
+       Right(LoginRequest(loginiArray(0),loginiArray(1)))
+      }
+      case None =>Left(new Exception("Invalid Token"))
+    }
+
   }
 
 

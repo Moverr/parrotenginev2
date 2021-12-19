@@ -21,7 +21,7 @@ class StationController @Inject()(
   //todo: Create
   def create() = Action.async { implicit request =>
     val authorization: String = request.headers.get("authentication").getOrElse("")
-    val authResponse: AuthResponse = authService.validateTokenv2(authorization)
+    val authResponse: Future[Option[AuthResponse]] = authService.validateTokenv2(authorization)
 
     //todo: read the body params
     val organization_id = request.body.asJson.get("organization_id").as[String]
@@ -30,12 +30,24 @@ class StationController @Inject()(
     val stationRequest: StationRequest = StationRequest(organization_id.toInt, name, code)
 
 
-    val response: Either[java.lang.Throwable, Future[StationResponse]] = stationService.create(authResponse, stationRequest)
     try {
-      response match {
-        case Left(exception) => Future.successful(BadRequest(Json.toJson(exception.getMessage)))
-        case Right(value) =>  value.flatMap(response=> Future.successful(Ok(Json.toJson(response))) )
-      }
+
+      authResponse.flatMap(item=> item match {
+        case Some(value) =>{
+
+         stationService.create(value, stationRequest)  match {
+            case Left(exception) => Future.successful(BadRequest(Json.toJson(exception.getMessage)))
+            case Right(value) =>  value.flatMap(response=> Future.successful(Ok(Json.toJson(response))) )
+          }
+
+        }
+        case None => Future.successful(Unauthorized("User  not authorized"))
+      })
+
+
+
+
+
     }
     catch {
       case e: Exception => Future.successful(InternalServerError(e.getMessage))
@@ -47,16 +59,27 @@ class StationController @Inject()(
   def list(organisation_id: Int, offset: Int, limit: Int) = Action.async { implicit request =>
 
     val authorization: String = request.headers.get("authentication").getOrElse("")
-    val authResponse: AuthResponse = authService.validateTokenv2(authorization)
+    val authResponse: Future[Option[AuthResponse]] = authService.validateTokenv2(authorization)
 
-    val result = stationService.list(authResponse, organisation_id, offset, limit)
+    authResponse.flatMap(item=> item match {
+      case Some(value) =>{
 
-    result match {
-      case Left(exception) => Future.successful(BadRequest(Json.toJson(exception.getMessage)))
-      case Right(result) => result flatMap {
-        result => Future.successful(Ok(Json.toJson(result)))
+       stationService.list(value, organisation_id, offset, limit)
+          match {
+          case Left(exception) => Future.successful(BadRequest(Json.toJson(exception.getMessage)))
+          case Right(result) => result flatMap {
+            result => Future.successful(Ok(Json.toJson(result)))
+          }
+        }
+
+
       }
-    }
+      case None => Future.successful(Unauthorized("User  not authorized"))
+    })
+
+
+
+
 
   }
 

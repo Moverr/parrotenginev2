@@ -67,15 +67,30 @@ class VisitationController @Inject()(
 
     //todo: get me all the list items
     val authorization: String = request.headers.get("authentication").getOrElse("")
-    val authResponse: AuthResponse = authService.validateTokenv2(authorization)
-    val result = visitationService.list(authResponse, organisation_id,station_id,kiosk_id, offset, limit)
+    val authResponse: Future[Option[AuthResponse]] = authService.validateTokenv2(authorization)
 
-    result match {
-      case Left(exception) => Future.successful(BadRequest(Json.toJson(exception.getMessage)))
-      case Right(result) => result flatMap {
-        result => Future.successful(Ok(Json.toJson(result)))
+
+
+    authResponse.flatMap(item=> item match {
+      case Some(value) =>{
+
+        visitationService.list(value, organisation_id,station_id,kiosk_id, offset, limit)
+
+          match {
+          case Left(exception) => Future.successful(BadRequest(Json.toJson(exception.getMessage)))
+          case Right(result) => result flatMap {
+            result => Future.successful(Ok(Json.toJson(result)))
+          }
+        }
+
       }
-    }
+      case None => Future.successful(Unauthorized("User  not authorized"))
+    })
+
+
+
+
+
 
   }
   //todo: view registrations on a given
