@@ -24,7 +24,7 @@ class OrganizationController @Inject()(
   def create = Action.async { implicit request =>
     //todo: read the header params
     val authorization: String = request.headers.get("authentication").getOrElse("")
-    val authResponse: AuthResponse = authService.validateTokenv2(authorization)
+    val authResponse: Future[Option[AuthResponse]] = authService.validateTokenv2(authorization)
 
 
     //todo: read the body params
@@ -34,12 +34,24 @@ class OrganizationController @Inject()(
 
 
     try {
-      orgService.create(authResponse, orgRequest)
-      match {
-        case Left(exception) => Future.successful(BadRequest(Json.toJson(exception.getMessage)))
-        case Right(value) =>  value.flatMap(x=> Future.successful(Ok(Json.toJson(x))))
 
-      }
+      authResponse.flatMap(item=> item match {
+        case Some(value) =>{
+
+          orgService.create(value, orgRequest)
+          match {
+            case Left(exception) => Future.successful(BadRequest(Json.toJson(exception.getMessage)))
+            case Right(value) =>  value.flatMap(x=> Future.successful(Ok(Json.toJson(x))))
+
+          }
+
+        }
+        case None => Future.successful(Unauthorized("User  not authorized"))
+      })
+
+
+
+
 
     }
     catch {
@@ -53,20 +65,34 @@ class OrganizationController @Inject()(
   //todo: list Organization
   def list(offset: Int, limit: Int) = Action.async { implicit request =>
     val authorization: String = request.headers.get("authentication").getOrElse("")
-    val authResponse: AuthResponse = authService.validateTokenv2(authorization)
+    val authResponse: Future[Option[AuthResponse]] = authService.validateTokenv2(authorization)
+
 
     try {
-     val result =  orgService.list(authResponse, offset, limit)
-      result match {
-        case Left(exception) => Future.successful(BadRequest(Json.toJson(exception.getMessage)))
-        case Right(result) => result flatMap {
-          result => Future.successful(Ok(Json.toJson(result)))
+
+      authResponse.flatMap(item=> item match {
+        case Some(value) =>{
+
+          val result =  orgService.list(value, offset, limit)
+          result match {
+            case Left(exception) => Future.successful(BadRequest(Json.toJson(exception.getMessage)))
+            case Right(result) => result flatMap {
+              result => Future.successful(Ok(Json.toJson(result)))
+            }
+          }
+
+
         }
-      }
+        case None => Future.successful(Unauthorized("User  not authorized"))
+      })
+
+
+
+
 
     }
     catch {
-      case e: Exception => Future.successful(InternalServerError(e.getMessage))
+      case e: Exception => Future.successful(BadRequest(e.getMessage))
     }
 
   }
@@ -75,17 +101,29 @@ class OrganizationController @Inject()(
 
   def get(id: Int) = Action.async { implicit request =>
     val authorization: String = request.headers.get("authentication").getOrElse("")
-    val authResponse: AuthResponse = authService.validateTokenv2(authorization)
+    val authResponse: Future[Option[AuthResponse]] = authService.validateTokenv2(authorization)
+
+
     try {
 
+      authResponse.flatMap(item=> item match {
+        case Some(value) =>{
 
-      orgService.get(authResponse, id)
+          orgService.get(value, id)
 
-      match {
-        case Left(exception) => Future.successful(BadRequest(Json.toJson(exception.getMessage)))
-        case Right(result) => result.flatMap { result => Future.successful(Ok(Json.toJson(result.get)))
+          match {
+            case Left(exception) => Future.successful(BadRequest(Json.toJson(exception.getMessage)))
+            case Right(result) => result.flatMap { result => Future.successful(Ok(Json.toJson(result.get)))
+            }
+          }
+
+
         }
-      }
+        case None => Future.successful(Unauthorized("User  not authorized"))
+      })
+
+
+
 
     }
     catch {

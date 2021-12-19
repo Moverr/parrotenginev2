@@ -28,7 +28,9 @@ class ResidentController @Inject()(
   def create = Action.async { implicit request =>
     //Authorization
     val authorization: String = request.headers.get("authentication").getOrElse("")
-    val authResponse: AuthResponse = authService.validateTokenv2(authorization)
+
+    val authResponse: Future[Option[AuthResponse]] = authService.validateTokenv2(authorization)
+
 
     //todo: read the body params
     val surname: String = request.body.asJson.get("surname").as[String]
@@ -49,12 +51,24 @@ class ResidentController @Inject()(
 
 
     try {
-      residentialService.create(authResponse, profileRequest)
-      match {
-        case Left(exception) => Future.successful(BadRequest(Json.toJson(exception.getMessage)))
-        case Right(value) => value.flatMap(x => Future.successful(Ok(Json.toJson(x))))
 
-      }
+      authResponse.flatMap(item=> item match {
+        case Some(value) =>{
+
+          residentialService.create(value, profileRequest)
+          match {
+            case Left(exception) => Future.successful(BadRequest(Json.toJson(exception.getMessage)))
+            case Right(value) => value.flatMap(x => Future.successful(Ok(Json.toJson(x))))
+
+          }
+
+        }
+        case None => Future.successful(Unauthorized("User  not authorized"))
+      })
+
+
+
+
 
     }
     catch {
@@ -72,17 +86,29 @@ class ResidentController @Inject()(
   def list(offset: Int, limit: Int, station_id: Option[Long],query:Option[String]) = Action.async { implicit request =>
 
     val authorization: String = request.headers.get("authentication").getOrElse("")
-    val authResponse: AuthResponse = authService.validateTokenv2(authorization)
+    val authResponse: Future[Option[AuthResponse]] = authService.validateTokenv2(authorization)
 
 
     try {
-      residentialService.list(authResponse, offset, limit, station_id,query) match {
-        case Left(exception: Exception) => Future.successful(BadRequest(Json.toJson(exception.getMessage)))
-        case Right(result) =>result.flatMap{
-          result =>Future.successful(Ok(Json.toJson(result)))
+
+      authResponse.flatMap(item=> item match {
+        case Some(value) =>{
+
+          residentialService.list(value, offset, limit, station_id,query) match {
+            case Left(exception: Exception) => Future.successful(BadRequest(Json.toJson(exception.getMessage)))
+            case Right(result) =>result.flatMap{
+              result =>Future.successful(Ok(Json.toJson(result)))
+            }
+            //Future.successful(Ok(Json.toJson(value)))
+          }
+
         }
-          //Future.successful(Ok(Json.toJson(value)))
-      }
+        case None => Future.successful(Unauthorized("User  not authorized"))
+      })
+
+
+
+
     }
     catch {
       case e: Exception => Future.successful(InternalServerError(e.getMessage))
@@ -97,18 +123,29 @@ class ResidentController @Inject()(
   def get(id: Long) = Action.async { implicit request =>
 
     val authorization: String = request.headers.get("authentication").getOrElse("")
-    val authResponse: AuthResponse = authService.validateTokenv2(authorization)
+    val authResponse: Future[Option[AuthResponse]] = authService.validateTokenv2(authorization)
 
 
     try {
-      residentialService.get(authResponse, id) match {
-        case Left(exception: Exception) => Future.successful(BadRequest(Json.toJson(exception.getMessage)))
-        case Right(result) =>result.flatMap{
-          result =>Future.successful(Ok(Json.toJson(result)))
+
+      authResponse.flatMap(item=> item match {
+        case Some(value) => {
+
+          residentialService.get(value, id) match {
+            case Left(exception: Exception) => Future.successful(BadRequest(Json.toJson(exception.getMessage)))
+            case Right(result) => result.flatMap {
+              result => Future.successful(Ok(Json.toJson(result)))
+            }
+
+          }
         }
+        case None => Future.successful(Unauthorized("User  not authorized"))
+      })
+
+
 
       }
-    }
+
     catch {
       case e: Exception => Future.successful(InternalServerError(e.getMessage))
     }
@@ -121,7 +158,7 @@ class ResidentController @Inject()(
   //todo: update the profile
   def update = Action.async { implicit request =>
     val authorization: String = request.headers.get("authentication").getOrElse("")
-    val authResponse: AuthResponse = authService.validateTokenv2(authorization)
+  val authResponse: Future[Option[AuthResponse]] = authService.validateTokenv2(authorization)
 
 
     ???
