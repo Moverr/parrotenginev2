@@ -86,17 +86,29 @@ class ResidentController @Inject()(
   def list(offset: Int, limit: Int, station_id: Option[Long],query:Option[String]) = Action.async { implicit request =>
 
     val authorization: String = request.headers.get("authentication").getOrElse("")
-    val authResponse: AuthResponse = authService.validateTokenv2(authorization)
+    val authResponse: Future[Option[AuthResponse]] = authService.validateTokenv2(authorization)
 
 
     try {
-      residentialService.list(authResponse, offset, limit, station_id,query) match {
-        case Left(exception: Exception) => Future.successful(BadRequest(Json.toJson(exception.getMessage)))
-        case Right(result) =>result.flatMap{
-          result =>Future.successful(Ok(Json.toJson(result)))
+
+      authResponse.flatMap(item=> item match {
+        case Some(value) =>{
+
+          residentialService.list(value, offset, limit, station_id,query) match {
+            case Left(exception: Exception) => Future.successful(BadRequest(Json.toJson(exception.getMessage)))
+            case Right(result) =>result.flatMap{
+              result =>Future.successful(Ok(Json.toJson(result)))
+            }
+            //Future.successful(Ok(Json.toJson(value)))
+          }
+
         }
-          //Future.successful(Ok(Json.toJson(value)))
-      }
+        case None => Future.successful(Unauthorized("User  not authorized"))
+      })
+
+
+
+
     }
     catch {
       case e: Exception => Future.successful(InternalServerError(e.getMessage))
@@ -130,10 +142,10 @@ class ResidentController @Inject()(
         case None => Future.successful(Unauthorized("User  not authorized"))
       })
 
- 
+
 
       }
-    }
+
     catch {
       case e: Exception => Future.successful(InternalServerError(e.getMessage))
     }
@@ -146,7 +158,7 @@ class ResidentController @Inject()(
   //todo: update the profile
   def update = Action.async { implicit request =>
     val authorization: String = request.headers.get("authentication").getOrElse("")
-    val authResponse: AuthResponse = authService.validateTokenv2(authorization)
+  val authResponse: Future[Option[AuthResponse]] = authService.validateTokenv2(authorization)
 
 
     ???
