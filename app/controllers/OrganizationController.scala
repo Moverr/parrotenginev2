@@ -50,9 +50,6 @@ class OrganizationController @Inject()(
       })
 
 
-
-
-
     }
     catch {
       case e: Exception => Future.successful(InternalServerError(e.getMessage))
