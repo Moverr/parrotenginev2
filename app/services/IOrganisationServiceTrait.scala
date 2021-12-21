@@ -19,5 +19,5 @@ trait IOrganisationServiceTrait {
   /*
       Populate Response
    */
-  def populateResponse(organisation: Organization,user: User): OrganisationResponse
+  def populateResponse(organisation: Organization, user: Option[User]): OrganisationResponse
 }

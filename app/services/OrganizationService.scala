@@ -21,7 +21,7 @@ class OrganizationService  @Inject()(organisationDAO: OrganisationDAO)  extends 
       //todo: Get Account Details  ::
 
        Right(organisationDAO.create(request.name,request.details,authResponse.user_id)
-      .map(x=>populateResponse(x)))
+      .map(record=>populateResponse(record,None)))
   }
 
   //todo: list organinsations
@@ -32,7 +32,7 @@ class OrganizationService  @Inject()(organisationDAO: OrganisationDAO)  extends 
 
     Right{
      result.map{
-       y=>y.map(p=>populateResponse(p._1,p._2))
+       y=>y.map(p=>populateResponse(p._1,Some(p._2)))
      }
     }
 
@@ -46,7 +46,7 @@ class OrganizationService  @Inject()(organisationDAO: OrganisationDAO)  extends 
     Right(
     organisationDAO.get(authResponse.user_id,id)
       .flatMap{
-        case Some(value) => Future.successful(Some(populateResponse(value._1,value._2)))
+        case Some(value) => Future.successful(Some(populateResponse(value._1,Some(value._2))))
         case None =>  Future.successful(None)
       }
     )
@@ -55,7 +55,7 @@ class OrganizationService  @Inject()(organisationDAO: OrganisationDAO)  extends 
   /*
       Populate Response
    */
-  override def populateResponse(organisation:Organization,user: User): OrganisationResponse = {
+  override def populateResponse(organisation:Organization,user: Option[User]): OrganisationResponse = {
     val x =  OrganisationResponse(organisation.id,organisation.name,organisation.details
       ,organisation.date_created.getTime, populateAuthor(user),
       organisation.date_updated.getTime,organisation.updated_by)
@@ -63,16 +63,13 @@ class OrganizationService  @Inject()(organisationDAO: OrganisationDAO)  extends 
     x
   }
 
-    def populateResponse(organisation:Organization): OrganisationResponse = {
-    val x =  OrganisationResponse(organisation.id,organisation.name,organisation.details
-      ,organisation.date_created.getTime, null
-      ,
-      organisation.date_updated.getTime,organisation.updated_by)
-
-    x
-  }
 
 
-  def populateAuthor(user: User):AuthorResponse={ AuthorResponse("Test","miles")
+  def populateAuthor(user:Option[User]):Option[AuthorResponse]={
+    user match {
+      case Some(value) => Some( AuthorResponse("Test","miles"))
+      case None =>None
+    }
+
   }
 }
