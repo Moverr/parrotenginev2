@@ -1,7 +1,7 @@
 package controllers
 
 import controllers.requests.{ProfileType, ResidentProfileRequest}
-import controllers.responses.AuthResponse
+import controllers.responses.UserResponse
 import helpers.Utilities.convertLongToDateTime
 import implicits.ResidentProfileWrites._
 import javax.inject.{Inject, Singleton}
@@ -29,7 +29,7 @@ class ResidentController @Inject()(
     //Authorization
     val authorization: String = request.headers.get("authentication").getOrElse("")
 
-    val authResponse: Future[Option[AuthResponse]] = authService.validateTokenv2(authorization)
+    val authResponse: Future[Option[UserResponse]] = authService.validateTokenv2(authorization)
 
 
     //todo: read the body params
@@ -86,7 +86,7 @@ class ResidentController @Inject()(
   def list(offset: Int, limit: Int, station_id: Option[Long],query:Option[String]) = Action.async { implicit request =>
 
     val authorization: String = request.headers.get("authentication").getOrElse("")
-    val authResponse: Future[Option[AuthResponse]] = authService.validateTokenv2(authorization)
+    val authResponse: Future[Option[UserResponse]] = authService.validateTokenv2(authorization)
 
 
     try {
@@ -123,7 +123,7 @@ class ResidentController @Inject()(
   def get(id: Long) = Action.async { implicit request =>
 
     val authorization: String = request.headers.get("authentication").getOrElse("")
-    val authResponse: Future[Option[AuthResponse]] = authService.validateTokenv2(authorization)
+    val authResponse: Future[Option[UserResponse]] = authService.validateTokenv2(authorization)
 
 
     try {
@@ -158,7 +158,7 @@ class ResidentController @Inject()(
   //todo: update the profile
   def update = Action.async { implicit request =>
     val authorization: String = request.headers.get("authentication").getOrElse("")
-  val authResponse: Future[Option[AuthResponse]] = authService.validateTokenv2(authorization)
+  val authResponse: Future[Option[UserResponse]] = authService.validateTokenv2(authorization)
 
 
     ???

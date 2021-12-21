@@ -2,7 +2,7 @@ package controllers
 
 import java.sql.Timestamp
 
-import controllers.responses.{AuthResponse, OrganisationResponse}
+import controllers.responses.{UserResponse, OrganisationResponse}
 import daos.{OrganisationDAO, UserDao}
 import db.tables.{Organization, Station}
 import helpers.Utilities
@@ -57,7 +57,7 @@ class OrganizationControllerTest extends PlaySpec {
 
     "list Organizations " in  {
 
-      Mockito.when(authService.validateTokenv2("token")).thenReturn(  AuthResponse("token","mose",10))
+      Mockito.when(authService.validateTokenv2("token")).thenReturn(  UserResponse("token","mose",10))
 
       Mockito.when(orgDaO.list(10,0,6)).thenReturn(Future.successful(organizations))
 
@@ -75,7 +75,7 @@ class OrganizationControllerTest extends PlaySpec {
     "Create  Organization " in {
       val jsonBody = Json.parse("{\"name\":\"name\", \"details\":\"details\" }")
 
-      Mockito.when(authService.validateTokenv2("token")).thenReturn(  AuthResponse("token","mose",10))
+      Mockito.when(authService.validateTokenv2("token")).thenReturn(  UserResponse("token","mose",10))
 
 
       Mockito.when(orgDaO.create("name","details",10)).thenReturn(Future.successful(org))

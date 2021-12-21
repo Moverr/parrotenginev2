@@ -1,7 +1,7 @@
 package controllers
 
 import controllers.requests.{GuestProfileRequest, PhysicalAddress, ProfileRequest, ProfileType}
-import controllers.responses.{AuthResponse, GuestInvitationResponse}
+import controllers.responses.{UserResponse, GuestInvitationResponse}
 import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Json
 import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents}
@@ -67,7 +67,7 @@ class VisitationController @Inject()(
 
     //todo: get me all the list items
     val authorization: String = request.headers.get("authentication").getOrElse("")
-    val authResponse: Future[Option[AuthResponse]] = authService.validateTokenv2(authorization)
+    val authResponse: Future[Option[UserResponse]] = authService.validateTokenv2(authorization)
 
 
 

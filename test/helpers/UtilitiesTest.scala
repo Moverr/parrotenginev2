@@ -1,7 +1,7 @@
 package helpers
 
 import controllers.requests.LoginRequest
-import controllers.responses.AuthResponse
+import controllers.responses.UserResponse
 import db.tables.User
 import org.scalatest.FunSuite
 import org.scalatestplus.play.PlaySpec

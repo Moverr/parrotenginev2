@@ -19,7 +19,10 @@ class OrganisationDAO  @Inject()(@NamedDatabase("default") dbConfigProvider: Dat
 
 
   private  val dbConfig = dbConfigProvider.get[JdbcProfile]
-  override lazy  val orgTable = TableQuery[OrganizationTable]
+   val orgTable = TableQuery[OrganizationTable]
+       val UserTable = TableQuery[UserTable]
+
+
   import dbConfig._
 
 
@@ -27,18 +30,28 @@ class OrganisationDAO  @Inject()(@NamedDatabase("default") dbConfigProvider: Dat
   *
   * Get Organisation by owner
    */
-    def list(owner:Long, offset:Int, limit:Int): Future[Seq[Organization]]  =     db.run(orgTable
-        .filter(_.owner === owner)
-        .drop(offset)
-        .take(limit)
-        .result)
+    def list(owner:Long, offset:Int, limit:Int):  Future[Seq[(Organization,User)]]  =  {
+
+     val record  =   for {
+        record <- orgTable.filter(_.owner === owner) join UserTable  on (_.owner === _.id)
+      }
+        yield (record)
+
+      db.run(record.drop(offset).take(limit).result)
+    }
 
 
   /*
      Get  Organisation by Id
    */
-  def get(owner:Long, orgId:Long): Future[Option[Organization]]  =
-    db.run(orgTable.filter(_.owner === owner).filter(_.id === orgId).result.headOption)
+  def get(owner:Long, orgId:Long): Future[Option[(Organization,User)]]  = {
+
+    val record  =   for {
+      record <- orgTable join UserTable  on (_.owner === _.id)
+    }
+      yield (record)
+    db.run(record.filter(_._2.id === owner).filter(_._1.id === orgId).result.headOption)
+  }
 
   def get(orgId:Long): Future[Option[Organization]]  =
     db.run(orgTable.filter(_.id === orgId).result.headOption)

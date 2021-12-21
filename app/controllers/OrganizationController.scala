@@ -1,7 +1,7 @@
 package controllers
 
 import controllers.requests.OrganisationRequest
-import controllers.responses.AuthResponse
+import controllers.responses.UserResponse
 import implicits.OrganizationResponseWrites._
 import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Json
@@ -24,7 +24,7 @@ class OrganizationController @Inject()(
   def create = Action.async { implicit request =>
     //todo: read the header params
     val authorization: String = request.headers.get("authentication").getOrElse("")
-    val authResponse: Future[Option[AuthResponse]] = authService.validateTokenv2(authorization)
+    val authResponse: Future[Option[UserResponse]] = authService.validateTokenv2(authorization)
 
 
     //todo: read the body params
@@ -62,7 +62,7 @@ class OrganizationController @Inject()(
   //todo: list Organization
   def list(offset: Int, limit: Int) = Action.async { implicit request =>
     val authorization: String = request.headers.get("authentication").getOrElse("")
-    val authResponse: Future[Option[AuthResponse]] = authService.validateTokenv2(authorization)
+    val authResponse: Future[Option[UserResponse]] = authService.validateTokenv2(authorization)
 
 
     try {
@@ -98,7 +98,7 @@ class OrganizationController @Inject()(
 
   def get(id: Int) = Action.async { implicit request =>
     val authorization: String = request.headers.get("authentication").getOrElse("")
-    val authResponse: Future[Option[AuthResponse]] = authService.validateTokenv2(authorization)
+    val authResponse: Future[Option[UserResponse]] = authService.validateTokenv2(authorization)
 
 
     try {

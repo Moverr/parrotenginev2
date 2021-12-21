@@ -1,7 +1,7 @@
 package services
 
 import controllers.requests.{LoginRequest, RegisterRequest}
-import controllers.responses.AuthResponse
+import controllers.responses.UserResponse
 import daos.UserDao
 import db.tables.User
 import helpers.Utilities
@@ -19,7 +19,7 @@ class AuthService @Inject()(userDao: UserDao )   {
 
 
   //todo: Login Function
-   def validate(loginRequest: LoginRequest): Future[Option[AuthResponse]] = {
+   def validate(loginRequest: LoginRequest): Future[Option[UserResponse]] = {
 
     val response =  userDao.getUserByUsernameAndPassword(loginRequest.username,Utilities.encrypt(loginRequest.password))
 
@@ -31,7 +31,7 @@ class AuthService @Inject()(userDao: UserDao )   {
   }
 
   //validate token
-  def validateToken(authorizationToken: Option[String]):Either[java.lang.Throwable, Future[Option[AuthResponse]] ]= {
+  def validateToken(authorizationToken: Option[String]):Either[java.lang.Throwable, Future[Option[UserResponse]] ]= {
     if(authorizationToken == "")    Left( new Exception("You are not authorized to this item "))
 
     val decrypted:Either[Exception,LoginRequest] =  decryptPairString(authorizationToken)
@@ -45,7 +45,7 @@ class AuthService @Inject()(userDao: UserDao )   {
 
 
   //validate Token Overloading
-  def validateTokenv2(authorizationToken: String): Future[Option[AuthResponse]] = {
+  def validateTokenv2(authorizationToken: String): Future[Option[UserResponse]] = {
 
     val xp = JwtUtility.retrievePasswordPair(authorizationToken)
     val decrypted:Either[Exception,LoginRequest] =  decryptPairString(xp)
@@ -58,7 +58,7 @@ class AuthService @Inject()(userDao: UserDao )   {
   }
 
 
-  def register(registerRequest: RegisterRequest): Either[java.lang.Throwable,AuthResponse] ={
+  def register(registerRequest: RegisterRequest): Either[java.lang.Throwable,UserResponse] ={
      val existingUser:Seq[User] =   Await.result( userDao.getUsersByUsername(registerRequest.email),Duration.Inf)
      if(existingUser.length > 0 ) Left (new Exception("User already exists in the system "))
 
@@ -67,20 +67,20 @@ class AuthService @Inject()(userDao: UserDao )   {
   }
 
 
-  def populateResponse(user: User,login:LoginRequest): Option[AuthResponse]  =  Some(populateBasic(user,login))
+  def populateResponse(user: User,login:LoginRequest): Option[UserResponse]  =  Some(populateBasic(user,login))
 
   //Populate Response and move
   /*
    Use the basic Passwrd just saw too hide the background
    */
-  private def populateBasic(user: User,login:LoginRequest): AuthResponse = {
+  private def populateBasic(user: User,login:LoginRequest): UserResponse = {
     val pairString:String = login.username+":"+login.password
-    AuthResponse(JwtUtility.generateKey(pairString), user.username,user.id)
+    UserResponse(JwtUtility.generateKey(pairString), user.username,user.id)
   }
   //todo: populate basic based ono Registratin
-  private def populateBasic(user: User, register:RegisterRequest): AuthResponse = {
+  private def populateBasic(user: User, register:RegisterRequest): UserResponse = {
     val pairString:String = register.email+":"+register.password
-    AuthResponse(JwtUtility.generateKey(pairString), user.username,user.id)
+    UserResponse(JwtUtility.generateKey(pairString), user.username,user.id)
   }
 
   private def decryptPairString(pairString:Option[String] ):Either[Exception,LoginRequest] ={

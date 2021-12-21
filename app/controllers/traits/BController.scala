@@ -1,6 +1,6 @@
 package controllers.traits
 
-import controllers.responses.AuthResponse
+import controllers.responses.UserResponse
 import javax.inject.Inject
 import play.api.mvc.{AbstractController, ControllerComponents}
 import services.AuthService
