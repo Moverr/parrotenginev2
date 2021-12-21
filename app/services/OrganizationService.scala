@@ -1,7 +1,7 @@
 package services
 
 import controllers.requests.OrganisationRequest
-import controllers.responses.{UserResponse, OrganisationResponse}
+import controllers.responses.{AuthorResponse, OrganisationResponse, UserResponse}
 import daos.OrganisationDAO
 import db.tables.{Organization, User}
 import javax.inject.{Inject, Singleton}
@@ -32,7 +32,7 @@ class OrganizationService  @Inject()(organisationDAO: OrganisationDAO)  extends 
 
     Right{
      result.map{
-       y=>y.map(p=>populateResponse(p._1))
+       y=>y.map(p=>populateResponse(p._1,p._2))
      }
     }
 
@@ -46,7 +46,7 @@ class OrganizationService  @Inject()(organisationDAO: OrganisationDAO)  extends 
     Right(
     organisationDAO.get(authResponse.user_id,id)
       .flatMap{
-        case Some(value) => Future.successful(Some(populateResponse(value._1)))
+        case Some(value) => Future.successful(Some(populateResponse(value._1,value._2)))
         case None =>  Future.successful(None)
       }
     )
@@ -55,8 +55,24 @@ class OrganizationService  @Inject()(organisationDAO: OrganisationDAO)  extends 
   /*
       Populate Response
    */
-  override def populateResponse(organisation:Organization): OrganisationResponse =
-    OrganisationResponse(organisation.id,organisation.name,organisation.details
-      ,organisation.date_created.getTime,organisation.author_id,
+  override def populateResponse(organisation:Organization,user: User): OrganisationResponse = {
+    val x =  OrganisationResponse(organisation.id,organisation.name,organisation.details
+      ,organisation.date_created.getTime, populateAuthor(user),
       organisation.date_updated.getTime,organisation.updated_by)
+
+    x
+  }
+
+    def populateResponse(organisation:Organization): OrganisationResponse = {
+    val x =  OrganisationResponse(organisation.id,organisation.name,organisation.details
+      ,organisation.date_created.getTime, null
+      ,
+      organisation.date_updated.getTime,organisation.updated_by)
+
+    x
+  }
+
+
+  def populateAuthor(user: User):AuthorResponse={ AuthorResponse("Test","miles")
+  }
 }

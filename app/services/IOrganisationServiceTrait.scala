@@ -1,7 +1,7 @@
 package services
 import controllers.requests.OrganisationRequest
-import controllers.responses.{UserResponse, OrganisationResponse}
-import db.tables.Organization
+import controllers.responses.{OrganisationResponse, UserResponse}
+import db.tables.{Organization, User}
 
 import scala.concurrent.Future
 
@@ -19,5 +19,5 @@ trait IOrganisationServiceTrait {
   /*
       Populate Response
    */
-  def populateResponse(organisation: Organization): OrganisationResponse
+  def populateResponse(organisation: Organization,user: User): OrganisationResponse
 }
