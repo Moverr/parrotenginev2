@@ -56,20 +56,19 @@ class OrganizationService  @Inject()(organisationDAO: OrganisationDAO)  extends 
       Populate Response
    */
   override def populateResponse(organisation:Organization,user: Option[User]): OrganisationResponse = {
-    val x =  OrganisationResponse(organisation.id,organisation.name,organisation.details
+    val response =  OrganisationResponse(organisation.id,organisation.name,organisation.details
       ,organisation.date_created.getTime, populateAuthor(user),
       organisation.date_updated.getTime,organisation.updated_by)
 
-    x
+    response
   }
 
 
 
-  def populateAuthor(user:Option[User]):Option[AuthorResponse]={
-    user match {
+  // populate response based on
+  def populateAuthor(user:Option[User]):Option[AuthorResponse]= user match {
       case Some(value) => Some( AuthorResponse("Test","miles"))
       case None =>None
     }
 
-  }
 }
