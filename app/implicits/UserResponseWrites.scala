@@ -1,17 +1,15 @@
 package implicits
 
-import controllers.responses.AuthResponse
+import controllers.responses.UserResponse
 import play.api.libs.functional.syntax.{unlift, _}
 import play.api.libs.json.{JsPath, Writes}
 
 
-object AuthResponseWrites {
+object UserResponseWrites {
 
 
- 
-
-  implicit  val authResponseWrites:JsonWriter[AuthResponse] =  new JsonWriter[AuthResponse] {
-    override def write(value: AuthResponse): Json = {
+  implicit  val userResponseWrites:JsonWriter[UserResponse] =  new JsonWriter[UserResponse] {
+    override def write(value: UserResponse): Json = {
     JsObject(Map {
       "access_token" -> JsString(value.access_token)
       "username" -> JsString(value.username)
@@ -22,11 +20,11 @@ object AuthResponseWrites {
     }
   }
 
-  implicit val authResponseWrites2: Writes[AuthResponse] = (
+  implicit val userResponseWrites2: Writes[UserResponse] = (
     (JsPath \ "access_token").write[String] and
       (JsPath \ "username").write[String] and
         (JsPath \ "user_id").write[Long]
-    )(unlift(AuthResponse.unapply))
+    )(unlift(UserResponse.unapply))
 
 }
 

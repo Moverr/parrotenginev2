@@ -1,7 +1,7 @@
 package services
 
 import controllers.requests.{GuestProfileRequest, ProfileRequest}
-import controllers.responses.{AuthResponse, GeneralProfileResponse, GuestInvitationResponse, GuestResponse, StationResponse}
+import controllers.responses.{UserResponse, GeneralProfileResponse, GuestInvitationResponse, GuestResponse, StationResponse}
 import daos.{GuestDAO, ProfileDAO, ResidentProfileDAO, VisitationDAO}
 import db.tables.{Guest, Profile, Visitation}
 import helpers.Utilities
@@ -81,7 +81,7 @@ class VisitationService @Inject()(
   }
 
   //todo: list visitations
-  def list(authResponse: AuthResponse,organisation_id:Option[Int],station_id:Option[Int] ,kiosk_id:Option[Int],offset:Int, limit:Int): Either[java.lang.Throwable,Future[Seq[GuestInvitationResponse]] ]= {
+  def list(authResponse: UserResponse, organisation_id:Option[Int], station_id:Option[Int], kiosk_id:Option[Int], offset:Int, limit:Int): Either[java.lang.Throwable,Future[Seq[GuestInvitationResponse]] ]= {
     if(authResponse == null ) return  Left(new Exception("Invalid Authentication"))
 
     Right(

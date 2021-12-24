@@ -1,9 +1,11 @@
 package implicits
 
-import controllers.responses.{ OrganisationResponse}
+import controllers.responses.{AuthorResponse, OrganisationResponse}
 import play.api.libs.functional.syntax.{unlift, _}
 import play.api.libs.json.{JsPath, Writes}
 
+
+import AuthorResponseWrites._
 
 
 object OrganizationResponseWrites {
@@ -12,7 +14,7 @@ object OrganizationResponseWrites {
       (JsPath \ "name").write[String] and
       (JsPath \ "details").write[String] and
       (JsPath \ "date_created").write[Long] and
-      (JsPath \ "author_id").write[Long] and
+      (JsPath \ "author").write[AuthorResponse] and
       (JsPath \ "date_updated").write[Long] and
       (JsPath \ "updated_by").write[Long]
     )(unlift(OrganisationResponse.unapply))

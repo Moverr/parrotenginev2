@@ -6,7 +6,7 @@ package controllers
 
 import java.sql.Timestamp
 
-import controllers.responses.{AuthResponse, OrganisationResponse, ResidentProfileResponse, StationResponse}
+import controllers.responses.{UserResponse, OrganisationResponse, ResidentProfileResponse, StationResponse}
 import daos.{OrganisationDAO, ProfileDAO, ResidentProfileDAO, StationDAO}
 import db.tables.{Profile, Resident}
 import helpers.Utilities._
@@ -72,12 +72,12 @@ class ResidentControllerTest extends PlaySpec {
       val jsonBody = Json.parse("{\"surname\":\"surname\", \"otherName\":\"otherName\" , \"profiletype\":\"profiletype\", \"gender\":\"male\", \"stationid\":\"1\", \"registerdate\":\"null\" }")
 
 
-      Mockito.when(authService.validateTokenv2("token")).thenReturn(  AuthResponse("token","mose",10))
+      Mockito.when(authService.validateTokenv2("token")).thenReturn(  UserResponse("token","mose",10))
 
       val stationResponse:Option[StationResponse] =  Some(StationResponse(1,"station","code",None))
       val stationResultResponse: Either[java.lang.Throwable,Future[Option[StationResponse]]]  =   Right(Future.successful(stationResponse))
 
-      Mockito.when(stationService.get(  AuthResponse("token","mose",10),1)).thenReturn(stationResultResponse)
+      Mockito.when(stationService.get(  UserResponse("token","mose",10),1)).thenReturn(stationResultResponse)
 
 
       //todo: create stattion and move on

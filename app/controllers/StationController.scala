@@ -1,7 +1,7 @@
 package controllers
 
 import controllers.requests.StationRequest
-import controllers.responses.{AuthResponse, StationResponse}
+import controllers.responses.{UserResponse, StationResponse}
 import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Json
 import play.api.mvc.{BaseController, ControllerComponents}
@@ -21,7 +21,7 @@ class StationController @Inject()(
   //todo: Create
   def create() = Action.async { implicit request =>
     val authorization: String = request.headers.get("authentication").getOrElse("")
-    val authResponse: Future[Option[AuthResponse]] = authService.validateTokenv2(authorization)
+    val authResponse: Future[Option[UserResponse]] = authService.validateTokenv2(authorization)
 
     //todo: read the body params
     val organization_id = request.body.asJson.get("organization_id").as[String]
@@ -59,7 +59,7 @@ class StationController @Inject()(
   def list(organisation_id: Int, offset: Int, limit: Int) = Action.async { implicit request =>
 
     val authorization: String = request.headers.get("authentication").getOrElse("")
-    val authResponse: Future[Option[AuthResponse]] = authService.validateTokenv2(authorization)
+    val authResponse: Future[Option[UserResponse]] = authService.validateTokenv2(authorization)
 
     authResponse.flatMap(item=> item match {
       case Some(value) =>{

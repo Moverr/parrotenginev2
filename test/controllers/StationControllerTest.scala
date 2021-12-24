@@ -1,7 +1,7 @@
 package controllers
 
 
-import controllers.responses.{AuthResponse, OrganisationResponse, StationResponse}
+import controllers.responses.{UserResponse, OrganisationResponse, StationResponse}
 import daos.{OrganisationDAO, StationDAO, UserDao}
 import db.tables.Station
 import helpers.Utilities
@@ -50,7 +50,7 @@ class StationControllerTest extends PlaySpec {
   val controller   = new StationController(Helpers.stubControllerComponents(),authService,stationService)
 
   //todo: mock the auth service
-  Mockito.when(authService.validateTokenv2("token")).thenReturn(  AuthResponse("token","mose",10))
+  Mockito.when(authService.validateTokenv2("token")).thenReturn(  UserResponse("token","mose",10))
 //  todo: Mock the Station Dao
   Mockito.when(stationDao list(1,0,6)) thenReturn(Future.successful(stations))
 // todo: Mock the Organization DAO

@@ -1,7 +1,7 @@
 package controllers
 
 import controllers.requests.{LoginRequest, RegisterRequest}
-import controllers.responses.AuthResponse
+import controllers.responses.UserResponse
 import db.tables.User
 import helpers.Utilities
 import org.mockito.Mockito
@@ -22,8 +22,8 @@ class AuthControllerTest extends PlaySpec     {
   val pairString:String = "moverr@gmail.com:Password"
   val request:LoginRequest = new LoginRequest(user.username,user.password)
 
-  val authResponse2:AuthResponse  =    AuthResponse(JwtUtility.generateKey(pairString), user.username,0L)
-  val authResponse: Either[java.lang.Throwable,AuthResponse]  =   Right(authResponse2)
+  val authResponse2:UserResponse  =    UserResponse(JwtUtility.generateKey(pairString), user.username,0L)
+  val authResponse: Either[java.lang.Throwable,UserResponse]  =   Right(authResponse2)
 
   val jsonLoginRequest = Json.parse("{\"username\":\""+user.username+"\", \"password\":\""+user.password+"\" }")
   val jsonRegistrationRequest = Json.parse("{\"email\":\""+user.username+"\", \"password\":\""+user.password+"\" }")
@@ -41,7 +41,7 @@ class AuthControllerTest extends PlaySpec     {
       val response = controller.login().apply(FakeRequest(Helpers.POST, "/v1/auth/login").withJsonBody(jsonLoginRequest))
       val bodyText: String = contentAsString(response)
 
-      val expectedResult:AuthResponse = Utilities.fromJson[AuthResponse](bodyText)
+      val expectedResult:UserResponse = Utilities.fromJson[UserResponse](bodyText)
       expectedResult.username mustBe user.username
     }
 
@@ -62,7 +62,7 @@ class AuthControllerTest extends PlaySpec     {
       val response = controller.register().apply(FakeRequest(Helpers.POST, "/v1/auth/register").withJsonBody(jsonRegistrationRequest))
       val bodyText: String = contentAsString(response)
 
-      val expectedResult:AuthResponse = Utilities.fromJson[AuthResponse](bodyText)
+      val expectedResult:UserResponse = Utilities.fromJson[UserResponse](bodyText)
       expectedResult.username mustBe user.username
     }
 

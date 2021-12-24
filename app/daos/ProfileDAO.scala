@@ -3,7 +3,7 @@ package daos
 import java.sql.Timestamp
 
 import controllers.requests.ProfileRequest
-import controllers.responses.AuthResponse
+import controllers.responses.UserResponse
 import db.tables.{OrganizationTable, Profile, ProfileTable, User}
 import helpers.Utilities.getCurrentTimeStamp
 

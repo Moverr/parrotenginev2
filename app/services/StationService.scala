@@ -1,7 +1,7 @@
 package services
 
 import controllers.requests.{OrganisationRequest, StationRequest}
-import controllers.responses.{AuthResponse, OrganisationResponse, StationResponse}
+import controllers.responses.{UserResponse, OrganisationResponse, StationResponse}
 import daos.{OrganisationDAO, StationDAO}
 import db.tables.{Organization, Station}
 import javax.inject.Inject
@@ -22,7 +22,7 @@ class StationService   @Inject()(
 
   //todo: Create
 
-    def create(authResponse: AuthResponse,request:StationRequest): Either[java.lang.Throwable,Future[StationResponse]]= {
+    def create(authResponse: UserResponse, request:StationRequest): Either[java.lang.Throwable,Future[StationResponse]]= {
       if (authResponse == null) return Left(new Exception("Invalid Authentication"))
 
       //todo: Get Account Details  ::
@@ -39,7 +39,7 @@ class StationService   @Inject()(
 
 
   //todo: list Stations
-  def list(authResponse: AuthResponse,organisation_id:Int,offset:Int, limit:Int): Either[java.lang.Throwable,Future[Seq[StationResponse]] ]= {
+  def list(authResponse: UserResponse, organisation_id:Int, offset:Int, limit:Int): Either[java.lang.Throwable,Future[Seq[StationResponse]] ]= {
     if(authResponse == null ) return  Left(new Exception("Invalid Authentication"))
 
     Right(
@@ -48,7 +48,7 @@ class StationService   @Inject()(
   }
 
   //todo: get item by id
-  def get(authResponse: AuthResponse, station_id:Int):Either[java.lang.Throwable,Future[Option[StationResponse]]]={
+  def get(authResponse: UserResponse, station_id:Int):Either[java.lang.Throwable,Future[Option[StationResponse]]]={
     if(authResponse == null ) return  Left(new Exception("Invalid Authentication"))
     Right( stationDao.get(station_id).map(record=>populateResponse(record)))
   }

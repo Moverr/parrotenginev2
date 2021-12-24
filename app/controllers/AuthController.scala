@@ -3,8 +3,8 @@ package controllers
 import java.util.NoSuchElementException
 
 import controllers.requests.{LoginRequest, RegisterRequest}
-import controllers.responses.AuthResponse
-import implicits.AuthResponseWrites._
+import controllers.responses.UserResponse
+import implicits.UserResponseWrites._
 import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Json
 import play.api.libs.json.Reads._
@@ -71,7 +71,7 @@ class AuthController @Inject()(
       val token = request.body.asJson.get("token").as[String]
       authService.validateToken(Some(token)) match {
         case Left(e: Exception) =>  Future.successful(BadRequest(e.getMessage))
-        case Right(response:Option[AuthResponse]) => Future.successful(Ok(Json.toJson(response.get)))
+        case Right(response:Option[UserResponse]) => Future.successful(Ok(Json.toJson(response.get)))
       }
 
 
