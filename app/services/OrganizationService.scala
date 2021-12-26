@@ -46,7 +46,7 @@ class OrganizationService  @Inject()(organisationDAO: OrganisationDAO)  extends 
     Right(
     organisationDAO.get(authResponse.user_id,id)
       .flatMap{
-        case Some(value) => Future.successful(Some(populateResponse(value._1,Some(value._2))))
+        case Some(value) => Future.successful(Some(populateResponse(value._1._1,Some(value._1._2))))
         case None =>  Future.successful(None)
       }
     )
