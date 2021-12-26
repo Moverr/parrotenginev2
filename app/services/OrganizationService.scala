@@ -44,8 +44,8 @@ class OrganizationService  @Inject()(organisationDAO: OrganisationDAO)  extends 
    */
   override def populateResponse(organisation:Organization, profile: Option[Profile]): OrganisationResponse = {
     val response =  OrganisationResponse(organisation.id,organisation.name,organisation.details
-      ,organisation.date_created.getTime, populateAuthor(profile),
-      organisation.date_updated.getTime,organisation.updated_by)
+      ,organisation.date_created, populateAuthor(profile),
+      organisation.date_updated,organisation.updated_by)
 
     response
   }

@@ -8,6 +8,7 @@ import play.db.NamedDatabase
 import slick.jdbc.JdbcProfile
 import slick.jdbc.PostgresProfile.api._
 import slick.lifted.TableQuery
+import java.sql.Timestamp
 
 import scala.concurrent.Future
 

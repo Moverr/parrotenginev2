@@ -1,4 +1,5 @@
 package controllers.responses
+import java.sql.Timestamp
 
-case class OrganisationResponse(id:Long,name:String,details:String,date_created:Long,author:Option[AuthorResponse],date_updated:Long,updated_by:Long)
+case class OrganisationResponse(id:Long,name:String,details:String,date_created:Timestamp,author:Option[AuthorResponse],date_updated:Timestamp,updated_by:Long)
 
