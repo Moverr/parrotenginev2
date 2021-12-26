@@ -27,12 +27,12 @@ class OrganizationService  @Inject()(organisationDAO: OrganisationDAO)  extends 
   //todo: list organinsations
   override def list(authResponse: UserResponse, offset:Int, limit:Int): Either[java.lang.Throwable,Future[Seq[OrganisationResponse]] ]= {
     if(authResponse == null ) return  Left(new Exception("Invalid Authentication"))
-    val result : Future[Seq[((Organization,User),Profile)]] =  organisationDAO.list(authResponse.user_id,offset,limit)
+    val result : Future[Seq[((Organization,User),Option[Profile])]] =  organisationDAO.list(authResponse.user_id,offset,limit)
 
 
     Right{
      result.map{
-       y=>y.map(p=>populateResponse(p._1._1,Some(p._2)))
+       y=>y.map(p=>populateResponse(p._1._1,p._2))
      }
     }
 
@@ -46,7 +46,7 @@ class OrganizationService  @Inject()(organisationDAO: OrganisationDAO)  extends 
     Right(
     organisationDAO.get(authResponse.user_id,id)
       .flatMap{
-        case Some(value) => Future.successful(Some(populateResponse(value._1._1,Some(value._2))))
+        case Some(value) => Future.successful(Some(populateResponse(value._1._1,value._2)))
         case None =>  Future.successful(None)
       }
     )
@@ -67,7 +67,7 @@ class OrganizationService  @Inject()(organisationDAO: OrganisationDAO)  extends 
 
   // populate response based on
   def populateAuthor(author:Option[Profile]):Option[AuthorResponse]= author match {
-      case Some(value) => Some( AuthorResponse(value.surname,value.other_names))
+      case Some(value) => Some( AuthorResponse(value.id, value.surname,value.other_names))
       case None =>None
     }
 

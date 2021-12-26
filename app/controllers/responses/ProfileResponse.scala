@@ -23,5 +23,5 @@ case class ResidentProfileResponse(id:Long, profile:GeneralProfileResponse, stat
 case class GuestResponse(id:Long, surname:String, othername:String, profiletype: String, gender:String) extends ProfileResponse
 
 // thisis to hellp in the authors
-case class AuthorResponse(surname:String, othername:String) extends  ProfileResponse
+case class AuthorResponse(id:Long,surname:String, othername:String) extends  ProfileResponse
 
