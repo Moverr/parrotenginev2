@@ -122,7 +122,7 @@ class ResidentService @Inject()(
   }
 
 
-  //todo: invite them to create user credentials
+  //todo: invite them to create profile credentials
 
 
   //todo: can achive or activate them depending on the permissions
