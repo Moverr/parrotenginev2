@@ -14,7 +14,7 @@ object OrganizationResponseWrites {
       (JsPath \ "name").write[String] and
       (JsPath \ "details").write[String] and
       (JsPath \ "date_created").write[Long] and
-      (JsPath \ "author").write[AuthorResponse] and
+      (JsPath \ "author").write[Option[AuthorResponse]] and
       (JsPath \ "date_updated").write[Long] and
       (JsPath \ "updated_by").write[Long]
     )(unlift(OrganisationResponse.unapply))
