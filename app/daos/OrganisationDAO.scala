@@ -28,10 +28,10 @@ class OrganisationDAO @Inject()(@NamedDatabase("default") dbConfigProvider: Data
   *
   * Get Organisation by owner
    */
-  def list(owner: Long, offset: Int, limit: Int): Future[Seq[((Organization, User),Profile)]] = {
+  def list(owner: Long, offset: Int, limit: Int): Future[Seq[((Organization, User),Option[Profile])]] = {
 
     val record = for {
-      record <- orgTable.filter(_.owner === owner) join UserTable on (_.owner === _.id) join profileTable on (_._2.id=== _.user_id)
+      record <- orgTable.filter(_.owner === owner) join UserTable on (_.owner === _.id) joinLeft  profileTable on (_._2.id=== _.user_id)
     }
       yield (record)
 
@@ -42,13 +42,13 @@ class OrganisationDAO @Inject()(@NamedDatabase("default") dbConfigProvider: Data
   /*
      Get  Organisation by Id
    */
-  def get(owner: Long, orgId: Long): Future[Option[((Organization, User),Profile)]] = {
+  def get(owner: Long, orgId: Long): Future[Option[((Organization, User),Option[Profile])]] = {
 
     val record = for {
-      record <- orgTable join UserTable on (_.owner === _.id) join profileTable on (_._2.id=== _.user_id)
+      record <- orgTable join UserTable on (_.owner === _.id) joinLeft  profileTable on (_._2.id=== _.user_id)
     }
       yield (record)
-    db.run(record.filter(_._2.id === owner).filter(_._1._1.id === orgId).result.headOption)
+    db.run(record.filter(_._1._2.id === owner).filter(_._1._1.id === orgId).result.headOption)
   }
 
   def get(orgId: Long): Future[Option[Organization]] =

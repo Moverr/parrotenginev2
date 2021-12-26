@@ -13,7 +13,7 @@ trait IOrganisatioonDAO {
  * Get Organisation by owner
 
   */
-  def list(owner: Long, offset: Int, limit: Int):  Future[Seq[((Organization,User),Profile)]]
+  def list(owner: Long, offset: Int, limit: Int):  Future[Seq[((Organization,User),Option[Profile])]]
 
   /*
   *
