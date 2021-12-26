@@ -39,6 +39,23 @@ class OrganizationService  @Inject()(organisationDAO: OrganisationDAO)  extends 
 
   }
 
+  /*
+      Populate Response
+   */
+  override def populateResponse(organisation:Organization, profile: Option[Profile]): OrganisationResponse = {
+    val response =  OrganisationResponse(organisation.id,organisation.name,organisation.details
+      ,organisation.date_created.getTime, populateAuthor(profile),
+      organisation.date_updated.getTime,organisation.updated_by)
+
+    response
+  }
+
+  // populate response based on
+  def populateAuthor(author:Option[Profile]):Option[AuthorResponse]= author match {
+      case Some(value) => Some( AuthorResponse(value.id, value.surname,value.other_names))
+      case None =>None
+    }
+
   //todo: Get Organization
   override def get(authResponse: UserResponse, id:Int):  Either[java.lang.Throwable,Future[Option[OrganisationResponse]]] ={
     if(authResponse == null )  return  Left(new Exception("Invalid Authentication"))
@@ -51,24 +68,5 @@ class OrganizationService  @Inject()(organisationDAO: OrganisationDAO)  extends 
       }
     )
   }
-
-  /*
-      Populate Response
-   */
-  override def populateResponse(organisation:Organization, profile: Option[Profile]): OrganisationResponse = {
-    val response =  OrganisationResponse(organisation.id,organisation.name,organisation.details
-      ,organisation.date_created.getTime, populateAuthor(profile),
-      organisation.date_updated.getTime,organisation.updated_by)
-
-    response
-  }
-
-
-
-  // populate response based on
-  def populateAuthor(author:Option[Profile]):Option[AuthorResponse]= author match {
-      case Some(value) => Some( AuthorResponse(value.id, value.surname,value.other_names))
-      case None =>None
-    }
 
 }
