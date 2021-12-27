@@ -14,6 +14,7 @@ import scala.concurrent.duration.Duration
 class StationService @Inject()(
                                 stationDao: StationDAO
                                 , organisationDAO: OrganisationDAO
+                              ,organizationService: OrganizationService
 
                               ) {
 
@@ -65,18 +66,20 @@ class StationService @Inject()(
 
   //todo: Archive
 
+  def populateResponse(station: Station, organization: Option[Organization]): StationResponse = {
+    StationResponse(station.id, station.name, station.code, organization match {
+      case Some(value) =>Some(organizationService.populateResponse(value,None))
+      case None =>None
+    })
+  }
+
   def populateResponse(station: Future[Station]): Future[StationResponse] = station.flatMap {
     record => Future.successful(populateResponse(record, None))
   }
 
-  def populateResponse(station: Station, organization: Option[Organization]): StationResponse = {
-    StationResponse(station.id, station.name, station.code, None)
-  }
-
-
-  def populateResponse(station: Option[Station]): Option[StationResponse] =
+  def populateResponse(station: Option[Station],organization: Option[Organization]): Option[StationResponse] =
     station match {
-      case Some(value) => Some(populateResponse(value, None))
+      case Some(value) => Some(populateResponse(value, organization))
       case None => None
     }
 
