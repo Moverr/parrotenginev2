@@ -1,7 +1,7 @@
 package daos
 
 import controllers.requests.StationRequest
-import db.tables.{OrganizationTable, Station, StationTable}
+import db.tables.{Organization, OrganizationTable, Station, StationTable}
 import javax.inject.{Inject, Singleton}
 import play.api.db.slick.DatabaseConfigProvider
 import slick.jdbc.JdbcProfile
@@ -27,9 +27,10 @@ class StationDAO @Inject()(dbConfigProvider: DatabaseConfigProvider) {
 
 
   //todo: list station in an organization
-  def list(organization_id: Long, offset: Int, limit: Int): Future[Seq[Station]] = {
+  def list(organization_id: Long, offset: Int, limit: Int): Future[Seq[(Station,Option[Organization])]] = {
 
-    val query = stationTable.filter(_.organisation_id === organization_id)
+    val query = stationTable    filter(_.organisation_id === organization_id)  joinLeft organizationTable on (_.organisation_id=== _.id)
+
 
     db.run(query
       .drop(offset)
@@ -38,13 +39,15 @@ class StationDAO @Inject()(dbConfigProvider: DatabaseConfigProvider) {
   }
 
 
+  def get(id: Long): Future[Option[(Station,Option[Organization])]] = {
+
+    val  query  = stationTable.filter(_.id === id) joinLeft organizationTable on (_.organisation_id=== _.id)
+    db.run(query.result.headOption)
+  }
+
   //todo: Archive Station
   def archive(organization_id: Int, id: Int): Unit = {
     ???
-  }
-
-  def get(id: Long): Future[Option[Station]] = {
-    db.run(stationTable.filter(_.id === id).result.headOption)
   }
 
   //todo: Populate Response
