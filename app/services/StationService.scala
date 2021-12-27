@@ -30,7 +30,7 @@ class StationService @Inject()(
     if (response.exists(_ => false)) return Left(new Exception("Organization Exists"))
 
     val stationResponse: Future[Station] = stationDao.create(request.organization_id, request)
-    Right(stationResponse.flatMap(x => Future.successful(populateResponse(x))))
+    Right(stationResponse.flatMap(x => Future.successful(populateResponse(x,None))))
 
 
   }
