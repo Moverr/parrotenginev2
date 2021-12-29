@@ -1,7 +1,9 @@
 package services
 
+import java.sql.Timestamp
+
 import controllers.requests.{GuestProfileRequest, ProfileRequest}
-import controllers.responses.{UserResponse, GeneralProfileResponse, GuestInvitationResponse, GuestResponse, StationResponse}
+import controllers.responses.{GeneralProfileResponse, GuestInvitationResponse, GuestResponse, StationResponse, UserResponse}
 import daos.{GuestDAO, ProfileDAO, ResidentProfileDAO, VisitationDAO}
 import db.tables.{Guest, Profile, Visitation}
 import helpers.Utilities
@@ -11,6 +13,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
+import java.time._
 
 
 @Singleton
@@ -18,7 +21,6 @@ class VisitationService @Inject()(
                               residentDAO: ResidentProfileDAO
                               , profileDAO: ProfileDAO
                               , guestDAO: GuestDAO
-                              , stationService: StationService
                               , visitationDAO: VisitationDAO
 
                             ) {
@@ -35,9 +37,9 @@ class VisitationService @Inject()(
     //5: register vistor in the book register
     //6: assigng registration external_id
  */
-  def Invitation(request: ProfileRequest): Either[Throwable, Future[GuestInvitationResponse]] = {
+  def createGuestInvitation(request: ProfileRequest): Either[Throwable, Future[GuestInvitationResponse]] = {
     request match {
-      case GuestProfileRequest(surname, othername, profiletype, gender, host_id, registerDate, location) => {
+      case gust as GuestProfileRequest(surname, othername, profiletype, gender, host_id, registerDate, location,deviceId,stationId,kiosk_id) => {
         //todo: check if host exists ?? jump this
 
 
@@ -49,7 +51,8 @@ class VisitationService @Inject()(
         response match {
           case Some(value: (Guest, Profile)) => {
             //todo: create guestProfile
-            val visitation = Visitation(0L, value._1.id, host_id, Some(getCurrentTimeStamp()), None, None, None, Some("pending"),Utilities.RandomString())
+//             visitation = Visitation(0L, value._1.id, host_id, Some(getCurrentTimeStamp()),   Some(Timestamp.valueOf(java.time.LocalDate.now().toString) , java.time.LocalDate.now(), Some(stationId), deviceId,Some("pending"),Utilities.RandomString())
+            val   visitation =  Visitation(0L,value._1.profile_id,host_id,Some(getCurrentTimeStamp()),None,Some(stationId.longValue()),deviceId,Some(kiosk_id.longValue()),Some("pending"),Utilities.RandomString())
             val record = for {
               response <- createVisitation(visitation).map(x => populateResponse(value._2,value._1,x))
 
@@ -61,11 +64,17 @@ class VisitationService @Inject()(
           case None => {
 
             val response = for {
-              resp <- CreateGuestProfile(GuestProfileRequest(surname, othername, profiletype, gender, host_id, registerDate, location))
-              visitation = Visitation(0L, resp._1.id, host_id, Some(getCurrentTimeStamp()), None, None, None, Some("pending"),Utilities.RandomString())
-              result <- createVisitation(visitation).map(x => populateResponse(resp._2,resp._1,x))
+              resp <- CreateGuestProfile(gust)
 
-            } yield (result)
+               visitation =  Visitation(0L,resp._1.profile_id,host_id,Some(getCurrentTimeStamp()),None,Some(stationId.longValue()),deviceId,Some(kiosk_id.longValue()),Some("pending"),Utilities.RandomString())
+
+                record =  for {
+                response <- createVisitation(visitation).map(x => populateResponse(resp._2,resp._1,x))
+
+              } yield (response)
+
+
+            } yield (record)
 
             Right(response)
           }

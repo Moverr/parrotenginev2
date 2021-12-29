@@ -34,6 +34,12 @@ class VisitationController @Inject()(
     val host_id = request.body.asJson.get("host_id").as[Long]
 
 
+    //New information needed ..
+    val deviceId: String = request.body.asJson.get("deviceId").as[String]
+    val stationId: Int = request.body.asJson.get("stationId").as[String].trim.toInt
+
+
+
     val latitude: Double = 0.0
       ///request.body.asJson.get("location").as[Double]
     val longitude: Double =  0.0
@@ -43,9 +49,9 @@ class VisitationController @Inject()(
 
 
     //todo: guest profile reequest
-    val guestRequest: ProfileRequest = GuestProfileRequest(surname, otherName, ProfileType.withName(profileType), gender, host_id, registratioon_date_long, address_location)
+    val guestRequest: ProfileRequest = GuestProfileRequest(surname, otherName, ProfileType.withName(profileType), gender, host_id, registratioon_date_long, address_location,deviceId,stationId)
 
-    val  response : Either[Throwable, Future[GuestInvitationResponse]] = visitationService.Invitation(guestRequest)
+    val  response : Either[Throwable, Future[GuestInvitationResponse]] = visitationService.createGuestInvitation(guestRequest)
 
     try{
       response match {

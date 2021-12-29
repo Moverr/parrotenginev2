@@ -4,13 +4,14 @@ import controllers.requests.StationRequest
 import controllers.responses.{StationResponse, UserResponse}
 import daos.{OrganisationDAO, StationDAO}
 import db.tables.{Organization, Station}
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{Await, Future}
 import scala.concurrent.duration.Duration
 
 
+@Singleton
 class StationService @Inject()(
                                 stationDao: StationDAO
                                 , organisationDAO: OrganisationDAO
@@ -82,8 +83,6 @@ class StationService @Inject()(
       case Some(value) => Some(populateResponse(value, organization))
       case None => None
     }
-
-  //StationResponse(station.id,station.name,station.code,None )
 
 
 }
