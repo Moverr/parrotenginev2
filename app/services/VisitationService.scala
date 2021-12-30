@@ -74,7 +74,8 @@ class VisitationService @Inject()(
               } yield (response)
 
 
-            } yield (record)
+            } yield (record.onComplete(x=>x.get))
+
 
             Right(response)
           }

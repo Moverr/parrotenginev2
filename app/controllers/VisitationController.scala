@@ -13,10 +13,10 @@ import implicits.GuestInvitationResponseWrites._
 
 @Singleton
 class VisitationController @Inject()(
-                                 controllerComponents: ControllerComponents
-                                 , val authService: AuthService
-                                 , val visitationService: VisitationService
-                               ) extends AbstractController(controllerComponents) {
+                                      controllerComponents: ControllerComponents
+                                      , val authService: AuthService
+                                      , val visitationService: VisitationService
+                                    ) extends AbstractController(controllerComponents) {
 
   //todo: create visiotr regirstration profile
   def register = Action.async { implicit request =>
@@ -34,22 +34,26 @@ class VisitationController @Inject()(
     val host_id = request.body.asJson.get("host_id").as[Long]
 
 
-    //New information needed ..
-    val deviceId: String = request.body.asJson.get("deviceId").as[String]
-    val stationId: Int = request.body.asJson.get("stationId").as[String].trim.toInt
-
-
-
     val latitude: Double = 0.0
-      ///request.body.asJson.get("location").as[Double]
+    ///request.body.asJson.get("location").as[Double]
     val longitude: Double =  0.0
-      //request.body.asJson.get("location").as[Double]
+    //request.body.asJson.get("location").as[Double]
 
     val address_location = PhysicalAddress(location, "LOCATION", Some(latitude), Some(longitude))
 
+    val deviceId = request.body.asJson.get("deviceId").as[String]
+    val stationId = request.body.asJson.get("stationId").as[Long]
+    val kiosk_id = request.body.asJson.get("kiosk_id").as[Long]
+
+
+
+
 
     //todo: guest profile reequest
-    val guestRequest: ProfileRequest = GuestProfileRequest(surname, otherName, ProfileType.withName(profileType), gender, host_id, registratioon_date_long, address_location,deviceId,stationId)
+    val guestRequest: ProfileRequest = GuestProfileRequest(surname, otherName, ProfileType.withName(profileType), gender,
+      host_id, registratioon_date_long,
+      address_location
+    ,deviceId,stationId.toInt,kiosk_id.toInt)
 
     val  response : Either[Throwable, Future[GuestInvitationResponse]] = visitationService.createGuestInvitation(guestRequest)
 
@@ -82,7 +86,7 @@ class VisitationController @Inject()(
 
         visitationService.list(value, organisation_id,station_id,kiosk_id, offset, limit)
 
-          match {
+        match {
           case Left(exception) => Future.successful(BadRequest(Json.toJson(exception.getMessage)))
           case Right(result) => result flatMap {
             result => Future.successful(Ok(Json.toJson(result)))
