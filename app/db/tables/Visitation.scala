@@ -5,7 +5,7 @@ import slick.jdbc.PostgresProfile.api._
 import slick.jdbc.JdbcProfile
 import slick.lifted.TableQuery
 
-case class Visitation(id:Long,guest_id:Long,host_id:Long,time_in:Option[Timestamp],time_out:Option[Timestamp],station_id:Option[Long],kiosk_id:Option[Long],status:Option[String],reference_id:String) ;
+case class Visitation(id:Long,guest_id:Long,host_id:Long,time_in:Option[Timestamp],time_out:Option[Timestamp],station_id:Option[Long],kiosk_id:Option[Long],status:Option[String],reference_id:String)
 
 
 
@@ -24,6 +24,7 @@ class  VisitationTable(tag: Tag) extends Table[Visitation](tag,"visitations"){
   def  reference_id= column[String]("reference_id")
 
 
-  override def * = (id,guest_id,host_id,time_in,time_out,station_id,kiosk_id,status,reference_id).mapTo[Visitation]
-  //<>( (Visitation.apply _).tupled ,Visitation.unapply)
+  override def * = (id,guest_id,host_id,time_in,time_out,station_id,kiosk_id,status,reference_id) <> (Visitation.tupled,Visitation.unapply)
+
+
 }

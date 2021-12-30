@@ -9,6 +9,7 @@ object AuthorResponseWrites {
 
   implicit val authorResponsewrites : Writes[AuthorResponse] = (
     (
+      (JsPath \ "id").write[Long] and
       (JsPath \ "surname").write[String] and
       (JsPath \ "othername").write[String]
 

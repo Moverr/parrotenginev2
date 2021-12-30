@@ -1,5 +1,5 @@
 package daos
-import db.tables.{Organization, OrganizationTable, User}
+import db.tables.{Organization, OrganizationTable, Profile, User}
 import slick.lifted.TableQuery
 
 import scala.concurrent.Future
@@ -13,7 +13,7 @@ trait IOrganisatioonDAO {
  * Get Organisation by owner
 
   */
-  def list(owner: Long, offset: Int, limit: Int):  Future[Seq[(Organization,User)]]
+  def list(owner: Long, offset: Int, limit: Int):  Future[Seq[((Organization,User),Option[Profile])]]
 
   /*
   *

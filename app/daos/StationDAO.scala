@@ -1,52 +1,54 @@
 package daos
 
-import java.sql.Timestamp
-
 import controllers.requests.StationRequest
-import controllers.responses.StationResponse
-import db.tables.{Organization, OrganizationTable, Station, StationTable, User, UserTable}
-
-import scala.concurrent.Future
+import db.tables.{Organization, OrganizationTable, Station, StationTable}
 import javax.inject.{Inject, Singleton}
-import org.joda.time.{DateTime, DateTimeZone, LocalDateTime}
 import play.api.db.slick.DatabaseConfigProvider
 import slick.jdbc.JdbcProfile
 import slick.jdbc.PostgresProfile.api._
 import slick.lifted.TableQuery
 
-@Singleton
-class StationDAO    @Inject()(dbConfigProvider: DatabaseConfigProvider) {
+import scala.concurrent.Future
 
-  private  val dbConfig = dbConfigProvider.get[JdbcProfile]
-  lazy  val stationTable = TableQuery[StationTable]
-  lazy  val organizationTable = TableQuery[OrganizationTable]
+@Singleton
+class StationDAO @Inject()(dbConfigProvider: DatabaseConfigProvider) {
+
+  private val dbConfig = dbConfigProvider.get[JdbcProfile]
+  lazy val stationTable = TableQuery[StationTable]
+  lazy val organizationTable = TableQuery[OrganizationTable]
 
   import dbConfig._
 
 
   //todo: create station
-  def create(organisation_id:Long, station:StationRequest): Future[Station] = {
-    db.run(stationTable.returning(stationTable) += Station(0L,organisation_id,station.name,station.code))
+  def create(organisation_id: Long, station: StationRequest): Future[Station] = {
+    db.run(stationTable.returning(stationTable) += Station(0L, organisation_id, station.name, station.code))
   }
 
 
   //todo: list station in an organization
-  def list(organization_id: Long,offset:Int,limit:Int):Future[Seq[Station]]= {
-    db.run(stationTable
-      .filter(_.organisation_id === organization_id)
+  def list(organization_id: Long, offset: Int, limit: Int): Future[Seq[(Station,Option[Organization])]] = {
+
+    val query = stationTable    filter(_.organisation_id === organization_id)  joinLeft organizationTable on (_.organisation_id=== _.id)
+
+
+    db.run(query
       .drop(offset)
       .take(limit)
       .result)
   }
 
 
-  //todo: Archive Station
-  def archive(organization_id:Int,id:Int):Unit ={
-  ???
+  def get(id: Long): Future[Option[(Station,Option[Organization])]] = {
+
+    val  query  = stationTable.filter(_.id === id) joinLeft organizationTable on (_.organisation_id=== _.id)
+    db.run(query.result.headOption)
   }
 
-  def get(id:Long):Future[Option[Station]]={
-    db.run(stationTable.filter(_.id === id).result.headOption)
+  //todo: Archive Station
+  def archive(organization_id: Int, id: Int): Unit = {
+    ???
   }
+
   //todo: Populate Response
 }
