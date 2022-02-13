@@ -32,27 +32,27 @@ class VisitationDAO @Inject()(dbConfigProvider: DatabaseConfigProvider) {
 
   //todo; get visitation on a given host.. day etc.
   //  organisation_id:Option[Int],station_id:Option[Int] ,kiosk_id:Option[Int],offset:Int, limit:Int
-  def list(organisation_id: Option[Int], station_id: Option[Int], kiosk_id: Option[Int], offset: Int, limit: Int): Future[Seq[(((((Visitation,Guest),Option[Profile]),Station),Option[Kiosk]),Profile)]] = {
+  def list(organisation_id: Option[Int], station_id: Option[Int], kiosk_id: Option[Int], offset: Int, limit: Int): Future[Seq[(((((Visitation,Guest),Option[Profile]),Option[Profile]),Option[Kiosk]),Profile)]] = {
     val records = for {
 
       record <- {
 
         val initQuery  = {
-          visitationTable join guestTable on (_.guest_id === _.id) joinLeft
-          profileTable on (_._1.host_id === _.id) join
-          //join the station if exists
-          stationTable on (_._1._1.station_id === _.id) joinLeft
-          //kiosk table
-          kioskTable on (_._1._1._1.kiosk_id === _.id) join
+          visitationTable join  guestTable on (_.guest_id === _.id) join
+          stationTable on (_._1.station_id === _.id) join
+          kioskTable on (_._1._1.kiosk_id === _.id) joinLeft
+            profileTable on (_._1._1._1.host_id === _.id) joinLeft
           //Guest to profile  information
-          profileTable on (_._1._1._1._2.profile_id === _.id)
+          profileTable on (_._1._1._1._2.profile_id === _.id) join
+       //odoo mising
 
         }
 
         //Fetch by kiosk Query
+        /*
         val KioskQuery = for{
           query <- kiosk_id match {
-            case Some(value) => initQuery.filter(_._1._1._1._1._1.kiosk_id === value.toLong)
+            case Some(value) => initQuery.filter(_. === value.toLong)
             case None => initQuery
           }
         }yield (query)
@@ -65,19 +65,23 @@ class VisitationDAO @Inject()(dbConfigProvider: DatabaseConfigProvider) {
             case None => initQuery
           }
         }yield (query)
+        */
 
-        val orgQuery = for{
-          query <- organisation_id match {
-            case Some(value) => stationQuery.filter(_._1._1._2.organisation_id === value.toLong)
-            case None => stationQuery
-          }
-        }yield (query)
+//        val orgQuery = for{
+//          query <- organisation_id match {
+//            case Some(value) => {
+//
+//             stationQuery.filter(_._2. === value.toLong)
+//            }
+//            case None => stationQuery
+//          }
+//        }yield (query)
 
 
         //todo:
 
-        orgQuery drop offset take limit
-
+//        initQuery drop offset take limit
+        initQuery
       }
 
 

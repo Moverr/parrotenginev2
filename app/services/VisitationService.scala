@@ -36,7 +36,7 @@ class VisitationService @Inject()(
    */
   def createGuestInvitation(request: ProfileRequest): Either[Throwable, Future[GuestInvitationResponse]] = {
     request match {
-      case gust as GuestProfileRequest(surname, othername, profiletype, gender, host_id, registerDate, location, deviceId, stationId, kiosk_id) => {
+      case   GuestProfileRequest(surname, othername, profiletype, gender, host_id, registerDate, location, deviceId, stationId, kiosk_id) => {
         //todo: check if host exists ?? jump this
 
 
@@ -60,37 +60,22 @@ class VisitationService @Inject()(
           }
           case None => {
 
-            val record: Future[(Guest, Profile)] = CreateGuestProfile(gust)
+            val record: Future[(Guest, Profile)] = CreateGuestProfile(GuestProfileRequest(surname, othername, profiletype, gender, host_id, registerDate, location, deviceId, stationId, kiosk_id) )
 
-            record map {
-              resp => {
-                val visitation = Visitation(0L, resp._1.profile_id, host_id, Some(getCurrentTimeStamp()), None, Some(stationId.longValue()), Some(kiosk_id.longValue()), Some("pending"), Utilities.RandomString())
-                val response = createVisitation(visitation).map(x => populateResponse(resp._2, resp._1, x))
-                Right(response)
-              }
-            }
+           val reat = for {
+             xt <-{
 
-            /*
-            val response = for {
-              resp <- CreateGuestProfile(gust)
-
-              visitation = Visitation(0L, resp._1.profile_id, host_id, Some(getCurrentTimeStamp()), None, Some(stationId.longValue()), Some(kiosk_id.longValue()), Some("pending"), Utilities.RandomString())
-
-              record = for {
-                response <- createVisitation(visitation).map(x => populateResponse(resp._2, resp._1, x))
-
-              } yield (response)
+                   val te = record.value.get.get
 
 
-            } yield (record)
+                 val visitation = Visitation(0L, te._1.profile_id, host_id, Some(getCurrentTimeStamp()), None, Some(stationId.longValue()), Some(kiosk_id.longValue()), Some("pending"), Utilities.RandomString())
+                 val response = createVisitation(visitation).map(x => populateResponse(te._2, te._1, x))
+                 response
 
+             }
+            } yield (xt)
 
-            response.map(x => Right(x))
-
-          }
-            */
-
-
+            Right(reat)
           }
 
 
@@ -99,6 +84,7 @@ class VisitationService @Inject()(
       }
 
     }
+  }
 
     //todo: list visitations
     def list(authResponse: UserResponse, organisation_id: Option[Int], station_id: Option[Int], kiosk_id: Option[Int], offset: Int, limit: Int): Either[java.lang.Throwable, Future[Seq[GuestInvitationResponse]]] = {
@@ -154,4 +140,4 @@ class VisitationService @Inject()(
 
 
   }
-}
+

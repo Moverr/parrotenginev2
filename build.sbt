@@ -1,3 +1,5 @@
+
+
 name := """parrotenginev2"""
 organization := "com.kodeinc"
 
@@ -36,13 +38,16 @@ libraryDependencies ++= Seq(
   "com.nimbusds" % "nimbus-jose-jwt" % "8.20.2",
 
   // Adding akka actors
- "com.typesafe.akka" %% "akka-actor" % "2.6.3"
+ "com.typesafe.akka" %% "akka-actor" % "2.6.3",
+
+  "org.seleniumhq.selenium" % "selenium-java"            % "3.141.59",
+  "commons-io"              % "commons-io"               % "2.8.0",
+  "org.scala-lang.modules" %% "scala-parser-combinators" % "1.1.2",
+  "org.scalatest"          %% "scalatest"                % "3.2.8" % "Test",
+  "org.scalamock"          %% "scalamock"                % "5.1.0" % "Test"
 
 )
-enablePlugins(UniversalPlugin)
-enablePlugins(JavaAppPackaging)
-import com.typesafe.sbt.packager.docker.DockerChmodType
-import com.typesafe.sbt.packager.docker.DockerPermissionStrategy
-import sbt.Keys.libraryDependencies
-dockerChmodType := DockerChmodType.UserGroupWriteExecute
-dockerPermissionStrategy := DockerPermissionStrategy.CopyChown
+
+
+
+//CQRS/Event Sourcing architecture
