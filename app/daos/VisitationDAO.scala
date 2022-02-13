@@ -32,21 +32,21 @@ class VisitationDAO @Inject()(dbConfigProvider: DatabaseConfigProvider) {
 
   //todo; get visitation on a given host.. day etc.
   //  organisation_id:Option[Int],station_id:Option[Int] ,kiosk_id:Option[Int],offset:Int, limit:Int
-  def list(organisation_id: Option[Int], station_id: Option[Int], kiosk_id: Option[Int], offset: Int, limit: Int): Future[Seq[(((((Visitation,Guest),Option[Profile]),Option[Profile]),Option[Kiosk]),Profile)]] = {
-    val records = for {
+ // def list(organisation_id: Option[Int], station_id: Option[Int], kiosk_id: Option[Int], offset: Int, limit: Int): Future[Seq[(((((Visitation,Guest),Option[Profile]),Option[Profile]),Option[Kiosk]),Profile)]] = {
+   // val records = for {
 
-      record <- {
+   //   record <- {
 
-        val initQuery  = {
-          visitationTable join  guestTable on (_.guest_id === _.id) join
-          stationTable on (_._1.station_id === _.id) join
-          kioskTable on (_._1._1.kiosk_id === _.id) joinLeft
-            profileTable on (_._1._1._1.host_id === _.id) joinLeft
+   //     val initQuery  = {
+       //   visitationTable join  guestTable on (_.guest_id === _.id) join
+         // stationTable on (_._1.station_id === _.id) join
+        //  kioskTable on (_._1._1.kiosk_id === _.id) joinLeft
+        //    profileTable on (_._1._1._1.host_id === _.id) joinLeft
           //Guest to profile  information
-          profileTable on (_._1._1._1._2.profile_id === _.id) join
+        //  profileTable on (_._1._1._1._2.profile_id === _.id) join
        //odoo mising
 
-        }
+     //   }
 
         //Fetch by kiosk Query
         /*
@@ -81,14 +81,14 @@ class VisitationDAO @Inject()(dbConfigProvider: DatabaseConfigProvider) {
         //todo:
 
 //        initQuery drop offset take limit
-        initQuery
-      }
+      //  initQuery
+    //  }
 
 
-    } yield (record)
+  //  } yield (record)
 
-    db.run(records.result)
-  }
+  //  db.run(records.result)
+  //}
 
 
 }

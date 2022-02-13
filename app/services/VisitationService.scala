@@ -91,7 +91,8 @@ class VisitationService @Inject()(
       if (authResponse == null) return Left(new Exception("Invalid Authentication"))
 
       Right(
-        visitationDAO.list(organisation_id, station_id, kiosk_id, offset, limit).map(y => y.map(record => populateResponse(record._1._1._1._2.get, record._1._1._1._1._2, record._1._1._1._1._1)))
+        None
+     //   visitationDAO.list(organisation_id, station_id, kiosk_id, offset, limit).map(y => y.map(record => populateResponse(record._1._1._1._2.get, record._1._1._1._1._2, record._1._1._1._1._1)))
       )
     }
 
