@@ -32,7 +32,11 @@ class VisitationDAO @Inject()(dbConfigProvider: DatabaseConfigProvider) {
 
   //todo; get visitation on a given host.. day etc.
   //  organisation_id:Option[Int],station_id:Option[Int] ,kiosk_id:Option[Int],offset:Int, limit:Int
- // def list(organisation_id: Option[Int], station_id: Option[Int], kiosk_id: Option[Int], offset: Int, limit: Int): Future[Seq[(((((Visitation,Guest),Option[Profile]),Option[Profile]),Option[Kiosk]),Profile)]] = {
+  def list(organisation_id: Option[Int], station_id: Option[Int], kiosk_id: Option[Int], offset: Int, limit: Int): Future[Seq[(((((Visitation,Guest),Option[Profile]),Option[Profile]),Option[Kiosk]),Profile)]] = {
+
+    ???
+  }
+
    // val records = for {
 
    //   record <- {
