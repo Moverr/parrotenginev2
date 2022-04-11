@@ -34,6 +34,7 @@ class VisitationDAO @Inject()(dbConfigProvider: DatabaseConfigProvider) {
   //  organisation_id:Option[Int],station_id:Option[Int] ,kiosk_id:Option[Int],offset:Int, limit:Int
   def list(organisation_id: Option[Int], station_id: Option[Int], kiosk_id: Option[Int], offset: Int, limit: Int): Future[Seq[(((((Visitation,Guest),Option[Profile]),Option[Profile]),Option[Kiosk]),Profile)]] = {
 
+    val visitation  = visitationTable joinLeft  guestTable  on (_.guest_id === _.profile_id)
     ???
   }
 

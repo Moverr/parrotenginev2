@@ -1,7 +1,7 @@
 package controllers
 
-import controllers.requests.{GuestProfileRequest, PhysicalAddress, ProfileRequest, ProfileType}
-import controllers.responses.{UserResponse, GuestInvitationResponse}
+import controllers.requests.{BasicProfileRequest, PhysicalAddress, ProfileRequest, ProfileType, VisitationRequest}
+import controllers.responses.{GuestInvitationResponse, UserResponse}
 import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Json
 import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents}
@@ -22,11 +22,11 @@ class VisitationController @Inject()(
   def register = Action.async { implicit request =>
 
 
+    //profilfe info
     val surname: String = request.body.asJson.get("surname").as[String]
     val otherName: String = request.body.asJson.get("otherName").as[String]
-    val profileType: String = request.body.asJson.get("profiletype").as[String]
+    val profileType: String = request.body.asJson.get("profile_type").as[String]
     val gender: String = request.body.asJson.get("gender").as[String]
-    //    val stationid: Int = request.body.asJson.get("stationid").as[String].trim.toInt
 
     val registratioon_date_long: Long = request.body.asJson.get("registration_date").as[Long]
     val location: String = request.body.asJson.get("location").as[String]
@@ -41,19 +41,19 @@ class VisitationController @Inject()(
 
     val address_location = PhysicalAddress(location, "LOCATION", Some(latitude), Some(longitude))
 
-    val deviceId = request.body.asJson.get("deviceId").as[String]
-    val stationId = request.body.asJson.get("stationId").as[Long]
-    val kiosk_id = request.body.asJson.get("kiosk_id").as[Long]
+
+    val stationId = request.body.asJson.get("station_id").as[String]
+    val kiosk_id = request.body.asJson.get("kiosk_id").as[String]
 
 
 
 
 
     //todo: guest profile reequest
-    val guestRequest: ProfileRequest = GuestProfileRequest(surname, otherName, ProfileType.withName(profileType), gender,
+    val guestRequest: ProfileRequest = VisitationRequest( BasicProfileRequest(surname, otherName, ProfileType.withName(profileType), gender),
       host_id, registratioon_date_long,
       address_location
-    ,deviceId,stationId.toInt,kiosk_id.toInt)
+    ,stationId,kiosk_id)
 
     val  response : Either[Throwable, Future[GuestInvitationResponse]] = visitationService.createGuestInvitation(guestRequest)
 

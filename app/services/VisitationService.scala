@@ -1,6 +1,6 @@
 package services
 
-import controllers.requests.{GuestProfileRequest, ProfileRequest}
+import controllers.requests.{BasicProfileRequest, ProfileRequest, ResidentProfileRequest, VisitationRequest}
 import controllers.responses.{GuestInvitationResponse, GuestResponse, UserResponse}
 import daos.{GuestDAO, ProfileDAO, ResidentProfileDAO, VisitationDAO}
 import db.tables.{Guest, Profile, Visitation}
@@ -35,12 +35,14 @@ class VisitationService @Inject()(
       //6: assigng registration external_id
    */
   def createGuestInvitation(request: ProfileRequest): Either[Throwable, Future[GuestInvitationResponse]] = {
+
+
     request match {
-      case   GuestProfileRequest(surname, othername, profiletype, gender, host_id, registerDate, location, deviceId, stationId, kiosk_id) => {
+      case    VisitationRequest(profile, host_id, registerDate, location, stationId, kioskId) => {
         //todo: check if host exists ?? jump this
 
 
-        val response: Option[(Guest, Profile)] = Await.result(guestDAO.getByProfileName(Some(surname), Some(othername)), Duration.Inf)
+        val response: Option[(Guest, Profile)] = Await.result(guestDAO.getByProfileName(Some(profile.surname), Some(profile.othername)), Duration.Inf)
 
         //todo: create a  guestProfile if does not exist.
         // else continue.
@@ -98,7 +100,7 @@ class VisitationService @Inject()(
 
     //todo create
     //list guests on a given statioon or visitor on a given days
-    def CreateGuestProfile(request: GuestProfileRequest): Future[(Guest, Profile)] = {
+    def CreateGuestProfile(request: VisitationRequest): Future[(Guest, Profile)] = {
       val record = for {
         profile <- profileDAO.create(request.surname, request.othername, request.gender, 0L, None, "GUEST").recoverWith {
           case exception: Throwable => Future.failed(new Exception(exception.getMessage))

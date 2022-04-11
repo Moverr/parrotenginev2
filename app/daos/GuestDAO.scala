@@ -38,21 +38,20 @@ class GuestDAO  @Inject()(dbConfigProvider: DatabaseConfigProvider) {
         val record = guestTable join profileTable on (_.profile_id === _.id)
 
 
-//        val firstNameQuery =  for(query<- surname match {
-//          case Some(surname) => record.filter(_._2.surname === surname)
-//          case None => record
-//        }) yield (query)
-//
-//
-//
-//        val lastNameQuery =  for(query<- otherName match {
-//          case Some(otherName) => firstNameQuery.filter(_._2.other_names  === otherName)
-//          case None => firstNameQuery
-//        }) yield (query)
+        val firstNameQuery =  for(query<- surname match {
+          case Some(surname) => record.filter(_._2.surname === surname)
+          case None => record
+        }) yield (query)
 
 
-        record
-        //drop (0) take (1)
+
+        val lastNameQuery =  for(query<- otherName match {
+          case Some(otherName) => firstNameQuery.filter(_._2.other_names  === otherName)
+          case None => firstNameQuery
+        }) yield (query)
+
+
+        lastNameQuery drop (0) take (1)
       }
 
     }
