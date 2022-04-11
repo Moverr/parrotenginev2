@@ -30,7 +30,11 @@ class GuestDAO  @Inject()(dbConfigProvider: DatabaseConfigProvider) {
    * @FutureIMpl: make sure you are able filter both surname and otherName, since they might be interchanged at entrace.
    */
 
+/*
 
+If profile exists in the same name, we extend id else we gegt the rest.
+
+ */
   def getByProfileName(surname: Option[String], otherName: Option[String]): Future[Option[(Guest, Profile)]] = {
 
     val records = for {

@@ -34,24 +34,51 @@ class VisitationService @Inject()(
       //5: register vistor in the book register
       //6: assigng registration external_id
    */
-  def createGuestInvitation(request: ProfileRequest): Either[Throwable, Future[GuestInvitationResponse]] = {
+  def createGuestInvitation(request: VisitationRequest): Either[Throwable, Future[GuestInvitationResponse]] = {
+
+
+    // val respoonse =  guestDAO.getByProfileName(Some(request.profile.surname),Some(request.profile.othername))
+
+    for {
+      response <-  guestDAO.getByProfileName(Some(request.profile.surname),Some(request.profile.othername))
+      xt <-  ???
+
+    } ???
 
 
     request match {
-      case    VisitationRequest(profile, host_id, registerDate, location, stationId, kioskId) => {
+      case    VisitationRequest(profile, host_id, registerDate, location, stationId, kiosk_id) => {
         //todo: check if host exists ?? jump this
 
 
         val response: Option[(Guest, Profile)] = Await.result(guestDAO.getByProfileName(Some(profile.surname), Some(profile.othername)), Duration.Inf)
 
+        /*
+        for{
+
+          response <- guestDAO.getByProfileName(Some(profile.surname), Some(profile.othername))
+          xt  =  response match {
+            case Some(value) => {
+              val visitation = Visitation(0L, value._1.profile_id, host_id, Some(getCurrentTimeStamp()), None, Some(stationId), Some(kiosk_id), Some("pending"), Utilities.RandomString())
+               createVisitation(visitation).map(x => populateResponse(value._2, value._1, x))
+            }
+            case None =>{
+              val record: Future[(Guest, Profile)] = CreateGuestProfile(request)
+              Right(record)
+            }
+          }
+        } yield (xt)
+
+        */
         //todo: create a  guestProfile if does not exist.
         // else continue.
+
 
         response match {
           case Some(value: (Guest, Profile)) => {
             //todo: create guestProfile
             //             visitation = Visitation(0L, value._1.id, host_id, Some(getCurrentTimeStamp()),   Some(Timestamp.valueOf(java.time.LocalDate.now().toString) , java.time.LocalDate.now(), Some(stationId), deviceId,Some("pending"),Utilities.RandomString())
-            val visitation = Visitation(0L, value._1.profile_id, host_id, Some(getCurrentTimeStamp()), None, Some(stationId.longValue()), Some(kiosk_id.longValue()), Some("pending"), Utilities.RandomString())
+            val visitation = Visitation(0L, value._1.profile_id, host_id, Some(getCurrentTimeStamp()), None, Some(stationId), Some(kiosk_id), Some("pending"), Utilities.RandomString())
             val record = for {
               response <- createVisitation(visitation).map(x => populateResponse(value._2, value._1, x))
 
@@ -62,15 +89,14 @@ class VisitationService @Inject()(
           }
           case None => {
 
-            val record: Future[(Guest, Profile)] = CreateGuestProfile(GuestProfileRequest(surname, othername, profiletype, gender, host_id, registerDate, location, deviceId, stationId, kiosk_id) )
+            val record: Future[(Guest, Profile)] = CreateGuestProfile(request)
 
            val reat = for {
              xt <-{
 
                    val te = record.value.get.get
 
-
-                 val visitation = Visitation(0L, te._1.profile_id, host_id, Some(getCurrentTimeStamp()), None, Some(stationId.longValue()), Some(kiosk_id.longValue()), Some("pending"), Utilities.RandomString())
+                 val visitation = Visitation(0L, te._1.profile_id, host_id, Some(getCurrentTimeStamp()), None, Some(stationId), Some(kiosk_id), Some("pending"), Utilities.RandomString())
                  val response = createVisitation(visitation).map(x => populateResponse(te._2, te._1, x))
                  response
 
@@ -82,6 +108,7 @@ class VisitationService @Inject()(
 
 
         }
+
 
       }
 
@@ -102,7 +129,7 @@ class VisitationService @Inject()(
     //list guests on a given statioon or visitor on a given days
     def CreateGuestProfile(request: VisitationRequest): Future[(Guest, Profile)] = {
       val record = for {
-        profile <- profileDAO.create(request.surname, request.othername, request.gender, 0L, None, "GUEST").recoverWith {
+        profile <- profileDAO.create(request.profile.surname, request.profile.othername, request.profile.gender, 0L, None, "GUEST").recoverWith {
           case exception: Throwable => Future.failed(new Exception(exception.getMessage))
         }
 
