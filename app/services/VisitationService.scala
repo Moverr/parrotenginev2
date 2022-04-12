@@ -10,6 +10,7 @@ import javax.inject.{Inject, Singleton}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
+import scala.concurrent.impl.Promise
 import scala.concurrent.{Await, Future}
 
 
@@ -39,12 +40,6 @@ class VisitationService @Inject()(
 
     // val respoonse =  guestDAO.getByProfileName(Some(request.profile.surname),Some(request.profile.othername))
 
-    for {
-      response <-  guestDAO.getByProfileName(Some(request.profile.surname),Some(request.profile.othername))
-      xt <-  ???
-
-    } ???
-
 
     request match {
       case    VisitationRequest(profile, host_id, registerDate, location, stationId, kiosk_id) => {
@@ -52,6 +47,16 @@ class VisitationService @Inject()(
 
 
         val response: Option[(Guest, Profile)] = Await.result(guestDAO.getByProfileName(Some(profile.surname), Some(profile.othername)), Duration.Inf)
+
+     val po =    for {
+
+          respose <- guestDAO.getByProfileName(Some(profile.surname), Some(profile.othername))
+        } respose.get
+
+        Right(po)
+
+
+        //val xt = guestDAO.getByProfileName(Some(profile.surname), Some(profile.othername))
 
         /*
         for{
