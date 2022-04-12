@@ -5,7 +5,7 @@ import slick.jdbc.PostgresProfile.api._
 import slick.jdbc.JdbcProfile
 import slick.lifted.TableQuery
 
-case class Visitation(id:Long,guest_id:Long,host_id:Long,time_in:Option[Timestamp],time_out:Option[Timestamp],station_id:Option[Long],kiosk_id:Option[Long],status:Option[String],reference_id:String)
+case class Visitation(id:Long,guest_id:Long,host_id:Long,time_in:Option[Timestamp],time_out:Option[Timestamp],station_id:Option[String],kiosk_id:Option[String],status:Option[String],reference_id:String)
 
 
 

@@ -1,4 +1,31 @@
-#FROM openjdk:8-jre
-#COPY svc /svc
-#EXPOSE 9000 9443
-#CMD /svc/bin/parrotenginev2 -Dhttps.port=9443 -Dplay.crypto.secret=secret
+
+FROM openjdk:16-alpine3.13
+
+WORKDIR /
+
+COPY .mvn/ .mvn
+COPY mvnw pom.xml ./
+RUN ./mvnw dependency:go-offline
+
+COPY src ./src
+
+CMD ["./mvnw", "spring-boot:run"]
+
+
+
+#RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
+#RUN apt-get install -y oracle-java8-installer
+#
+#ENV PROJECT_HOME /usr/src
+#RUN mkdir -p $PROJECT_HOME/activator $PROJECT_HOME/app
+#
+#WORKDIR $PROJECT_WORKPLACE/activator
+#
+#RUN wget http://downloads.typesafe.com/typesafe-activator/1.3.10/typesafe-activator-1.3.10.zip && \
+#    unzip typesafe-activator-1.3.10.zip
+#
+#ENV PATH $PROJECT_HOME/activator/activator-dist-1.3.10/bin:$PATH
+#ENV PATH $PROJECT_WORKPLACE/build/target/universal/stage/bin:$PATH
+#COPY . $PROJECT_HOME/app
+#WORKDIR $PROJECT_HOME/app
+#EXPOSE 9000
