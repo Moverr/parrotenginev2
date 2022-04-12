@@ -50,7 +50,7 @@ class VisitationController @Inject()(
 
 
     //todo: guest profile reequest
-    val guestRequest: ProfileRequest = VisitationRequest( BasicProfileRequest(surname, otherName, ProfileType.withName(profileType), gender),
+    val guestRequest: VisitationRequest = VisitationRequest( BasicProfileRequest(surname, otherName, ProfileType.withName(profileType), gender),
       host_id, registratioon_date_long,
       address_location
     ,stationId,kiosk_id)

@@ -18,8 +18,8 @@ class  VisitationTable(tag: Tag) extends Table[Visitation](tag,"visitations"){
   def  host_id  = column[Long]("host_id")
   def  time_in  = column[Option[Timestamp]]("time_in")
   def  time_out  = column[Option[Timestamp]]("time_out")
-  def  station_id  = column[Option[Long]]("station_id")
-  def  kiosk_id= column[Option[Long]]("kiosk_id")
+  def  station_id  = column[Option[String]]("station_id")
+  def  kiosk_id= column[Option[String]]("kiosk_id")
   def  status= column[Option[String]]("status")
   def  reference_id= column[String]("reference_id")
 
