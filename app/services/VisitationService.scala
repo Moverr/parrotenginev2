@@ -12,6 +12,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 import scala.concurrent.impl.Promise
 import scala.concurrent.{Await, Future}
+import scala.util.{Failure, Success}
 
 
 @Singleton
@@ -35,6 +36,15 @@ class VisitationService @Inject()(
       //5: register vistor in the book register
       //6: assigng registration external_id
    */
+
+
+
+  def createVisitationA(): Unit ={
+
+  }
+
+
+
   def createGuestInvitation(request: VisitationRequest): Either[Throwable, Future[GuestInvitationResponse]] = {
 
 
@@ -48,12 +58,17 @@ class VisitationService @Inject()(
 
         val response: Option[(Guest, Profile)] = Await.result(guestDAO.getByProfileName(Some(profile.surname), Some(profile.othername)), Duration.Inf)
 
-     val po =    for {
+     val guestProofile:Future[Option[(Guest,Profile)]]  =   guestDAO.getByProfileName(Some(profile.surname), Some(profile.othername))
 
-          respose <- guestDAO.getByProfileName(Some(profile.surname), Some(profile.othername))
-        } respose.get
 
-        Right(po)
+        guestProofile.onComplete{
+          case Success(guestProfileResponse) =>{
+
+          }
+          case Failure(exception) => Left(throw new Exception("Not able to retrievev profile information"))
+        }
+
+
 
 
         //val xt = guestDAO.getByProfileName(Some(profile.surname), Some(profile.othername))
@@ -150,6 +165,7 @@ class VisitationService @Inject()(
 
       record
     }
+
 
     def createVisitation(visitation: Visitation): Future[Visitation] = visitationDAO.create(visitation)
 
