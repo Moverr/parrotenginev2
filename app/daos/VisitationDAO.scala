@@ -1,9 +1,9 @@
 package daos
 
-import db.tables._
+
+
+import db.tables.{GuestTable, KioskTable, OrganizationTable, Profile, ProfileTable, StationTable, Visitation, VisitationTable}
 import javax.inject.{Inject, Singleton}
-import org.hibernate.engine.internal.JoinSequence
-import org.hibernate.engine.internal.JoinSequence.Join
 import play.api.db.slick.DatabaseConfigProvider
 import slick.jdbc.JdbcProfile
 import slick.jdbc.PostgresProfile.api._
@@ -32,10 +32,42 @@ class VisitationDAO @Inject()(dbConfigProvider: DatabaseConfigProvider) {
 
   //todo; get visitation on a given host.. day etc.
   //  organisation_id:Option[Int],station_id:Option[Int] ,kiosk_id:Option[Int],offset:Int, limit:Int
-  def list(organisation_id: Option[Int], station_id: Option[Int], kiosk_id: Option[Int], offset: Int, limit: Int): Future[Seq[(((((Visitation,Guest),Option[Profile]),Option[Profile]),Option[Kiosk]),Profile)]] = {
+  def list( station_id: Option[Int], kiosk_id: Option[Int], offset: Int, limit: Int): Future[Seq[((Visitation, Profile), Profile)]] = {
 
-    val visitation  = visitationTable joinLeft  guestTable  on (_.guest_id === _.profile_id)
-    ???
+    val query  = for {
+                query <- {
+                val record =   visitationTable join   profileTable  on (_.guest_profile_id === _.id)  join  profileTable on (_._1.host_profile_id === _.id)
+
+                  val stationQuery =  for(query<- station_id match {
+                    case Some(station_id) => record.filter(_._1._1.station_id  === station_id.toString)
+                    case None => record
+                  }) yield (query)
+
+
+
+                  val kiokQuery =  for(query<- station_id match {
+                    case Some(station_id) => stationQuery.filter(_._1._1.kiosk_id  === kiosk_id.toString)
+                    case None => stationQuery
+                  }) yield (query)
+
+
+                  // Organizaitiono would cocme from statin but as long as we have the station, we can deal wiith the organizatitoon.
+
+
+                  kiokQuery   .drop(offset)   .take(limit)
+                }
+
+
+
+        } yield (query)
+
+
+
+   // query filter(_._1._1.station_id === station_id)
+
+      db.run(query.result)
+
+
   }
 
    // val records = for {

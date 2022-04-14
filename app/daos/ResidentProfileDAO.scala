@@ -8,7 +8,15 @@ import slick.jdbc.JdbcProfile
 import slick.jdbc.PostgresProfile.api._
 import slick.lifted.TableQuery
 
+import db.tables._
+import org.hibernate.engine.internal.JoinSequence
+import org.hibernate.engine.internal.JoinSequence.Join
+
 import scala.concurrent.Future
+
+
+
+
 
 @Singleton
 class ResidentProfileDAO @Inject()(dbConfigProvider: DatabaseConfigProvider) {
