@@ -33,16 +33,15 @@ class VisitationService @Inject()(
       case VisitationRequest(profile, host_id, registerDate, location, stationId, kiosk_id) => {
 
 
-        val response: Option[(Guest, Profile)] = Await.result(guestDAO.getByProfileName(Some(profile.surname), Some(profile.othername)), 2.seconds)
+        val response: Option[( Profile)] = Await.result(guestDAO.getByProfileName(Some(profile.surname), Some(profile.othername)), Duration.Inf)
 
 
         response match {
-          case Some(value: (Guest, Profile)) => {
+          case Some(value: ( Profile)) => {
 
-            val visitation = Visitation(0L, value._1.profile_id, host_id, Some(getCurrentTimeStamp()), None, Some(stationId), Some(kiosk_id), Some("pending"), Utilities.RandomString())
+            val visitation = Visitation(0L, value.id, host_id, Some(getCurrentTimeStamp()), None, Some(stationId), Some(kiosk_id), Some("pending"), Utilities.RandomString())
             val record = for {
-              response <- createVisitation(visitation).map(x => populateResponse(value._2, value._1, x))
-
+              response <- createVisitation(visitation).map(x => populateResponse(value, x))
 
             } yield (response)
 
@@ -50,15 +49,15 @@ class VisitationService @Inject()(
           }
           case None => {
 
-            val record: Future[(Guest, Profile)] = CreateGuestProfile(request)
+
 
             val result = for {
+                profileResponse <-  CreateGuestProfile(request)
+
               record <- {
 
-                val te = record.value.get.get
-
-                val visitation = Visitation(0L, te._1.profile_id, host_id, Some(getCurrentTimeStamp()), None, Some(stationId), Some(kiosk_id), Some("pending"), Utilities.RandomString())
-                val response = createVisitation(visitation).map(x => populateResponse(te._2, te._1, x))
+                val visitation =  Visitation(0L, profileResponse.id, host_id, Some(getCurrentTimeStamp()), None, Some(stationId), Some(kiosk_id), Some("pending"), Utilities.RandomString())
+                val response =  visitationDAO.create(visitation).map(x => populateResponse(profileResponse,  x))
                 response
 
               }
@@ -76,11 +75,16 @@ class VisitationService @Inject()(
   }
 
 
-  def CreateGuestProfile(request: VisitationRequest): Future[(Guest, Profile)] = {
+  def CreateGuestProfile(request: VisitationRequest): Future[Profile] = {
+
+     profileDAO.create(request.profile.surname, request.profile.othername, request.profile.gender, 0L, None, "GUEST")
+
+    /*
     val record = for {
       profile <- profileDAO.create(request.profile.surname, request.profile.othername, request.profile.gender, 0L, None, "GUEST").recoverWith {
         case exception: Throwable => Future.failed(new Exception(exception.getMessage))
-      }
+
+
 
       future2 <- {
         val guest: Guest = Guest(0L, profile.id, None, getCurrentTimeStamp(), None, getCurrentTimeStamp())
@@ -90,9 +94,12 @@ class VisitationService @Inject()(
       }
 
 
-    } yield (future2, profile)
 
-    record
+
+
+    } yield (profile)
+
+     */
   }
 
   def createVisitation(visitation: Visitation): Future[Visitation] = visitationDAO.create(visitation)
@@ -106,7 +113,7 @@ class VisitationService @Inject()(
     )
   }
 
-  def populateResponse(guestProfile: Profile, guest: Guest, visitation: Visitation): GuestInvitationResponse = {
+  def populateResponse(guestProfile: Profile,  visitation: Visitation): GuestInvitationResponse = {
     //GuestResponse
     val profileResponse = populateResponse1(guestProfile)
     val response = GuestInvitationResponse(profileResponse, visitation.time_in, visitation.time_out, visitation.reference_id, visitation.status.get)
