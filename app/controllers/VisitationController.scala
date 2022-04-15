@@ -84,10 +84,10 @@ class VisitationController @Inject()(
     authResponse.flatMap(item=> item match {
       case Some(value) =>{
 
-        visitationService.list(value, organisation_id,station_id,kiosk_id, offset, limit)
+        visitationService.list(value,station_id,kiosk_id, offset, limit)
 
         match {
-          case Left(exception) => Future.successful(BadRequest(Json.toJson(exception.getMessage)))
+          case Left(exception) => Future.successful(BadRequest(Json.toJson(exception.  getMessage)))
           case Right(result) => result flatMap {
             result => Future.successful(Ok(Json.toJson(result)))
           }

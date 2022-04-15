@@ -1,13 +1,15 @@
 package services
 
-import controllers.requests.{BasicProfileRequest, ProfileRequest, ResidentProfileRequest, VisitationRequest}
-import controllers.responses.{GuestInvitationResponse, GuestResponse, HostResponse, UserResponse}
+import controllers.requests.VisitationRequest
+import controllers.responses.{GuestInvitationResponse, GuestResponse, HostResponse}
 import daos.{GuestDAO, ProfileDAO, ResidentProfileDAO, VisitationDAO}
-import db.tables.{Guest, Profile, Visitation}
+import db.tables.{Profile, Visitation}
 import helpers.Utilities
 import helpers.Utilities.getCurrentTimeStamp
 import javax.inject.{Inject, Singleton}
 
+import scala.collection.mutable
+import scala.collection.mutable.ArrayBuffer
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 import scala.concurrent.impl.Promise
@@ -25,7 +27,6 @@ class VisitationService @Inject()(
 
                                  ) {
 
-
   def createGuestInvitation(request: VisitationRequest): Either[Throwable, Future[GuestInvitationResponse]] = {
 
     request match {
@@ -40,7 +41,7 @@ class VisitationService @Inject()(
 
             val visitation = Visitation(0L, value.id, host_id, Some(getCurrentTimeStamp()), None, Some(stationId), Some(kiosk_id), Some("pending"), Utilities.RandomString())
             val record = for {
-              response <- createVisitation(visitation).map(x => populateResponse(value, x))
+              response <- createVisitation(visitation).map(x => populateResponse(None,None,x))
 
             } yield (response)
 
@@ -56,7 +57,7 @@ class VisitationService @Inject()(
               record <- {
 
                 val visitation =  Visitation(0L, profileResponse.id, host_id, Some(getCurrentTimeStamp()), None, Some(stationId), Some(kiosk_id), Some("pending"), Utilities.RandomString())
-                val response =  visitationDAO.create(visitation).map(x => populateResponse(profileResponse,  x))
+                val response =  visitationDAO.create(visitation).map(visitattionRecord => populateResponse(None,None,visitattionRecord))
                 response
 
               }
@@ -103,27 +104,47 @@ class VisitationService @Inject()(
 
   def createVisitation(visitation: Visitation): Future[Visitation] = visitationDAO.create(visitation)
 
+
   //todo: list visitations
   def list(authResponse: UserResponse,  station_id: Option[Int], kiosk_id: Option[Int], offset: Int, limit: Int): Either[java.lang.Throwable, Future[Seq[GuestInvitationResponse]]] = {
     if (authResponse == null) return Left(new Exception("Invalid Authentication"))
-//    visitationDAO.list( station_id, kiosk_id, offset, limit).foreach(x=>x.map(y=>populateResponse(y._1._2,y._1._1)))
-    val po =for{
-      xt <-  visitationDAO.list( station_id, kiosk_id, offset, limit)
-      rec = xt.toSeq.foreach( u => populateResponse(u._1._2,u._1._1))
-        //.foreach(x=>x.map(y=>populateResponse(y._1._2,y._1._1)))
-    } yield (xt)
 
-    Right(
-      po
-    )
+    val visitationRecords = for  {
+        records <- { visitationDAO.list(station_id, kiosk_id, offset, limit)  }
+
+    } yield(records)
+
+
+    val record:scala.collection.mutable.Buffer[GuestInvitationResponse] =  ArrayBuffer()
+
+
+     visitationRecords.map(
+       y=> y.foreach{x=>
+
+         record += populateResponse(Some(x._1._2),Some(x._2),x._1._1)
+       }
+     )
+
+
+    Right(Future.successful(record.toSeq))
+
   }
 
-  def populateResponse(guestProfile: Profile,hostProfile: Profile,   visitation: Visitation): GuestInvitationResponse = {
+  def populateResponse(guestProfile: Option[Profile],hostProfile: Option[Profile],   visitation: Visitation): GuestInvitationResponse = {
     //GuestResponse
-    val profileResponse = populateResponse1(guestProfile)
-    val hostProofile = populateResponse12(hostProfile)
-    val response = GuestInvitationResponse(profileResponse,hostProofile, visitation.time_in, visitation.time_out, visitation.reference_id, visitation.status.get)
-    response
+    val guest = guestProfile match {
+      case Some(value) => populateResponse1(value)
+      case None => None
+    }
+    val host = hostProfile match {
+      case Some(value) =>    populateResponse12(value)
+      case None => None
+    }
+
+
+     val response = controllers.responses.GuestInvitationResponse(None,None, visitation.time_in, visitation.time_out, visitation.reference_id, visitation.status.get)
+     response
+
   }
 
 
