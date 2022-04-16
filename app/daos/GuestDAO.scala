@@ -35,22 +35,22 @@ class GuestDAO  @Inject()(dbConfigProvider: DatabaseConfigProvider) {
 If profile exists in the same name, we extend id else we gegt the rest.
 
  */
-  def getByProfileName(surname: Option[String], otherName: Option[String]): Future[Option[(Guest, Profile)]] = {
+  def getByProfileName(surname: Option[String], otherName: Option[String]): Future[Option[Profile]] = {
 
     val records = for {
-      (guest, profile) <- {
-        val record = guestTable join profileTable on (_.profile_id === _.id)
+      (profile) <- {
+        val record =   profileTable
 
 
         val firstNameQuery =  for(query<- surname match {
-          case Some(surname) => record.filter(_._2.surname === surname)
+          case Some(surname) => record.filter(_.surname === surname)
           case None => record
         }) yield (query)
 
 
 
         val lastNameQuery =  for(query<- otherName match {
-          case Some(otherName) => firstNameQuery.filter(_._2.other_names  === otherName)
+          case Some(otherName) => firstNameQuery.filter(_.other_names  === otherName)
           case None => firstNameQuery
         }) yield (query)
 
@@ -59,10 +59,11 @@ If profile exists in the same name, we extend id else we gegt the rest.
       }
 
     }
-      yield (guest, profile)
+      yield ( profile)
 
 
-    db.run(records.result.headOption)
+   db.run(records.result.headOption)
+
   }
 
 

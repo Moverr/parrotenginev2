@@ -38,6 +38,14 @@ class ProfileDAO   @Inject()(dbConfigProvider: DatabaseConfigProvider) {
   }
 
 
+  //todo: gegt profile by id
+  def getProfileById(profile_id:Long): Future[Option[Profile]] ={
+
+    val query = profileTable
+      .filter(_.id === profile_id)
+      .result.headOption
+    db.run(query)
+  }
 
 
 

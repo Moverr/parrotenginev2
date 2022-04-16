@@ -42,15 +42,15 @@ class VisitationController @Inject()(
     val address_location = PhysicalAddress(location, "LOCATION", Some(latitude), Some(longitude))
 
 
-    val stationId = request.body.asJson.get("station_id").as[String]
-    val kiosk_id = request.body.asJson.get("kiosk_id").as[String]
+    val stationId = request.body.asJson.get("station_id").as[Long]
+    val kiosk_id = request.body.asJson.get("kiosk_id").as[Long]
 
 
 
 
 
     //todo: guest profile reequest
-    val guestRequest: ProfileRequest = VisitationRequest( BasicProfileRequest(surname, otherName, ProfileType.withName(profileType), gender),
+    val guestRequest: VisitationRequest = VisitationRequest( BasicProfileRequest(surname, otherName, ProfileType.withName(profileType), gender),
       host_id, registratioon_date_long,
       address_location
     ,stationId,kiosk_id)
@@ -73,7 +73,7 @@ class VisitationController @Inject()(
   }
 
   //todo; view registrations etcs,
-  def list(organisation_id: Option[Int],station_id: Option[Int],kiosk_id: Option[Int], offset: Int, limit: Int ):Action[AnyContent] = Action.async{ implicit  request =>
+  def list(organisation_id: Option[Long],station_id: Option[Long],kiosk_id: Option[Long], offset: Int, limit: Int ):Action[AnyContent] = Action.async{ implicit  request =>
 
     //todo: get me all the list items
     val authorization: String = request.headers.get("authentication").getOrElse("")
@@ -84,10 +84,10 @@ class VisitationController @Inject()(
     authResponse.flatMap(item=> item match {
       case Some(value) =>{
 
-        visitationService.list(value, organisation_id,station_id,kiosk_id, offset, limit)
+        visitationService.list(value,station_id,kiosk_id, offset, limit)
 
         match {
-          case Left(exception) => Future.successful(BadRequest(Json.toJson(exception.getMessage)))
+          case Left(exception) => Future.successful(BadRequest(Json.toJson(exception.  getMessage)))
           case Right(result) => result flatMap {
             result => Future.successful(Ok(Json.toJson(result)))
           }
