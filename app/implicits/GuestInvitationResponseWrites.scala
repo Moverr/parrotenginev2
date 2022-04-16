@@ -18,7 +18,9 @@ object GuestInvitationResponseWrites {
       (JsPath \ "timein").write[Option[Timestamp]] and
       (JsPath \ "timeout").write[Option[Timestamp]] and
       (JsPath \ "reference_id").write[String] and
-      (JsPath \ "status").write[String]
+      (JsPath \ "status").write[String] and
+      (JsPath \ "station_id").write[Option[Long]] and
+      (JsPath \ "kiosk_id").write[Option[Long]]
     )(unlift(GuestInvitationResponse.unapply))
 
 }

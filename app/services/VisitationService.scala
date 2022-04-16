@@ -99,10 +99,19 @@ class VisitationService @Inject()(
   }
 
   def populateResponse(guestProfile: Option[Profile],hostProfile: Option[Profile],   visitation: Visitation): GuestInvitationResponse =
- GuestInvitationResponse(getGuestProfile(guestProfile)  , getHostProfile(hostProfile), visitation.time_in, visitation.time_out, visitation.reference_id, visitation.status.get)
+ GuestInvitationResponse(getGuestProfile(guestProfile)  , getHostProfile(hostProfile), visitation.time_in, visitation.time_out, visitation.reference_id, getStatus(visitation.status)
+ ,visitation.station_id,visitation.kiosk_id
+ )
 
 
 
+
+  private def getStatus(statusOption:Option[String]) = {
+    statusOption match {
+      case Some(value) => value
+      case None => "N/A"
+    }
+  }
 
   private def getHostProfile(hostProfile: Option[Profile]) =   hostProfile match {
       case Some(value) => Some(populateResponse12(value))
