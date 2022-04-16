@@ -35,7 +35,7 @@ class GuestDAO  @Inject()(dbConfigProvider: DatabaseConfigProvider) {
 If profile exists in the same name, we extend id else we gegt the rest.
 
  */
-  def getByProfileName(surname: Option[String], otherName: Option[String]): Future[Option[( Profile)]] = {
+  def getByProfileName(surname: Option[String], otherName: Option[String]): Future[Option[Profile]] = {
 
     val records = for {
       (profile) <- {

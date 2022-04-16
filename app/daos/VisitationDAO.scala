@@ -32,21 +32,21 @@ class VisitationDAO @Inject()(dbConfigProvider: DatabaseConfigProvider) {
 
   //todo; get visitation on a given host.. day etc.
   //  organisation_id:Option[Int],station_id:Option[Int] ,kiosk_id:Option[Int],offset:Int, limit:Int
-  def list( station_id: Option[Int], kiosk_id: Option[Int], offset: Int, limit: Int): Future[Seq[((Visitation, Profile), Profile)]] = {
+  def list( station_id: Option[Long], kiosk_id: Option[Long], offset: Int, limit: Int): Future[Seq[((Visitation, Profile), Profile)]] = {
 
     val query  = for {
                 query <- {
                 val record =   visitationTable join   profileTable  on (_.guest_profile_id === _.id)  join  profileTable on (_._1.host_profile_id === _.id)
 
                   val stationQuery =  for(query<- station_id match {
-                    case Some(station_id) => record.filter(_._1._1.station_id  === station_id.toString)
+                    case Some(station_id) => record.filter(_._1._1.station_id  === station_id)
                     case None => record
                   }) yield (query)
 
 
 
                   val kiokQuery =  for(query<- station_id match {
-                    case Some(station_id) => stationQuery.filter(_._1._1.kiosk_id  === kiosk_id.toString)
+                    case Some(station_id) => stationQuery.filter(_._1._1.kiosk_id  === kiosk_id)
                     case None => stationQuery
                   }) yield (query)
 

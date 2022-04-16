@@ -15,7 +15,7 @@ case class ResidentProfileRequest(surname:String,othername:String,profiletype: P
 //Guest
 //,user_id:Option[Long]
 case class VisitationRequest(profile:BasicProfileRequest, host_id:Long, registerDate:Long, location: PhysicalAddress
-                             , stationId:String, kioskId:String //kiok id is device id
+                             , stationId:Long, kioskId:Long //kiok id is device id
                               ) extends  ProfileRequest
 
 

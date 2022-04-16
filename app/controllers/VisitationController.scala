@@ -42,8 +42,8 @@ class VisitationController @Inject()(
     val address_location = PhysicalAddress(location, "LOCATION", Some(latitude), Some(longitude))
 
 
-    val stationId = request.body.asJson.get("station_id").as[String]
-    val kiosk_id = request.body.asJson.get("kiosk_id").as[String]
+    val stationId = request.body.asJson.get("station_id").as[Long]
+    val kiosk_id = request.body.asJson.get("kiosk_id").as[Long]
 
 
 
@@ -73,7 +73,7 @@ class VisitationController @Inject()(
   }
 
   //todo; view registrations etcs,
-  def list(organisation_id: Option[Int],station_id: Option[Int],kiosk_id: Option[Int], offset: Int, limit: Int ):Action[AnyContent] = Action.async{ implicit  request =>
+  def list(organisation_id: Option[Long],station_id: Option[Long],kiosk_id: Option[Long], offset: Int, limit: Int ):Action[AnyContent] = Action.async{ implicit  request =>
 
     //todo: get me all the list items
     val authorization: String = request.headers.get("authentication").getOrElse("")

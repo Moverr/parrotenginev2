@@ -15,7 +15,7 @@ import slick.lifted.TableQuery
 
 
 
-case class Visitation(id:Long,guest_profile_id:Long,host_profile_id:Long,time_in:Option[Timestamp],time_out:Option[Timestamp],station_id:Option[String],kiosk_id:Option[String],status:Option[String],reference_id:String)
+case class Visitation(id:Long,guest_profile_id:Long,host_profile_id:Long,time_in:Option[Timestamp],time_out:Option[Timestamp],station_id:Option[Long],kiosk_id:Option[Long],status:Option[String],reference_id:String)
 
 
 
@@ -28,8 +28,8 @@ class  VisitationTable(tag: Tag) extends Table[Visitation](tag,"visitations"){
   def  host_profile_id  = column[Long]("host_profile_id")
   def  time_in  = column[Option[Timestamp]]("time_in")
   def  time_out  = column[Option[Timestamp]]("time_out")
-  def  station_id  = column[Option[String]]("station_id")
-  def  kiosk_id= column[Option[String]]("kiosk_id")
+  def  station_id  = column[Option[Long]]("station_id")
+  def  kiosk_id= column[Option[Long]]("kiosk_id")
   def  status= column[Option[String]]("status")
   def  reference_id= column[String]("reference_id")
 
